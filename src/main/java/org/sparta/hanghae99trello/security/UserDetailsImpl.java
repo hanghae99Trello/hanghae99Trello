@@ -18,6 +18,14 @@ public class UserDetailsImpl implements UserDetails {
         this.user = user;
     }
 
+    public static UserDetailsImpl createCustomUserDetails(User user) {
+        return new UserDetailsImpl(user);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();

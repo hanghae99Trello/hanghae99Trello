@@ -1,4 +1,8 @@
 package org.sparta.hanghae99trello.repository;
 
-public interface BoardRepository {
+import org.sparta.hanghae99trello.entity.Board;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    Board findByBoardName(String boardName);
 }
