@@ -23,6 +23,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+          
+      # [0.5]
+      - name: Setup Gradle Wrapper
+        run: gradle wrapper --gradle-version 7.2
+        shell: bash        
         
         # [1]
       # - name: Set yaml file 
