@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
 @Entity
@@ -17,24 +18,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @jakarta.persistence.Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @JsonIgnore
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String phone;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserAuthEnum auth;
 
-    public User(String name, String email, String password, UserAuthEnum auth) {
+    public User(String name, String email, String password, String phone) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.auth = auth;
+        this.phone = phone;
+        this.auth = UserAuthEnum.valueOf("USER");
+    }
+
+    public void update(UserRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.phone = requestDto.getPhone();
     }
 }
