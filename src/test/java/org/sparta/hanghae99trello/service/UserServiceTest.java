@@ -44,7 +44,7 @@ public class UserServiceTest {
     @ParameterizedTest
     @MethodSource("provideUserTestData")
     @Transactional
-    @Rollback(value = false)
+    @Rollback(value = true)
     @DisplayName("회원가입 테스트")
     void createUser(UserRequestDto requestDto) {
         UserResponseDto responseDto = userService.createUser(requestDto);
