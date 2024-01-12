@@ -16,6 +16,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/hello")
+    public String hello() {
+        return "ok";
+    }
+
     @PostMapping("/join")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
         return handleRequest(() -> {

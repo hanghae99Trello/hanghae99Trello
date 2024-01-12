@@ -56,6 +56,7 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests)->
                 authorizeHttpRequests
+                        .requestMatchers("/hello").permitAll()
                         .requestMatchers("/join").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAnyAuthority("AUTH_USER")
