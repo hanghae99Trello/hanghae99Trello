@@ -21,4 +21,5 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             java -jar hanghae99Trello-0.0.1-SNAPSHOT.jar
+            git pull
             '
