@@ -24,6 +24,11 @@ public class UserController {
         });
     }
 
+    @GetMapping("/users/{userId}")
+    public User getUser(@PathVariable Long userId) {
+        return userService.getUser(userId);
+    }
+
     @PutMapping("/users/{userId}")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto requestDto) {
         userService.updateUser(userId, requestDto);
