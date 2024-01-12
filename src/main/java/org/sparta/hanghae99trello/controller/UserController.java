@@ -16,7 +16,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/hello")
+    @GetMapping("/hello")
     public String hello() {
         return "ok";
     }
