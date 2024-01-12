@@ -1,13 +1,12 @@
 package org.sparta.hanghae99trello.controller;
 
 import org.sparta.hanghae99trello.dto.UserRequestDto;
+import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -23,6 +22,12 @@ public class UserController {
             userService.createUser(requestDto);
             return new ResponseEntity<>(SuccessMessage.JOIN_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
         });
+    }
+
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto requestDto) {
+        userService.updateUser(userId, requestDto);
+        return new ResponseEntity<>(SuccessMessage.UPDATE_USER_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
     }
 
     private ResponseEntity<String> handleRequest(RequestHandler handler) {
