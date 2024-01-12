@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.sparta.hanghae99trello.Hanghae99trelloApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-01-12T16:56:22" hostname="gimdabomiui-MacBookAir.local" time="0.007">
+  <properties/>
+  <testcase name="contextLoads()" classname="org.sparta.hanghae99trello.Hanghae99trelloApplicationTests" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
