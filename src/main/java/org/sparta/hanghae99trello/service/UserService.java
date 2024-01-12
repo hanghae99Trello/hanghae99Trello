@@ -22,7 +22,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserResponseDto createUser(UserRequestDto requestDto) {
         String name = requestDto.getName();
         String email = requestDto.getEmail();
@@ -32,6 +31,10 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(password);
         User user = userRepository.save(new User(name, email, encodedPassword, phone));
         return new UserResponseDto(user);
+    }
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
     }
 
     public User updateUser(Long id, UserRequestDto requestDto) {
