@@ -1,4 +1,4 @@
-cd ./build/libs/
+cd ../build/libs/
 
 latest_jar=$(ls -t *.jar | head -n 1)
 
