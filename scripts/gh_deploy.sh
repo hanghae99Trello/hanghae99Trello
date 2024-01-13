@@ -1,5 +1,5 @@
 cd ../build/libs/
-echo "cd"
+echo "cd" >> script.log
 latest_jar=$(ls -t *.jar | head -n 1)
 
 if [ -n "$latest_jar" ]; then
