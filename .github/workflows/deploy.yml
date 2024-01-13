@@ -7,10 +7,7 @@ on:
 
 env:
   RESOURCE_PATH: ./src/main/resources/application.properties
-#   S3_BUCKET_NAME: hanghae-trello
-#   CODE_DEPLOY_APPLICATION_NAME: trell-code-deploy
-#   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: trell-server
-
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -53,8 +50,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: trell-code-deploy
-        environment_name: trell-server
+        application_name: trello-beanstalk-deploy
+        environment_name: trelo-server
         version_label: github-action-${{ steps.current-time.outputs.formattedTime }}
         region: ap-northeast-2
         deployment_package: ./build/libs/${{ env.artifact }}
