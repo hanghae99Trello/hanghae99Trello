@@ -17,5 +17,3 @@ hooks:
     - location: /scripts/gh_deploy.sh
       timeout: 60
       runas: ubuntu
-      commands:
-        - ls -al
