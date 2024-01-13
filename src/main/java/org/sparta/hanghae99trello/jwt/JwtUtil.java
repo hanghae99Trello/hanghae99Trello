@@ -32,7 +32,7 @@ public class JwtUtil {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String JWT_LOG_HEAD = "JWT 관련 로그";
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
-    @Value("${jwt.secret.key}")
+    @Value("${JWT_SECRET_KEY}")
     private String secretKey;
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
