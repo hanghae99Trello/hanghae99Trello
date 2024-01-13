@@ -10,9 +10,4 @@ public class HelloController {
     public String hey() {
         return "hey 제발 쫌!!!!!!!!!!!!!!!!!";
     }
-
-    @PostMapping("/hello")
-    public String hello(){
-        return "야 왜안돼";
-    }
 }

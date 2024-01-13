@@ -1,6 +1,5 @@
 package org.sparta.hanghae99trello.config;
 
-import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.jwt.JwtAuthenticationFilter;
 import org.sparta.hanghae99trello.jwt.JwtAuthorizationFilter;
 import org.sparta.hanghae99trello.jwt.JwtUtil;
@@ -33,7 +32,6 @@ public class WebSecurityConfig {
         this.userDetailsService = userDetailsService;
         this.authenticationConfiguration = authenticationConfiguration;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
