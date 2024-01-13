@@ -4,17 +4,18 @@ files:
   - source:  /
     destination: /home/ubuntu/github_action
     overwrite: yes
-
+    
 permissions:
   - object: /
     pattern: "**"
     mode: '755'
     owner: ubuntu
     group: ubuntu
-
+    
 hooks:
   ApplicationStart:
     - location: /scripts/gh_deploy.sh
       timeout: 60
       runas: ubuntu
-      
+      commands:
+        - ls -al
