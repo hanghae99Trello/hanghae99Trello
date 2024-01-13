@@ -6,6 +6,7 @@ import org.sparta.hanghae99trello.jwt.JwtAuthorizationFilter;
 import org.sparta.hanghae99trello.jwt.JwtUtil;
 import org.sparta.hanghae99trello.security.CustomAccessDeniedHandler;
 import org.sparta.hanghae99trello.security.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
-
+    @Autowired
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
