@@ -14,10 +14,10 @@ public class BoardRequestDto {
     private String boardDescription;
     private Set<String> participants;
 
-    public BoardRequestDto(String todo, String hashtag, String firstBoard, Set<String> participants) {
-        this.boardName = todo;
-        this.boardColor = hashtag;
-        this.boardDescription = firstBoard;
+    public BoardRequestDto(String boardName, String boardColor, String boardDescription, Set<String> participants) {
+        this.boardName = boardName;
+        this.boardColor = boardColor;
+        this.boardDescription = boardDescription;
         this.participants = participants;
     }
 }
