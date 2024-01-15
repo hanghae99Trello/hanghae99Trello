@@ -23,6 +23,6 @@ public class Col {
     @Column(name = "col_Index")
     private Long colIndex;
 
-    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL)
-    private List<Card> cards;
+//    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL)
+//    private List<Card> cards;
 }
