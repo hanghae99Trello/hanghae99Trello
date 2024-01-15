@@ -6,6 +6,7 @@ import org.sparta.hanghae99trello.jwt.JwtUtil;
 import org.sparta.hanghae99trello.security.CustomAccessDeniedHandler;
 import org.sparta.hanghae99trello.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -60,6 +61,7 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests)->
                 authorizeHttpRequests
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/hey").permitAll()
                         .requestMatchers("/join").permitAll()
                         .requestMatchers("/login").permitAll()
@@ -73,6 +75,11 @@ public class WebSecurityConfig {
         http.exceptionHandling((exceptionHandling) ->
                 exceptionHandling
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
+        );
+
+        http.formLogin((formLogin) ->
+                formLogin
+                        .loginPage("/api/user/login-page").permitAll()
         );
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
