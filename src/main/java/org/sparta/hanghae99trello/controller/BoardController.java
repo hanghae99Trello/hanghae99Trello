@@ -11,10 +11,9 @@ import org.sparta.hanghae99trello.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +25,10 @@ public class BoardController {
     public ResponseEntity<String> createBoard(@RequestBody BoardRequestDto requestDto) {
         boardService.createBoard(requestDto);
         return new ResponseEntity<>(SuccessMessage.CREATE_BOARD_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/boards")
+    public List<BoardResponseDto> getBoards() {
+        return boardService.getBoards();
     }
 }

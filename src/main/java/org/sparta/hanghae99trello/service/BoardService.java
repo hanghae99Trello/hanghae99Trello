@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,10 @@ public class BoardService {
         return new BoardResponseDto(savedBoard);
     }
 
+    public List<BoardResponseDto> getBoards() {
+        return boardRepository.findAll().stream().map(BoardResponseDto::new).collect(Collectors.toList());
+    }
+
     public Set<Participant> convertStringArrayToParticipants(Set<String> participantNames) {
         Set<Participant> participants = new HashSet<>();
         for (String participantName : participantNames) {
@@ -59,7 +65,4 @@ public class BoardService {
         }
         return participants;
     }
-
-
-
 }
