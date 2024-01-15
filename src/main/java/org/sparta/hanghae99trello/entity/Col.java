@@ -20,9 +20,15 @@ public class Col {
     @Column(name = "col_name")
     private String colName;
 
-    @Column(name = "col_Index")
+    @Column(name = "col_index")
     private Long colIndex;
 
 //    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL)
 //    private List<Card> cards;
+
+public Col(Long id, String colName, Long colIndex) {
+    this.id = id;
+    this.colName = colName;
+    this.colIndex = colIndex;
+}
 }
