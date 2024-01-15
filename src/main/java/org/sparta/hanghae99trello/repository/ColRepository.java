@@ -1,4 +1,4 @@
 package org.sparta.hanghae99trello.repository;
 
-public interface ColumnRepository {
+public interface ColRepository {
 }

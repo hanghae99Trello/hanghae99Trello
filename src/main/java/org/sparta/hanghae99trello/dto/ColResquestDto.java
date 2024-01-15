@@ -1,4 +1,4 @@
 package org.sparta.hanghae99trello.dto;
 
-public class ColumnRequestDto {
+public class ColResquestDto {
 }
