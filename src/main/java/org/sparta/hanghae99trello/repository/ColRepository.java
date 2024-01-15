@@ -1,4 +1,6 @@
 package org.sparta.hanghae99trello.repository;
 
-public interface ColRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ColRepository extends JpaRepository {
 }
