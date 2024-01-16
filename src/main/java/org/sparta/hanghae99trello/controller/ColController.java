@@ -35,16 +35,17 @@ public class ColController {
     }
 
     @PutMapping("/users/boards/{boardId}/columns/{columnId}")
-    public void updateCol() {
-
+    public void updateCol(@PathVariable Long boardId, @PathVariable Long columnId, @RequestBody ColRequestDto requestDto) {
+        colService.updateCol(boardId, columnId, requestDto);
     }
 
     @DeleteMapping("/users/boards/{boardId}/columns/{columnId}")
-    public void deleteCol() {
-
+    public void deleteCol(@PathVariable Long boardId, @PathVariable Long columnId) {
+        colService.deleteCol(boardId, columnId);
     }
 
     @PutMapping("/users/boards/{boardId}/columns/{columnId}/{columnOrderIndex}")
     public void updateColIdx() {
+
     }
 }

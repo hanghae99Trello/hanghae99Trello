@@ -27,6 +27,7 @@ public class ColService {
     public void createCol(Long boardId, ColRequestDto requestDto) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
 
+        // TODO : 에러 처리
 //        if (!optionalBoard.isPresent()) {
 //            // Handle the case where the board with the specified ID is not found
 //            throw new BoardNotFoundException("Board with ID " + boardId + " not found");
@@ -56,5 +57,22 @@ public class ColService {
         return cols.stream()
                 .map(ColResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public void updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
+
+        // TODO : Error Handling (if board is not present, boardId랑 Column이 속한 ID 다른경우! )
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        Optional<Col> optionalCol = colRepository.findById(columnId);
+
+        Board board = optionalBoard.get();
+        Col col = optionalCol.get();
+
+        col.setColName(requestDto.getColName());
+
+        colRepository.save(col);
+    }
+
+    public void deleteCol(Long boardId, Long columnId) {
     }
 }
