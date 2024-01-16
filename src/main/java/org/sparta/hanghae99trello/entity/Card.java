@@ -43,16 +43,12 @@ public class Card {
     private LocalDate dueDate;
 
     @Setter
-    @OneToOne
-    @JsonIgnore
     @JoinColumn(name = "previous_card_id")
-    private Card previousCard;
+    private Long previousCardId;
 
     @Setter
-    @OneToOne
-    @JsonIgnore
     @JoinColumn(name = "next_card_id")
-    private Card nextCard;
+    private Long nextCardId;
 
     public Card(String cardName, String cardDescription, String color, List<User> operators) {
         this.cardName = cardName;
