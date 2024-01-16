@@ -50,11 +50,9 @@ public class Col {
         }
         else if(this.firstCardId.equals(card.getId())){
             this.firstCardId = card.getNextCardId();
-            return false;
         }
         else if(this.lastCardId.equals(card.getId())){
             this.lastCardId = card.getPreviousCardId();
-            return false;
         }
         return false;
     }
