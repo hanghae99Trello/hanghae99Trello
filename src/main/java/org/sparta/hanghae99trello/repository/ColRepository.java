@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface ColRepository extends JpaRepository<Col, Long> {
     List<Col> findByBoardId(Long boardId);
     Optional<Col> findById(Long id);
+
 }

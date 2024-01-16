@@ -74,6 +74,25 @@ public class ColService {
     }
 
     public void deleteCol(Long boardId, Long columnId) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        Optional<Col> optionalCol = colRepository.findById(columnId);
 
+        if (optionalBoard.isPresent() && optionalCol.isPresent()) {
+            Board board = optionalBoard.get();
+            Col col = optionalCol.get();
+
+            // Check if the column belongs to the specified board
+            if (col.getBoard().getId().equals(board.getId())) {
+                // Delete the column
+                colRepository.deleteById(columnId);
+            } else {
+                // Error handling: The specified column does not belong to the specified board
+                throw new IllegalArgumentException("Column with ID " + columnId +
+                        " does not belong to the board with ID " + boardId);
+            }
+        } else {
+            // Error handling: Either the board or the column is not present
+            throw new IllegalArgumentException("Board or Column not found");
+        }
     }
 }
