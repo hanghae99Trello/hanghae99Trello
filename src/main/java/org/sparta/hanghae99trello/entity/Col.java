@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
@@ -22,6 +20,9 @@ public class Col {
 
     @Column(name = "col_index")
     private Long colIndex;
+
+    @Column(name = "board_id")
+    private Long boardId;
 
     @JoinColumn(name = "first_card_id")
     private Long firstCardId;
@@ -40,15 +41,11 @@ public class Col {
         return prev_id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "board_id") // Specify the foreign key column
-    private Board board;
-
-    public Col(String colName, Long colIndex, Board board) {
+    public Col(String colName, Long colIndex, Long boardId) {
 
         this.colName = colName;
         this.colIndex = colIndex;
-        this.board = board;
+        this.boardId = boardId;
     }
 
     public Boolean deleteCard(Card card) {

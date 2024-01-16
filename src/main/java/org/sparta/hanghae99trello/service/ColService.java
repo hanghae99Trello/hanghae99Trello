@@ -33,13 +33,12 @@ public class ColService {
 //            throw new BoardNotFoundException("Board with ID " + boardId + " not found");
 //
 //        } else {
-        Board board = optionalBoard.get();
 
         // Create and save the new Col
         Col col = new Col(
                 requestDto.getColName(),
                 requestDto.getColIndex(),
-                board
+                boardId
         );
 
         Col savedCol = colRepository.save(col);
@@ -62,10 +61,8 @@ public class ColService {
     public void updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
 
         // TODO : Error Handling (if board is not present, boardId랑 Column이 속한 ID 다른경우! )
-        Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Optional<Col> optionalCol = colRepository.findById(columnId);
 
-        Board board = optionalBoard.get();
         Col col = optionalCol.get();
 
         col.setColName(requestDto.getColName());
@@ -82,7 +79,7 @@ public class ColService {
             Col col = optionalCol.get();
 
             // Check if the column belongs to the specified board
-            if (col.getBoard().getId().equals(board.getId())) {
+            if (col.getBoardId().equals(board.getId())) {
                 // Delete the column
                 colRepository.deleteById(columnId);
             } else {
