@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,6 +40,9 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Participant> participants;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Col> cols;  // Bidirectional mapping
 
     public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;

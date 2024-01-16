@@ -12,35 +12,40 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cols")
 public class ColController {
-    private final UserService userService;
-    private final BoardService boardService;
+
     private final ColService colService;
 
     // TODO : mapping주소는 나중에 바꾸자
+    // Question : boardId를 받으려면 일단은 Col에서 BoardId를 가져야할텐데
+    // 다대일로 매핑해야겠지? 보드(다) - 컬럼(일)
+    // 순환참조는 안 되겠지?
+    // 일단 getCols에서 boardId를 받으면 ColsRepostory에서 findbyboardId로 찾도록 하자
+    // PostMapping의 경우엔 RequestParam과 RequestBody 두가지 방식으로
+    // 한 번에 받을 수는 없다고 하니 (할 수 있을 수도?) mapping을 바꾸는 방식도 고려해보자.
 
-    @GetMapping("/유저ㅓㅓ/보오으드/보드ID/columns")
-    public List<ColResponseDto> getCols(@RequestBody ColRequestDto colRequestDto) {
-        return null;
+    @GetMapping("/users/boards/{boardId}/columns")
+    public List<ColResponseDto> getCols(@PathVariable Long boardId) {
+        return colService.getCols(boardId);
     }
 
-    @PostMapping("/유저ㅓㅓ/보오으드/보드ID/columns")
-    public void CreateCols() {
-
+    @PostMapping("/users/boards/{boardId}/columns")
+    public void CreateCol(@PathVariable Long boardId, @RequestBody ColRequestDto requestDto) {
+        colService.createCol(boardId, requestDto);
     }
 
-    @PutMapping("/유저ㅓㅓ/보오으드/보드ID/columns/컬럼ID")
-    public void updateCols() {
-
+    @PutMapping("/users/boards/{boardId}/columns/{columnId}")
+    public void updateCol(@PathVariable Long boardId, @PathVariable Long columnId, @RequestBody ColRequestDto requestDto) {
+        colService.updateCol(boardId, columnId, requestDto);
     }
 
-    @DeleteMapping("/유저ㅓㅓ/보오으드/보드ID/columns")
-    public void deleteCols() {
-
+    @DeleteMapping("/users/boards/{boardId}/columns/{columnId}")
+    public void deleteCol(@PathVariable Long boardId, @PathVariable Long columnId) {
+        colService.deleteCol(boardId, columnId);
     }
 
-    @PutMapping("/유저ㅓㅓ/보오으드/보드ID/columns/컬럼ID/컬럼순서idx")
-    public void updateColsIdx() {
+    @PutMapping("/users/boards/{boardId}/columns/{columnId}/{columnOrderIndex}")
+    public void updateColIdx() {
+
     }
 }
