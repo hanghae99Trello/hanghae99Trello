@@ -22,7 +22,7 @@ public class ColController {
 
     @GetMapping("/유저ㅓㅓ/보오으드/보드ID/columns")
     public List<ColResponseDto> getCols(@RequestBody ColRequestDto colRequestDto) {
-
+        return null;
     }
 
     @PostMapping("/유저ㅓㅓ/보오으드/보드ID/columns")

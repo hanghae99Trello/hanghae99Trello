@@ -25,7 +25,7 @@ public class BoardService {
     private final UserRepository userRepository;
 
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
+    public void createBoard(BoardRequestDto requestDto) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User createdBy = userDetails.getUser();
 
@@ -45,7 +45,7 @@ public class BoardService {
 
         board.setParticipants(participants);
         Board savedBoard = boardRepository.save(board);
-        return new BoardResponseDto(savedBoard);
+        new BoardResponseDto(savedBoard);
     }
 
     public List<BoardResponseDto> getBoards() {
@@ -60,7 +60,7 @@ public class BoardService {
 
             // 사용자를 찾았을 경우에만 Participant 객체를 생성합니다.
             if (user != null) {
-                participants.add(new Participant(user));
+                participants.add(new Participant(user, user.getName()));
             }
         }
         return participants;

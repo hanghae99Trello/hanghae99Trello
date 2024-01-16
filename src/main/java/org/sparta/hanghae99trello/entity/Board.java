@@ -1,5 +1,8 @@
 package org.sparta.hanghae99trello.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,6 +32,7 @@ public class Board {
     private String boardDescription;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by")
     private User createdBy;
 

@@ -6,6 +6,7 @@ import org.sparta.hanghae99trello.entity.Board;
 import org.sparta.hanghae99trello.entity.Participant;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -14,13 +15,15 @@ public class BoardResponseDto {
     private String boardName;
     private String boardColor;
     private String boardDescription;
-    private Set<Participant> participants;
+    private Set<String> participants;
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
         this.boardName = board.getBoardName();
         this.boardColor = board.getBoardColor();
         this.boardDescription = board.getBoardDescription();
-        this.participants = board.getParticipants();
+        this.participants = board.getParticipants().stream()
+                .map(Participant::getParticipantName)
+                .collect(Collectors.toSet());
     }
 }

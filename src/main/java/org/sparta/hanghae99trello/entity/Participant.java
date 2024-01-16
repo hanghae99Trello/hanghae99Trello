@@ -23,7 +23,11 @@ public class Participant {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Participant(User user) {
+    @Column
+    private String participantName;
+
+    public Participant(User user, String participantName) {
         this.user = user;
+        this.participantName = user.getName();
     }
 }
