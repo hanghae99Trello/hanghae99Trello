@@ -41,9 +41,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Participant> participants;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Col> cols;  // Bidirectional mapping
-
     public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;
         this.boardColor = boardColor;
