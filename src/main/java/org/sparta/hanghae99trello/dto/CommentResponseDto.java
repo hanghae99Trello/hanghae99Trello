@@ -8,7 +8,7 @@ import org.sparta.hanghae99trello.entity.Comment;
 @Setter
 public class CommentResponseDto {
 
-    private int commentId;
+    private Long commentId;
     private String commentMessage;
 
     public CommentResponseDto(Comment comment) {
