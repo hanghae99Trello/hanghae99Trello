@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.entity.Participant;
 
+import java.util.Collections;
 import java.util.Set;
 
 @Getter
@@ -18,6 +19,6 @@ public class BoardRequestDto {
         this.boardName = boardName;
         this.boardColor = boardColor;
         this.boardDescription = boardDescription;
-        this.participants = participants;
+        this.participants = Collections.unmodifiableSet(participants);
     }
 }

@@ -1,5 +1,8 @@
 package org.sparta.hanghae99trello.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,11 +33,15 @@ public class Board {
     private String boardDescription;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by")
     private User createdBy;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Participant> participants;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Col> cols;  // Bidirectional mapping
 
     public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;

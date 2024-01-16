@@ -23,12 +23,14 @@ public class Col {
     @Column(name = "col_index")
     private Long colIndex;
 
-//    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL)
-//    private List<Card> cards;
+    @ManyToOne
+    @JoinColumn(name = "board_id") // Specify the foreign key column
+    private Board board;
 
-public Col(Long id, String colName, Long colIndex) {
-    this.id = id;
-    this.colName = colName;
-    this.colIndex = colIndex;
-}
+    public Col(String colName, Long colIndex, Board board) {
+
+        this.colName = colName;
+        this.colIndex = colIndex;
+        this.board = board;
+    }
 }

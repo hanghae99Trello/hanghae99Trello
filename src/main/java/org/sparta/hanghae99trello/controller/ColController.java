@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cols")
 public class ColController {
 
     private final ColService colService;
@@ -26,26 +25,26 @@ public class ColController {
     // 한 번에 받을 수는 없다고 하니 (할 수 있을 수도?) mapping을 바꾸는 방식도 고려해보자.
 
     @GetMapping("/users/boards/{boardId}/columns")
-    public List<ColResponseDto> getCols() {
-        return colService.getCols();
+    public List<ColResponseDto> getCols(@PathVariable Long boardId) {
+        return colService.getCols(boardId);
     }
 
     @PostMapping("/users/boards/{boardId}/columns")
-    public void CreateCols() {
+    public void CreateCol(@PathVariable Long boardId, @RequestBody ColRequestDto requestDto) {
+        colService.createCol(boardId, requestDto);
+    }
+
+    @PutMapping("/users/boards/{boardId}/columns/{columnId}")
+    public void updateCol() {
 
     }
 
-    @PutMapping("/users/boards/{boardId}/columns")
-    public void updateCols() {
+    @DeleteMapping("/users/boards/{boardId}/columns/{columnId}")
+    public void deleteCol() {
 
     }
 
-    @DeleteMapping("/users/boards/{boardId}/columns")
-    public void deleteCols() {
-
-    }
-
-    @PutMapping("/users/boards/{boardId}/columns")
-    public void updateColsIdx() {
+    @PutMapping("/users/boards/{boardId}/columns/{columnId}/{columnOrderIndex}")
+    public void updateColIdx() {
     }
 }
