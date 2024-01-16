@@ -78,9 +78,6 @@ public class BoardService {
     }
 
     private void updateParticipants(Board board, Set<String> participantNames) {
-        List<Participant> existingParticipants = participantRepository.findAllByBoardId(board.getId());
-        participantRepository.deleteAll(existingParticipants);
-
         for (String participantName : participantNames) {
             User user = userRepository.findByName(participantName);
             Participant participant = new Participant(user, participantName);
