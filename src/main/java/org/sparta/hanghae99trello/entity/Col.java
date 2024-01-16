@@ -23,6 +23,7 @@ public class Col {
     @Column(name = "col_index")
     private Long colIndex;
 
+
     @ManyToOne
     @JoinColumn(name = "board_id") // Specify the foreign key column
     private Board board;
@@ -33,4 +34,5 @@ public class Col {
         this.colIndex = colIndex;
         this.board = board;
     }
+
 }

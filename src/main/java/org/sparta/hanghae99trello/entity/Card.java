@@ -1,9 +1,10 @@
 package org.sparta.hanghae99trello.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,24 +16,17 @@ import java.util.List;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String cardName;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String cardDescription;
 
-    @jakarta.persistence.Column(nullable = false)
+    @Column(nullable = false)
     private String cardColor;
 
-//    @OneToOne
-//    private Card prevCard;
-//
-//    @OneToOne
-//    private Card nextCard;
-
-    //operator 정보
     @ManyToMany
     @JoinTable(
             name = "operator",
@@ -41,13 +35,24 @@ public class Card {
     )
     private List<User> operators;
 
-    //댓글 정보
     @OneToMany(mappedBy = "card",cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Comment> commentList;
 
     @Column(nullable = true)
     private LocalDate dueDate;
+
+    @Setter
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "previous_card_id")
+    private Card previousCard;
+
+    @Setter
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "next_card_id")
+    private Card nextCard;
 
     public Card(String cardName, String cardDescription, String color, List<User> operators) {
         this.cardName = cardName;
@@ -68,4 +73,6 @@ public class Card {
         this.operators = operator;
         this.dueDate = dueDate;
     }
+
+
 }

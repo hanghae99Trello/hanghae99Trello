@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
 import java.util.List;

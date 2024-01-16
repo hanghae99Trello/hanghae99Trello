@@ -31,4 +31,10 @@ public class BoardController {
     public List<BoardResponseDto> getBoards() {
         return boardService.getBoards();
     }
+
+    @PutMapping("/boards/{boardId}")
+    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long boardId, @RequestBody BoardRequestDto requestDto) {
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, requestDto);
+        return ResponseEntity.ok(boardResponseDto);
+    }
 }
