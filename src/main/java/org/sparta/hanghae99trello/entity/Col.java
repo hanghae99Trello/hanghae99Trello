@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,49 +25,37 @@ public class Col {
     @Column(name = "col_Index")
     private Long colIndex;
 
-    @OneToOne
     @JoinColumn(name="first_card_id")
-    private Card firstCard;
+    private Long firstCardId;
 
-    @OneToOne
     @JoinColumn(name="last_card_id")
-    private Card lastCard;
+    private Long lastCardId;
 
-    public void addCard(Card card) {
-        if (this.firstCard == null){
-            this.firstCard = card;
+    public Long addCard(Card card) {
+        if (this.firstCardId == null){
+            this.firstCardId = card.getId();
+            this.lastCardId = card.getId();
+            return card.getId();
         }
-        else {
-            this.lastCard.setNextCard(card);
-            card.setPreviousCard(this.lastCard);
-        }
-        this.lastCard = card;
+        Long prev_id = lastCardId;
+        this.lastCardId = card.getId();
+        return prev_id;
     }
 
-    public void deleteCard(Card card) {
-        if (this.firstCard == this.lastCard && this.firstCard == card){
-            firstCard = null;
-            lastCard = null;
+    public Boolean deleteCard(Card card) {
+        if(this.firstCardId.equals(this.lastCardId) && this.firstCardId.equals(card.getId())){
+            this.firstCardId = null;
+            this.lastCardId = null;
+            return true;
         }
-        else if(this.firstCard == card){
-            Card nxt_card = card.getNextCard();
-            nxt_card.setPreviousCard(null);
-            this.firstCard = nxt_card;
-
+        else if(this.firstCardId.equals(card.getId())){
+            this.firstCardId = card.getNextCardId();
+            return false;
         }
-        else if(this.lastCard == card){
-            Card pre_card = card.getPreviousCard();
-            pre_card.setNextCard(null);
-            this.lastCard = pre_card;
+        else if(this.lastCardId.equals(card.getId())){
+            this.lastCardId = card.getPreviousCardId();
+            return false;
         }
-        else{
-            Card pre_card = card.getPreviousCard();
-            Card nxt_card = card.getNextCard();
-            pre_card.setNextCard(nxt_card);
-            nxt_card.setPreviousCard(pre_card);
-        }
+        return false;
     }
-
-//    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL)
-//    private List<Card> cards;
 }
