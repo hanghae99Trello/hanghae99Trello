@@ -39,10 +39,11 @@ public class Board {
     private User createdBy;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Participant> participants;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Col> cols;  // Bidirectional mapping
+    @OneToMany(mappedBy = "board")
+    private List<Col> cols;
 
     public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;
