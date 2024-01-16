@@ -74,5 +74,6 @@ public class ColService {
     }
 
     public void deleteCol(Long boardId, Long columnId) {
+
     }
 }
