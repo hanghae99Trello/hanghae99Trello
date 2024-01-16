@@ -21,7 +21,7 @@ public class CommentController {
 
     //TODO :: 엔드포인트에 필요없는 값들 수정필요
     @PostMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}/comments")
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable int boardId,
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long boardId,
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
 

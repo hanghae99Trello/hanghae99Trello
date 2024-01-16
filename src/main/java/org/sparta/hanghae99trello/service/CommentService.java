@@ -18,7 +18,7 @@ public class CommentService {
 
     //TODO :: 유저 정보 반드시 필요함
     @Transactional
-    public CommentResponseDto createComment(User user, int cardId, String commentMessage) {
+    public CommentResponseDto createComment(User user, Long cardId, String commentMessage) {
 
         Card card = cardRepository.findById(cardId).orElseThrow(
                 ()-> new IllegalArgumentException("해당하는 카드가 없습니다.")
