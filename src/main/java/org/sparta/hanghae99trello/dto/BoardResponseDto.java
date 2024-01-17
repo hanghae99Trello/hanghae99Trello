@@ -3,8 +3,10 @@ package org.sparta.hanghae99trello.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.entity.Board;
+import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.entity.Participant;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,7 @@ public class BoardResponseDto {
     private String boardColor;
     private String boardDescription;
     private Set<String> participants;
+    private List<Col> colList;
 
     public BoardResponseDto(Board board) {
         this.id = board.getId();
@@ -25,5 +28,6 @@ public class BoardResponseDto {
         this.participants = board.getParticipants().stream()
                 .map(Participant::getParticipantName)
                 .collect(Collectors.toSet());
+        this.colList = board.getColList();
     }
 }
