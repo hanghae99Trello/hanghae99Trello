@@ -13,14 +13,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/api/users/boards")
 public class CommentController {
     private final CommentService commentService;
 
     //TODO :: 엔드포인트에 필요없는 값들 수정필요
-    @PostMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}/comments")
+    @PostMapping("/{boardId}/columns/{columnId}/cards/{cardId}/comments")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long cardId,
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
