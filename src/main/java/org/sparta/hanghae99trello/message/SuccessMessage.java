@@ -6,7 +6,9 @@ public enum SuccessMessage {
     DELETE_SUCCESS_MESSAGE("삭제가 완료되었습니다."),
     UPDATE_USER_SUCCESS_MESSAGE("사용자 정보가 수정되었습니다."),
     CREATE_BOARD_SUCCESS_MESSAGE("보드 생성이 완료되었습니다."),
-    UPDATE_BOARD_SUCCESS_MESSAGE("보드 수정이 완료되었습니다.");
+    UPDATE_BOARD_SUCCESS_MESSAGE("보드 수정이 완료되었습니다."),
+    CREATE_COL_SUCCESS_MESSAGE("컬럼 생성이 완료되었습니다."),
+    UPDATE_COL_SUCCESS_MESSAGE("컬럼 수정이 완료되었습니다.");
 
     private final String successMessage;
 

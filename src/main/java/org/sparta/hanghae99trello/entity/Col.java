@@ -1,5 +1,6 @@
 package org.sparta.hanghae99trello.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +22,10 @@ public class Col {
     @Column(name = "col_index")
     private Long colIndex;
 
-    @Column(name = "board_id")
-    private Long boardId;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "board")
+    private Board board;
 
     @JoinColumn(name = "first_card_id")
     private Long firstCardId;
@@ -41,11 +44,11 @@ public class Col {
         return prev_id;
     }
 
-    public Col(String colName, Long colIndex, Long boardId) {
+    public Col(String colName, Long colIndex, Board board) {
 
         this.colName = colName;
         this.colIndex = colIndex;
-        this.boardId = boardId;
+        this.board = board;
     }
 
     public Boolean deleteCard(Card card) {
