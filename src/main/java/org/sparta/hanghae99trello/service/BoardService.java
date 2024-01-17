@@ -4,11 +4,14 @@ import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
+import org.sparta.hanghae99trello.dto.ColRequestDto;
 import org.sparta.hanghae99trello.entity.Board;
+import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.entity.Participant;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
+import org.sparta.hanghae99trello.repository.ColRepository;
 import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
@@ -17,10 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +29,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
+    private final ColRepository colRepository;
 
     @Transactional
     public void createBoard(BoardRequestDto requestDto) {
@@ -37,22 +38,34 @@ public class BoardService {
 
         Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
+        // Initialize colList with an empty list by default
+        List<Col> colList = new ArrayList<>();
+
+        if (requestDto.getColList() != null) {
+            colList = convertColRequestDtoList(requestDto.getColList());
+        }
+
         Board board = new Board(
                 requestDto.getBoardName(),
                 requestDto.getBoardColor(),
                 requestDto.getBoardDescription(),
                 createdBy,
-                participants
+                participants,
+                colList
         );
 
         for (Participant participant : participants) {
             participant.setBoard(board);
         }
 
+        for (Col col : colList) {
+            col.setBoard(board);
+        }
+
         board.setParticipants(participants);
-        Board savedBoard = boardRepository.save(board);
-        new BoardResponseDto(savedBoard);
+        boardRepository.save(board);
     }
+
 
     @Transactional
     public List<BoardResponseDto> getBoards() {
@@ -102,5 +115,11 @@ public class BoardService {
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
         return loggedInId.equals(boardCreatorId);
+    }
+
+    private List<Col> convertColRequestDtoList(List<ColRequestDto> colRequestDtoList) {
+        return colRequestDtoList.stream()
+                .map(colRequestDto -> new Col(colRequestDto.getColName(), colRequestDto.getColIndex(), null))
+                .collect(Collectors.toList());
     }
 }

@@ -41,11 +41,16 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private Set<Participant> participants;
 
-    public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Col> colList;
+
+    public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants, List<Col> colList) {
         this.boardName = boardName;
         this.boardColor = boardColor;
         this.boardDescription = boardDescription;
         this.createdBy = createdBy;
         this.participants = participants;
+        this.colList = colList;
     }
 }
