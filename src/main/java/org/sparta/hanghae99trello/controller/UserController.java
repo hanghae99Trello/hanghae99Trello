@@ -22,7 +22,7 @@ public class UserController {
         return "login";
     }
 
-    @PostMapping("/join")
+    @PostMapping("/api/join")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
         return handleRequest(() -> {
             userService.createUser(requestDto);
@@ -30,16 +30,20 @@ public class UserController {
         });
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/api/users/{userId}")
     public User getUser(@PathVariable Long userId) {
         return userService.getUser(userId);
     }
 
-    @PutMapping("/users/{userId}")
+    @PutMapping("/api/users/{userId}")
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserRequestDto requestDto) {
         userService.updateUser(userId, requestDto);
         return new ResponseEntity<>(SuccessMessage.UPDATE_USER_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
     }
+
+//    @DeleteMapping("/api/users/{userId}")
+//    public ResponseEntity<String> deleteUser()
+
 
     private ResponseEntity<String> handleRequest(RequestHandler handler) {
         try {

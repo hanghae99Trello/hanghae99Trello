@@ -5,16 +5,9 @@ import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.dto.UserResponseDto;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
-import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.repository.UserRepository;
-import org.sparta.hanghae99trello.security.UserAuthEnum;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto createUser(UserRequestDto requestDto) {
+    public void createUser(UserRequestDto requestDto) {
         String name = requestDto.getName();
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
@@ -30,7 +23,7 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(password);
         User user = userRepository.save(new User(name, email, encodedPassword, phone));
-        return new UserResponseDto(user);
+        new UserResponseDto(user);
     }
 
     public User getUser(Long userId) {
