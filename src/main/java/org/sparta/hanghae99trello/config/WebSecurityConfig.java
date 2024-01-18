@@ -59,13 +59,14 @@ public class WebSecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests)->
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/").permitAll()
                         .requestMatchers("/hey").permitAll()
                         .requestMatchers("/join").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/signup").permitAll()
+                        .requestMatchers("/resources/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAnyAuthority("AUTH_USER")
                         .requestMatchers(HttpMethod.PUT, "/users/**").hasAnyAuthority("AUTH_USER")
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("AUTH_USER")
