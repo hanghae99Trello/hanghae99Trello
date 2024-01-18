@@ -12,28 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/api")
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/user/login-page")
-    public String loginPage() {
-        return "login";
-    }
-
-    @GetMapping("api/user/signup")
-    public String signUpPage() {
-        return "signup";
-    }
-
-    @PostMapping("/join")
-    public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
-        return handleRequest(() -> {
-            userService.createUser(requestDto);
-            return new ResponseEntity<>(SuccessMessage.JOIN_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
-        });
     }
 
     @GetMapping("/users/{userId}")
