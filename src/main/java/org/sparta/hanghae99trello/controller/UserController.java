@@ -23,6 +23,11 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("api/user/signup")
+    public String signUpPage() {
+        return "signup";
+    }
+
     @PostMapping("/join")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
         return handleRequest(() -> {

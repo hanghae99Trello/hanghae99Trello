@@ -2,8 +2,10 @@ package org.sparta.hanghae99trello.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @RequiredArgsConstructor
 public class UserRequestDto {
     private String name;
