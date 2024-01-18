@@ -29,4 +29,3 @@ replay_pid*
 .gradle
 build
 build.gradle
-src/test
