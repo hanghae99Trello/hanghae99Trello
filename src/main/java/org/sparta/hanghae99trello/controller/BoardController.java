@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class BoardController {
     private final BoardService boardService;
 
@@ -36,5 +36,11 @@ public class BoardController {
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long boardId, @RequestBody BoardRequestDto requestDto) {
         BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, requestDto);
         return ResponseEntity.ok(boardResponseDto);
+    }
+
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(SuccessMessage.DELETE_SUCCESS_MESSAGE.getSuccessMessage());
     }
 }

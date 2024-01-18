@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/api")
 public class UserController {
     private UserService userService;
 
@@ -17,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/api/user/login-page")
+    @GetMapping("/user/login-page")
     public String loginPage() {
         return "login";
     }
@@ -45,6 +46,12 @@ public class UserController {
         userService.updateUser(userId, requestDto);
         return new ResponseEntity<>(SuccessMessage.UPDATE_USER_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
     }
+
+//    @DeleteMapping("/users/{userId}")
+//    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+//        userService.deleteUser(userId);
+//        return new ResponseEntity<>(SuccessMessage.DELETE_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+//    }
 
     private ResponseEntity<String> handleRequest(RequestHandler handler) {
         try {

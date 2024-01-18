@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant,Long> {
     List<Participant> findAllByBoardId(Long boardId);
+
+    void deleteByBoardId(Long id);
 }

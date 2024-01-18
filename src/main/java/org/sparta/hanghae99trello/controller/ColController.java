@@ -16,22 +16,23 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/users/boards")
 public class ColController {
 
     private final ColService colService;
 
-    @GetMapping("/users/boards/{boardId}/columns")
+    @GetMapping("/{boardId}/columns")
     public List<ColResponseDto> getCols(@PathVariable Long boardId) {
         return colService.getCols(boardId);
     }
 
-    @PostMapping("/users/boards/{boardId}/columns")
+    @PostMapping("/{boardId}/columns")
     public ResponseEntity<String> CreateCol(@PathVariable Long boardId, @RequestBody ColRequestDto requestDto) {
         colService.createCol(boardId, requestDto);
         return new ResponseEntity<>(SuccessMessage.CREATE_COL_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
     }
 
-    @PutMapping("/users/boards/{boardId}/columns/{columnId}")
+    @PutMapping("/{boardId}/columns/{columnId}")
     public ResponseEntity<ColResponseDto> updateCol(@PathVariable Long boardId, @PathVariable Long columnId, @RequestBody ColRequestDto requestDto) {
         ColResponseDto colResponseDto = colService.updateCol(boardId, columnId, requestDto);
         return ResponseEntity.ok(colResponseDto);

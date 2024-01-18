@@ -10,11 +10,14 @@ import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.entity.Participant;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
+import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
 import org.sparta.hanghae99trello.repository.ColRepository;
 import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -38,7 +41,6 @@ public class BoardService {
 
         Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
-        // Initialize colList with an empty list by default
         List<Col> colList = new ArrayList<>();
 
         if (requestDto.getColList() != null) {
@@ -97,6 +99,15 @@ public class BoardService {
             participant.setBoard(board);
             board.getParticipants().add(participant);
         }
+    }
+
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+
+        List<Col> columns = colRepository.findByBoardId(boardId);
+        colRepository.deleteAll(columns);
+
+        boardRepository.delete(board);
     }
 
     private Set<Participant> convertStringArrayToParticipants(Set<String> participantNames) {

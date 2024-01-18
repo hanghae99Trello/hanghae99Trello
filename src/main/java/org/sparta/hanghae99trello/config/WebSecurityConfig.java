@@ -59,18 +59,16 @@ public class WebSecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-        http.authorizeHttpRequests((authorizeHttpRequests) ->
+        http.authorizeHttpRequests((authorizeHttpRequests)->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/hey").permitAll()
-                        .requestMatchers("/join").permitAll()
+                        .requestMatchers("/api/join").permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/resources/").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.PUT, "/users/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyAuthority("AUTH_USER")
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasAnyAuthority("AUTH_USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAnyAuthority("AUTH_USER")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAnyAuthority("AUTH_USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAnyAuthority("AUTH_USER")
                         .anyRequest().authenticated()
         );
 

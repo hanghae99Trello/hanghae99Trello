@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/users/boards")
 public class CardController {
 
     private final CardService cardService;
 
-    @PostMapping("/users/boards/{boardId}/columns/{columnId}/cards")
+    @PostMapping("/{boardId}/columns/{columnId}/cards")
     public ResponseEntity<CardResponseDto> createCard(@PathVariable Long boardId,
                                                       @PathVariable Long columnId,
                                                       @RequestBody CardRequestDto requestDto) {
@@ -28,7 +29,7 @@ public class CardController {
     }
 
 
-    @GetMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}")
+    @GetMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long boardId,
                                                    @PathVariable Long columnId,
                                                    @PathVariable Long cardId) {
@@ -36,7 +37,7 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }
 
-    @PutMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}")
+    @PutMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
     public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId,
                                                       @RequestBody CardRequestDto requestDto) {
         CardResponseDto cardResponseDto = cardService.updateCard(cardId, requestDto.getCardName(), requestDto.getCardDescription(),
