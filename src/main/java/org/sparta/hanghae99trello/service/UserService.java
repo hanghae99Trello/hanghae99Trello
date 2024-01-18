@@ -1,21 +1,19 @@
 package org.sparta.hanghae99trello.service;
 
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.dto.UserResponseDto;
-import org.sparta.hanghae99trello.entity.Board;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
-import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
 import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +22,7 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final ParticipantRepository participantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedissonClient redissonClient;
 
     public void createUser(UserRequestDto requestDto) {
         String name = requestDto.getName();
@@ -31,9 +30,20 @@ public class UserService {
         String password = requestDto.getPassword();
         String phone = requestDto.getPhone();
 
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = userRepository.save(new User(name, email, encodedPassword, phone));
-        new UserResponseDto(user);
+        String lockName = "createUserLock:" + email;
+
+        RLock lock = redissonClient.getLock(lockName);
+
+        try {
+            lock.lock(10, TimeUnit.SECONDS);
+
+            String encodedPassword = passwordEncoder.encode(password);
+            User user = userRepository.save(new User(name, email, encodedPassword, phone));
+            new UserResponseDto(user);
+
+        } finally {
+            lock.unlock();
+        }
     }
 
     public User getUser(Long userId) {
