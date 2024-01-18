@@ -20,7 +20,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+//@SpringBootTest
 @ActiveProfiles("test")
 public class UserServiceTest {
 
