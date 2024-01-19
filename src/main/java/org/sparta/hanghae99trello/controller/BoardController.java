@@ -23,8 +23,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/boards")
-    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto) {
-        return boardService.createBoard(requestDto);
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto) {
+        BoardResponseDto boardResponseDto = boardService.createBoard(requestDto);
+        return ResponseEntity.ok(boardResponseDto);
     }
 
     @GetMapping("/boards/{boardId}")
