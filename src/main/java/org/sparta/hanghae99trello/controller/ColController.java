@@ -27,9 +27,8 @@ public class ColController {
     }
 
     @PostMapping("/{boardId}/columns")
-    public ResponseEntity<String> CreateCol(@PathVariable Long boardId, @RequestBody ColRequestDto requestDto) {
-        colService.createCol(boardId, requestDto);
-        return new ResponseEntity<>(SuccessMessage.CREATE_COL_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+    public ColResponseDto CreateCol(@PathVariable Long boardId, @RequestBody ColRequestDto requestDto) {
+        return colService.createCol(boardId, requestDto);
     }
 
     @PutMapping("/{boardId}/columns/{columnId}")

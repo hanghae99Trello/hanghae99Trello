@@ -34,7 +34,7 @@ menu.list .viewlist {
 .dd {
     max-width: 100%;
     top: 88px;
-    margin: 0 auto;
+    margin-left: 40px;
     display: block;
     vertical-align: top;
 }
@@ -163,7 +163,7 @@ button {
 }
 
 ol.kanban.To-do {
-    border-top: 5px solid #FFB300;
+    border-top: 5px solid gray;
 }
 
 ol.kanban.Gone {
@@ -180,7 +180,6 @@ ol.kanban.Done {
 
 ol.kanban {
     border-top: 5px solid #78909C;
-    width: 20%;
     height: auto;
     margin: 1%;
     max-width: 250px;
@@ -368,4 +367,38 @@ ol.kanban {
     -webkit-box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .5);
     box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .5);
     cursor: move;
+}
+
+.popup-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 21px;
+    border-radius: 10px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+}
+
+.popup-form input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 16px;
+}
+
+.popup-form button {
+    background-color: gray;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.flex_container {
+    display: flex;
 }

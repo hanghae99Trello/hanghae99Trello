@@ -94,7 +94,7 @@
     <h2 style="margin: 40px 0 20px 0;">Your Boards</h2>
     <ul>
       <li class="board_list" th:each="board : ${userBoards}">
-        <a th:href="@{'/users/boards/details/' + ${board.id}}">
+        <a th:href="@{'/users/boards/' + ${board.id}}">
           <div class="board_list_box">
             <h3 th:text="${board.boardName}"></h3>
             <p th:text="${board.boardDescription}"></p>
