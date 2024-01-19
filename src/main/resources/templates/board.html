@@ -39,7 +39,7 @@
             </div>
         </div>
         <menu class="kanban">
-            <button>
+            <button id="openFormButton">
                 <i class="material-icons">settings</i>
             </button>
             <button>
@@ -51,19 +51,30 @@
             <button class="viewlist">
                 <i class="material-icons">view_list</i>
             </button>
-            <button class="add-column-button" onclick="openForm()">
+            <button class="add-column-button" onclick="openColumnForm()">
                 <i class="material-icons">playlist_add</i> Add new Column
             </button>
         </menu>
 
         <div class="popup-form" id="columnForm">
-            <form id="addBoardForm">
-                <div id="formErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+            <form id="addColumnForm">
+                <div id="columnFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
                 <input type="text" id="colName" name="colName" placeholder="Column Name" required><br>
                 <input type="text" id="colIndex" name="colIndex" placeholder="Column Index" required><br>
-                <!-- 추가 폼 요소들을 필요에 따라 추가할 수 있습니다 -->
-                <button type="button" onclick="submitForm()">Create Column</button>
-                <button type="button" onclick="closeForm()">Close</button>
+                <button type="button" onclick="submitColumnForm()">Create Column</button>
+                <button type="button" onclick="closeColumnForm()">Close</button>
+            </form>
+        </div>
+
+        <div class="popup-form" id="boardEditForm" style="display: none;">
+            <form id="editBoardForm">
+                <div id="editBoardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
+                <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
+                <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
+                <input type="text" id="participants" name="participants" placeholder="Participants"><br>
+                <button type="button" onclick="submitBoardEditForm()">Update Board</button>
+                <button type="button" onclick="closeBoardEditForm()">Close</button>
             </form>
         </div>
     </div>
@@ -71,16 +82,15 @@
         document.querySelector('#p1').addEventListener('mdl-componentupgraded', function() {
             this.MaterialProgress.setProgress(44);
         });
-        function openForm() {
+        function openColumnForm() {
             document.getElementById("columnForm").style.display = "block";
         }
 
-        function closeForm() {
+        function closeColumnForm() {
             document.getElementById("columnForm").style.display = "none";
         }
 
-        function submitForm() {
-            // 이 부분에서 보드 ID를 가져옴
+        function submitColumnForm() {
             const boardContainer = document.querySelector('.board_container');
             const boardId = boardContainer.getAttribute('data-board-id');
 
@@ -92,7 +102,6 @@
                 colIndex: colIndex
             };
 
-            // Ajax 호출
             fetch(`/api/users/boards/${boardId}/columns`, {
                 method: 'POST',
                 headers: {
@@ -103,15 +112,57 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
-                    closeForm();
+                    closeColumnForm();
                     location.reload();
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    document.getElementById("formErrorMessage").textContent = "Error creating column.";
+                    document.getElementById("columnFormErrorMessage").textContent = "컬럼 생성에 실패했습니다.";
                 });
         }
 
+        document.getElementById("openFormButton").addEventListener("click", function() {
+            document.getElementById("boardEditForm").style.display = "block";
+        });
+
+        function closeBoardEditForm() {
+            document.getElementById("boardEditForm").style.display = "none";
+        }
+
+        function submitBoardEditForm() {
+            const boardName = document.getElementById("boardName").value;
+            const boardDescription = document.getElementById("boardDescription").value;
+            const boardColor = document.getElementById("boardColor").value;
+            const participants = document.getElementById("participants").value;
+
+            const requestData = {
+                boardName: boardName,
+                boardDescription: boardDescription,
+                boardColor: boardColor,
+                participants: participants
+            };
+
+            const boardContainer = document.querySelector('.board_container');
+            const boardId = boardContainer.getAttribute('data-board-id');
+            fetch("/api/users/boards/" + boardId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {  // data가 존재하는 경우에만 리로드
+                        closeBoardEditForm();
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error("Error updating board:", error);
+                    document.getElementById("editBoardFormErrorMessage").textContent = "보드 수정에 실패했습니다.";
+                });
+        }
     </script>
 </body>
 </html>

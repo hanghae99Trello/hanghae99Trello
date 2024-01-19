@@ -41,28 +41,18 @@ public class BoardService {
 
         Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
-        List<Col> colList = new ArrayList<>();
-
-        if (requestDto.getColList() != null) {
-            colList = convertColRequestDtoList(requestDto.getColList());
-        }
-
         Board board = new Board(
                 requestDto.getBoardName(),
                 requestDto.getBoardColor(),
                 requestDto.getBoardDescription(),
                 createdBy,
-                participants,
-                colList
+                participants
         );
 
         for (Participant participant : participants) {
             participant.setBoard(board);
         }
 
-        for (Col col : colList) {
-            col.setBoard(board);
-        }
 
         board.setParticipants(participants);
         return new BoardResponseDto(boardRepository.save(board));
@@ -132,6 +122,8 @@ public class BoardService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
+        System.out.println("loggedInId = " + loggedInId);
+        System.out.println("boardCreatorId = " + boardCreatorId);
         return loggedInId.equals(boardCreatorId);
     }
 
