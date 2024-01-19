@@ -83,7 +83,7 @@
                 })
                 .fail(function (xhr, textStatus, errorThrown) {
                     console.log('statusCode: ' + xhr.status);
-                    showLoginFailedMessage(); // 실패 시 메시지 표시
+                    showLoginFailedMessage();
                 });
             });
 
@@ -101,7 +101,7 @@
                     }),
                 })
                     .done(function (res, status, xhr) {
-                        showSignupSuccessMessage(); // 성공 시 메시지 표시
+                        showSignupSuccessMessage();
                         console.log('Signup successful');
                     })
                     .fail(function (xhr, textStatus, errorThrown) {
