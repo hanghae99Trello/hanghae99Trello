@@ -40,6 +40,10 @@ public class Card {
     @Column(nullable = false)
     private double index;
 
+    public void addComment(Comment comment) {
+        this.commentList.add(comment);
+    }
+
 //    @Setter
 //    @JoinColumn(name = "previous_card_id")
 //    private Long previousCardId;
@@ -56,10 +60,7 @@ public class Card {
 //        this.commentList = new ArrayList<>();
 //    }
 //
-//    public void addComment(Comment comment) {
-//        this.commentList.add(comment);
-//    }
-//
+
 //    public void update(String cardName, String cardDescription, String color, List<User> operator, LocalDate dueDate) {
 //        this.cardName = cardName;
 //        this.cardDescription = cardDescription;
