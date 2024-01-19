@@ -2,9 +2,12 @@ package org.sparta.hanghae99trello.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
+import org.sparta.hanghae99trello.dto.ColResponseDto;
 import org.sparta.hanghae99trello.entity.Board;
+import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
 import org.sparta.hanghae99trello.service.BoardService;
+import org.sparta.hanghae99trello.service.ColService;
 import org.sparta.hanghae99trello.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import java.util.List;
 public class PageController {
     private final UserService userService;
     private final BoardService boardService;
+    private final ColService colService;
 
     @GetMapping("/")
     public String getUserDetails(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -42,10 +46,21 @@ public class PageController {
         return "sign";
     }
 
-    @GetMapping("/users/boards/details/{boardId}")
+    @GetMapping("/users/boards/{boardId}")
     public String boardPage(@PathVariable Long boardId, Model model) {
         BoardResponseDto board = boardService.getBoardById(boardId);
         model.addAttribute("board", board);
+
+        return "board";
+    }
+
+    @GetMapping("/users/boards/{boardId}/columns")
+    public String getColumns(@PathVariable Long boardId, Model model) {
+        BoardResponseDto board = boardService.getBoardById(boardId);
+        List<ColResponseDto> columns = colService.getCols(boardId);
+
+        model.addAttribute("board", board);
+        // model.addAttribute("columns", columns); // 이 부분은 주석 처리해주세요.
 
         return "board";
     }
