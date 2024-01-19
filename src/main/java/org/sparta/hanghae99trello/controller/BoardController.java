@@ -22,14 +22,14 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/boards")
-    public ResponseEntity<String> createBoard(@RequestBody BoardRequestDto requestDto) {
-        boardService.createBoard(requestDto);
-        return new ResponseEntity<>(SuccessMessage.CREATE_BOARD_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto) {
+        return boardService.createBoard(requestDto);
     }
 
-    @GetMapping("/boards")
-    public List<BoardResponseDto> getBoards() {
-        return boardService.getBoards();
+    @GetMapping("/boards/{boardId}")
+    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable Long boardId) {
+        BoardResponseDto boardResponseDto = boardService.getBoardById(boardId);
+        return ResponseEntity.ok(boardResponseDto);
     }
 
     @PutMapping("/boards/{boardId}")
