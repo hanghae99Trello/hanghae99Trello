@@ -11,13 +11,11 @@ public class ColResponseDto {
     private Long id;
     private String colName;
     private Long colIndex;
-    private Board board;
 
     public ColResponseDto(Col col) {
         this.id = col.getId();
         this.colName = col.getColName();
         this.colIndex = col.getColIndex();
-        this.board = col.getBoard();
     }
 }
 
