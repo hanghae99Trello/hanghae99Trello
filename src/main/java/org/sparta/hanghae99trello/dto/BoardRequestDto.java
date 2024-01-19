@@ -14,13 +14,11 @@ public class BoardRequestDto {
     private String boardColor;
     private String boardDescription;
     private Set<String> participants;
-    private List<ColRequestDto> colList;
 
-    public BoardRequestDto(String boardName, String boardColor, String boardDescription, Set<String> participants, List<ColRequestDto> colList) {
+    public BoardRequestDto(String boardName, String boardColor, String boardDescription, Set<String> participants) {
         this.boardName = boardName;
         this.boardColor = boardColor;
         this.boardDescription = boardDescription;
         this.participants = Collections.unmodifiableSet(participants);
-        this.colList = colList;
     }
 }

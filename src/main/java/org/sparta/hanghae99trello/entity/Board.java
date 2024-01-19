@@ -45,12 +45,11 @@ public class Board {
     @JsonManagedReference
     private List<Col> colList;
 
-    public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants, List<Col> colList) {
+    public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;
         this.boardColor = boardColor;
         this.boardDescription = boardDescription;
         this.createdBy = createdBy;
         this.participants = participants;
-        this.colList = colList;
     }
 }
