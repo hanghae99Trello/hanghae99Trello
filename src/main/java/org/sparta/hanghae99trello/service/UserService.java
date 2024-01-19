@@ -64,7 +64,6 @@ public class UserService {
 
 //    public void deleteUser(Long userId) {
 //        User user = findUser(userId);
-//
 //        List<Board> boards = boardRepository.findByCreatedBy(user);
 //
 //        for (Board board : boards) {
