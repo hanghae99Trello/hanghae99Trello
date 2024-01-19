@@ -1,5 +1,6 @@
 package org.sparta.hanghae99trello.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.service.UserService;
@@ -11,8 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
+@RequiredArgsConstructor
 public class SignController {
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/api/user/login-page")
     public String signPage() {

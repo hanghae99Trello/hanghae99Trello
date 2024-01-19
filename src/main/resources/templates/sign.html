@@ -19,16 +19,23 @@
             <div class="sign-up-container">
                 <form>
                     <h1>Create Account</h1>
-                    <input type="text" placeholder="Name">
-                    <input type="email" placeholder="Email">
-                    <input type="text" placeholder="Phone">
-                    <input type="password" placeholder="Password">
-                    <button class="form_btn">Sign Up</button>
+                    <input type="text" id="name" placeholder="Name">
+                    <input type="email" id="signupEmail" placeholder="Email">
+                    <input type="text" id="phone" placeholder="Phone">
+                    <input type="password" id="signupPassword" placeholder="Password">
+                    <p id="signupSuccessMessage" style="font-weight:100; text-align:center; color: green; display: none;">
+                        회원가입이 완료되었습니다!
+                    </p>
+                    <button class="form_btn" type="button" id="signUpBtn">Sign Up</button>
                 </form>
             </div>
             <div class="sign-in-container">
                 <form>
                     <h1>Sign In</h1>
+                    <p id="loginFailedMessage" style="font-weight:100; text-align:center; color: red; display: none;">
+                        로그인에 실패했습니다.<br />
+                        회원 정보를 확인해 주세요.
+                    </p>
                     <input type="email" name="email" id="email" placeholder="Email">
                     <input type="password" name="password" id="password" placeholder="Password">
                     <button class="form_btn" type="button" id="signInBtn">Sign In</button>
@@ -51,8 +58,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const signUpBtn = document.getElementById("signUp");
-            const signInBtn = document.getElementById("signInBtn"); // 'signIn'이 아닌 'signInBtn'로 수정
+            const signInBtn = document.getElementById("signInBtn");
             const container = document.querySelector(".container");
+            const signUpForm = document.getElementById("signupForm");
 
             signUpBtn.addEventListener("click", function() {
                 container.classList.add("right-panel-active");
@@ -61,7 +69,6 @@
             signInBtn.addEventListener("click", function() {
                 container.classList.remove("right-panel-active");
 
-                // 변경된 부분: 'onLogin()' 함수를 호출하지 않고, 로그인 요청 로직을 직접 처리
                 let email = $('#email').val();
                 let password = $('#password').val();
 
@@ -71,15 +78,42 @@
                     contentType: "application/json",
                     data: JSON.stringify({username: email, password: password}),
                 })
+                .done(function (res, status, xhr) {
+                    window.location.href = host;
+                })
+                .fail(function (xhr, textStatus, errorThrown) {
+                    console.log('statusCode: ' + xhr.status);
+                    showLoginFailedMessage(); // 실패 시 메시지 표시
+                });
+            });
+
+            $('#signUpBtn').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '/api/join',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        name: $('#name').val(),
+                        email: $('#signupEmail').val(),
+                        phone: $('#phone').val(),
+                        password: $('#signupPassword').val(),
+                        auth: 'USER'
+                    }),
+                })
                     .done(function (res, status, xhr) {
-                        window.location.href = host;
+                        showSignupSuccessMessage(); // 성공 시 메시지 표시
+                        console.log('Signup successful');
                     })
                     .fail(function (xhr, textStatus, errorThrown) {
-                        console.log('statusCode: ' + xhr.status);
-                        window.location.href = host + '/api/user/login-page?error'
+                        console.log('Signup failed');
                     });
             });
         });
+
+        function showSignupSuccessMessage() {
+            const signupSuccessMessage = document.getElementById('signupSuccessMessage');
+            signupSuccessMessage.style.display = 'block';
+        }
 
         $(document).ready(function () {
             // 토큰 삭제
@@ -112,6 +146,11 @@
                     console.log('statusCode: ' + xhr.status);
                     window.location.href = host + '/api/user/login-page?error'
                 });
+        }
+
+        function showLoginFailedMessage() {
+            const loginFailedMessage = document.getElementById('loginFailedMessage');
+            loginFailedMessage.style.display = 'block';
         }
     </script>
 </body>
