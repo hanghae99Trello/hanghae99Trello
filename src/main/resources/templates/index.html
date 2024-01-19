@@ -4,18 +4,165 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Details</title>
+  <style>
+    * {
+      margin:0;
+      padding:0;
+    }
+    .board_container {
+      width: 80%;
+      margin: auto;
+      text-align: center;
+    }
+
+    .board_container > p {
+      line-height: 2em;
+    }
+
+    .board_list {
+      list-style: none;
+      width: 100%;
+    }
+
+    .board_list_box {
+      background-color: gray;
+      text-align: center;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .add-board-button {
+      background-color: gray;
+      color: white;
+      font-size: 22px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .popup-form {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup-form input {
+      margin-right: 1px;
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    .popup-form button {
+      background-color: gray;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    ul {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome, <span th:text="${userName}"></span>!</h1>
-  <p>Your ID: <span th:text="${userId}"></span></p>
-  <p>Your Email: <span th:text="${userEmail}"></span></p>
-  <p>Your Phone: <span th:text="${userPhone}"></span></p>
+  <div class="board_container">
+    <h1 style="margin: 20px;">Welcome, <span th:text="${userName}"></span>!</h1>
+    <p>Your ID: <span th:text="${userId}"></span></p>
+    <p>Your Email: <span th:text="${userEmail}"></span></p>
+    <p>Your Phone: <span th:text="${userPhone}"></span></p>
 
-  <h2>Your Boards:</h2>
-  <ul>
-    <li th:each="board : ${userBoards}">
-      <span th:text="${board.name}"></span>
-    </li>
-  </ul>
+    <h2 style="margin: 40px 0 20px 0;">Your Boards</h2>
+    <ul>
+      <li class="board_list" th:each="board : ${userBoards}">
+        <a th:href="@{'/users/boards/details/' + ${board.id}}">
+          <div class="board_list_box">
+            <h3 th:text="${board.boardName}"></h3>
+            <p th:text="${board.boardDescription}"></p>
+          </div>
+        </a>
+      </li>
+      <li class="board_list">
+          <div class="board_list_box">
+            <button class="add-board-button" onclick="openForm()">+</button>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <div class="popup-form" id="boardForm">
+      <form id="addBoardForm">
+        <div id="formErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+        <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
+        <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
+        <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
+        <input type="text" id="participants" name="participants" placeholder="Participants"><br>
+        <button type="button" onclick="submitForm()">Submit</button>
+        <button type="button" onclick="closeForm()">Close</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openForm() {
+      document.getElementById("boardForm").style.display = "block";
+    }
+
+    function closeForm() {
+      document.getElementById("boardForm").style.display = "none";
+    }
+
+    function submitForm() {
+      const boardName = document.getElementById("boardName").value;
+      const boardColor = document.getElementById("boardColor").value;
+      const boardDescription = document.getElementById("boardDescription").value;
+      const participants = document.getElementById("participants").value.split(',').map(participant => participant.trim());
+
+      const data = {
+        boardName: boardName,
+        boardColor: boardColor,
+        boardDescription: boardDescription,
+        participants: participants
+      };
+
+      // Ajax 호출
+      fetch('/api/users/boards', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Success:', data);
+                closeForm();
+                location.reload();
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("formErrorMessage").textContent = "Error creating board.";
+              });
+    }
+  </script>
 </body>
 </html>

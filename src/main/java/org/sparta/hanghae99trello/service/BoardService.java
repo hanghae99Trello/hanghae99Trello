@@ -35,7 +35,7 @@ public class BoardService {
     private final ColRepository colRepository;
 
     @Transactional
-    public void createBoard(BoardRequestDto requestDto) {
+    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User createdBy = userDetails.getUser();
 
@@ -65,7 +65,7 @@ public class BoardService {
         }
 
         board.setParticipants(participants);
-        boardRepository.save(board);
+        return new BoardResponseDto(boardRepository.save(board));
     }
 
 
@@ -108,6 +108,13 @@ public class BoardService {
         colRepository.deleteAll(columns);
 
         boardRepository.delete(board);
+    }
+
+    public BoardResponseDto getBoardById(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() ->
+            new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage())
+        );
+        return new BoardResponseDto(board);
     }
 
     private Set<Participant> convertStringArrayToParticipants(Set<String> participantNames) {
