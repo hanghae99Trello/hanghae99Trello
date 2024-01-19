@@ -1,5 +1,6 @@
 package org.sparta.hanghae99trello.service;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 
 import org.sparta.hanghae99trello.dto.UserRequestDto;
@@ -48,7 +49,6 @@ public class UserService {
 
         } finally {
             lock.unlock(); // 락 해제
-
         }
     }
 
@@ -74,6 +74,12 @@ public class UserService {
 //
 //        userRepository.delete(user);
 //    }
+
+    @PreDestroy
+    public void preDestroy() {
+        // 애플리케이션 종료 시 실행될 코드
+        redissonClient.shutdown();
+    }
 
     private User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
