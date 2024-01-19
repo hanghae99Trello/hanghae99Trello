@@ -1,6 +1,6 @@
 package org.sparta.hanghae99trello.entity;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,14 +27,6 @@ public class Card {
     @Column(nullable = false)
     private String cardColor;
 
-    @ManyToMany
-    @JoinTable(
-            name = "operator",
-            joinColumns =  @JoinColumn(name = "card_ids"),
-            inverseJoinColumns = @JoinColumn(name = "user_ids")
-    )
-    private List<User> operators;
-
     @OneToMany(mappedBy = "card",cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<Comment> commentList;
@@ -42,33 +34,39 @@ public class Card {
     @Column(nullable = true)
     private LocalDate dueDate;
 
-    @Setter
-    @JoinColumn(name = "previous_card_id")
-    private Long previousCardId;
+    @OneToMany
+    private List<Operator> operators;
 
-    @Setter
-    @JoinColumn(name = "next_card_id")
-    private Long nextCardId;
+    @Column(nullable = false)
+    private double index;
 
-    public Card(String cardName, String cardDescription, String color, List<User> operators) {
-        this.cardName = cardName;
-        this.cardDescription = cardDescription;
-        this.cardColor = color;
-        this.operators = operators != null ? operators : new ArrayList<>();
-        this.commentList = new ArrayList<>();
-    }
+//    @Setter
+//    @JoinColumn(name = "previous_card_id")
+//    private Long previousCardId;
 
-    public void addComment(Comment comment) {
-        this.commentList.add(comment);
-    }
-
-    public void update(String cardName, String cardDescription, String color, List<User> operator, LocalDate dueDate) {
-        this.cardName = cardName;
-        this.cardDescription = cardDescription;
-        this.cardColor = color;
-        this.operators = operator;
-        this.dueDate = dueDate;
-    }
+//    @Setter
+//    @JoinColumn(name = "next_card_id")
+//    private Long nextCardId;
+//
+//    public Card(String cardName, String cardDescription, String color, List<User> operators) {
+//        this.cardName = cardName;
+//        this.cardDescription = cardDescription;
+//        this.cardColor = color;
+//        this.operators = operators != null ? operators : new ArrayList<>();
+//        this.commentList = new ArrayList<>();
+//    }
+//
+//    public void addComment(Comment comment) {
+//        this.commentList.add(comment);
+//    }
+//
+//    public void update(String cardName, String cardDescription, String color, List<User> operator, LocalDate dueDate) {
+//        this.cardName = cardName;
+//        this.cardDescription = cardDescription;
+//        this.cardColor = color;
+//        this.operators = operator;
+//        this.dueDate = dueDate;
+//    }
 
 
 }
