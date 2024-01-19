@@ -2,23 +2,23 @@ package org.sparta.hanghae99trello.service;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.dto.UserResponseDto;
+import org.sparta.hanghae99trello.entity.Board;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
 import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +31,12 @@ public class UserService {
 
     @Transactional
     public void createUser(UserRequestDto requestDto) {
-        String lockKey = "createUserLock"; // 락의 키 설정
+        String lockKey = "createUserLock";
 
         RLock lock = redissonClient.getLock(lockKey);
         try {
-            lock.lock(); // 락 획득
+            lock.lock();
 
-            // createUser 메서드의 나머지 로직 수행
             String name = requestDto.getName();
             String email = requestDto.getEmail();
             String password = requestDto.getPassword();
@@ -48,7 +47,7 @@ public class UserService {
             new UserResponseDto(user);
 
         } finally {
-            lock.unlock(); // 락 해제
+            lock.unlock();
         }
     }
 
@@ -73,6 +72,13 @@ public class UserService {
 //
 //        userRepository.delete(user);
 //    }
+
+    public List<Board> getUserBoards(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+
+        return new ArrayList<>(user.getCreatedBoards());
+    }
 
     @PreDestroy
     public void preDestroy() {
