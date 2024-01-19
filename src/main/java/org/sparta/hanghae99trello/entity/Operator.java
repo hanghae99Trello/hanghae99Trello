@@ -13,11 +13,9 @@ public class Operator {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
     @ManyToOne
-    @JoinColumn(name = "participant_id", nullable = false)
     private Participant participant;
 
 

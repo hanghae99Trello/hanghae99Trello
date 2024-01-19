@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name="cards")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +31,15 @@ public class Card {
     @OneToMany(mappedBy = "card",cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    private List<Operator> operators;
+
     @Column(nullable = true)
     private LocalDate dueDate;
 
-    @OneToMany
-    private List<Operator> operators;
-
     @Column
     @Setter
-    private double index;
+    private double orderIndex;
 
     public Card(String cardName, String cardDescription, String color) {
         this.cardName = cardName;
@@ -55,6 +56,15 @@ public class Card {
     public void updateOperator(Operator operator) {
         this.operators.add(operator);
     }
+
+    public void update(String cardName, String cardDescription, String color, LocalDate dueDate) {
+        this.cardName = cardName;
+        this.cardDescription = cardDescription;
+        this.cardColor = color;
+        this.dueDate = dueDate;
+    }
+
+
 
 //    @Setter
 //    @JoinColumn(name = "previous_card_id")
@@ -73,13 +83,7 @@ public class Card {
 //    }
 //
 
-//    public void update(String cardName, String cardDescription, String color, List<User> operator, LocalDate dueDate) {
-//        this.cardName = cardName;
-//        this.cardDescription = cardDescription;
-//        this.cardColor = color;
-//        this.operators = operator;
-//        this.dueDate = dueDate;
-//    }
+
 
 
 }

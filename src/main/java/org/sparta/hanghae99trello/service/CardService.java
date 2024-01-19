@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 //TODO:: 유저 권한 확인 필요
 @Service
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class CardService {
     private final CardRepository cardRepository;
     private final ColRepository colRepository;
     private final ParticipantRepository participantRepository;
-    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final OperatorRepository operatorRepository;
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
@@ -27,17 +29,8 @@ public class CardService {
 
         Card card = new Card(cardName, cardDescription, color);
         cardRepository.save(card);
-
-        List<Participant> participants = participantRepository.findByIdIn(operatorIds);
-        for (Participant participant : participants) {
-            if(!boardId.equals(participant.getBoard().getId())){
-                throw new IllegalArgumentException("보드에 해당하지 않는 참여자 입니다.");
-            }
-            Operator operator = new Operator(card,participant);
-            operatorRepository.save(operator);
-            card.updateOperator(operator);
-        }
-        card.setIndex(card.getId());
+        updateOperator(boardId, card, operatorIds);
+        card.setOrderIndex(card.getId());
         return new CardResponseDto(card);
     }
 
@@ -46,23 +39,40 @@ public class CardService {
         Card card = getCardById(cardId);
         return new CardResponseDto(card);
     }
+    @Transactional
+    public CardResponseDto updateCard(Long boardId,Long cardId, String cardName, String cardDescription,
+                                      String color, List<Long> operatorIds, LocalDate dueDate) {
+        Card card = getCardById(cardId);
+        card.update(cardName, cardDescription, color, dueDate);
+        updateOperator(boardId, card, operatorIds);
+        cardRepository.save(card);
+        return new CardResponseDto(card);
+    }
+    @Transactional
+    public void updateOperator(Long boardId, Card card, List<Long> operatorIds) {
+        if (card == null) {
+            throw new IllegalArgumentException("Card cannot be null");
+        }
+        List<Participant> participants = participantRepository.findByIdIn(operatorIds);
+        List<Participant> operatorsInCard = card.getOperators().stream().map(Operator::getParticipant).toList();
+        for (Participant participant : participants) {
+            if(!boardId.equals(participant.getBoard().getId())){
+                throw new IllegalArgumentException("보드에 해당하지 않는 참여자 입니다.");
+            }
+            if (!operatorsInCard.contains(participant)) {
+                Operator operator = new Operator(card,participant);
+                operatorRepository.save(operator);
+                card.updateOperator(operator);
+            }
+        }
+    }
 
-//    @Transactional
-//    public CardResponseDto updateCard(Long cardId, String cardName, String cardDescription, String color, List<Long> operatorIds, LocalDate dueDate) {
-//        Card card = getCardById(cardId);
-//        List<User> operators = userRepository.findByIdIn(operatorIds);
-//        card.update(cardName, cardDescription, color, operators, dueDate);
-//        return new CardResponseDto(card);
-//    }
-//
-//    @Transactional
-//    public void deleteCard(Long columnId, Long cardId) {
-//        Col col = getColById(columnId);
-//        Card card = getCardById(cardId);
-//        removeCardAssociations(col, card);
-//        cardRepository.delete(card);
-//    }
-//
+    @Transactional
+    public void deleteCard(Long cardId) {
+        Card card = getCardById(cardId);
+        cardRepository.delete(card);
+    }
+
 //    @Transactional
 //    public CardResponseDto updateCardColumn(Long cardId, Long from, Long to) {
 //        Col fromCol = getColById(from);

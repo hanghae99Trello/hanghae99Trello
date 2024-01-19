@@ -14,11 +14,9 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "participant_id")
     private Participant participant;
 
     @ManyToOne
-    @JoinColumn(name = "card_id")
     private Card card;
 
     @Column(nullable = false)

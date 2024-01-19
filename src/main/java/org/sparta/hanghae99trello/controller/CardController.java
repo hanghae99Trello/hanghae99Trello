@@ -38,20 +38,20 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }
 
-//    @PutMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
-//    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long cardId,
-//                                                      @RequestBody CardRequestDto requestDto) {
-//        CardResponseDto cardResponseDto = cardService.updateCard(cardId, requestDto.getCardName(), requestDto.getCardDescription(),
-//                requestDto.getColor(), requestDto.getOperatorIds(), requestDto.getDueDate());
-//        return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
-//    }
-//
-//    @DeleteMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}")
-//    public ResponseEntity<String> deleteCard(@PathVariable Long columnId,
-//                                             @PathVariable Long cardId) {
-//        cardService.deleteCard(columnId, cardId);
-//        return new ResponseEntity<>("카드 삭제가 완료되었습니다.", HttpStatus.OK);
-//    }
+    @PutMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
+    public ResponseEntity<CardResponseDto> updateCard(@PathVariable Long boardId,
+                                                      @PathVariable Long cardId,
+                                                      @RequestBody CardRequestDto requestDto) {
+        CardResponseDto cardResponseDto = cardService.updateCard(boardId, cardId, requestDto.getCardName(),
+                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds(), requestDto.getDueDate());
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
+    }
+
+    @DeleteMapping("/{boardId}/columns/{columnId}/cards/{cardId}")
+    public ResponseEntity<String> deleteCard(@PathVariable Long cardId) {
+        cardService.deleteCard(cardId);
+        return new ResponseEntity<>("카드 삭제가 완료되었습니다.", HttpStatus.OK);
+    }
 //
 //    //컬럼 간 카드 이동
 //    @PutMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}/col")
