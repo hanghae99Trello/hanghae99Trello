@@ -18,9 +18,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users/{userId}")
-    public User getUser(@PathVariable Long userId) {
-        return userService.getUser(userId);
+    @PostMapping("/join")
+    public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
+        return handleRequest(() -> {
+            userService.createUser(requestDto);
+            return new ResponseEntity<>(SuccessMessage.JOIN_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+        });
     }
 
     @PutMapping("/users/{userId}")

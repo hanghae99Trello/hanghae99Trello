@@ -19,6 +19,9 @@
             <div class="sign-up-container">
                 <form>
                     <h1>Create Account</h1>
+                    <p id="signupWarningMessage" style="font-weight:100; text-align:center; color: red; display: none;">
+                        모든 정보를 입력해주세요.
+                    </p>
                     <input type="text" id="name" placeholder="Name">
                     <input type="email" id="signupEmail" placeholder="Email">
                     <input type="text" id="phone" placeholder="Phone">
@@ -56,67 +59,7 @@
         </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const signUpBtn = document.getElementById("signUp");
-            const signInBtn = document.getElementById("signInBtn");
-            const container = document.querySelector(".container");
-            const signUpForm = document.getElementById("signupForm");
-
-            signUpBtn.addEventListener("click", function() {
-                container.classList.add("right-panel-active");
-            });
-
-            signInBtn.addEventListener("click", function() {
-                container.classList.remove("right-panel-active");
-
-                let email = $('#email').val();
-                let password = $('#password').val();
-
-                $.ajax({
-                    type: "POST",
-                    url: `/api/user/login`,
-                    contentType: "application/json",
-                    data: JSON.stringify({username: email, password: password}),
-                })
-                .done(function (res, status, xhr) {
-                    window.location.href = host;
-                })
-                .fail(function (xhr, textStatus, errorThrown) {
-                    console.log('statusCode: ' + xhr.status);
-                    showLoginFailedMessage();
-                });
-            });
-
-            $('#signUpBtn').click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: '/api/join',
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        name: $('#name').val(),
-                        email: $('#signupEmail').val(),
-                        phone: $('#phone').val(),
-                        password: $('#signupPassword').val(),
-                        auth: 'USER'
-                    }),
-                })
-                    .done(function (res, status, xhr) {
-                        showSignupSuccessMessage();
-                        console.log('Signup successful');
-                    })
-                    .fail(function (xhr, textStatus, errorThrown) {
-                        console.log('Signup failed');
-                    });
-            });
-        });
-
-        function showSignupSuccessMessage() {
-            const signupSuccessMessage = document.getElementById('signupSuccessMessage');
-            signupSuccessMessage.style.display = 'block';
-        }
-
         $(document).ready(function () {
-            // 토큰 삭제
             Cookies.remove('Authorization', {path: '/'});
         });
 
@@ -128,6 +71,73 @@
             const errorDiv = document.getElementById('login-failed');
             errorDiv.style.display = 'block';
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const signUpBtn = document.getElementById("signUp");
+            const signIn = document.getElementById("signIn");
+            const signInBtn = document.getElementById("signInBtn");
+            const container = document.querySelector(".container");
+
+            signUpBtn.addEventListener("click", function() {
+                container.classList.add("right-panel-active");
+            });
+
+            signIn.addEventListener("click", function() {
+                container.classList.remove("right-panel-active");
+            });
+
+            signInBtn.addEventListener("click", function() {
+                let email = $('#email').val();
+                let password = $('#password').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: `/api/user/login`,
+                    contentType: "application/json",
+                    data: JSON.stringify({username: email, password: password}),
+                })
+                .done(function (res, status, xhr) {
+                    // 홈 화면으로 이동
+                    window.location.href = host;
+                })
+                .fail(function (xhr, textStatus, errorThrown) {
+                    console.log('statusCode: ' + xhr.status);
+                    showLoginFailedMessage();
+                });
+            });
+
+            $('#signUpBtn').click(function () {
+                const name = $('#name').val();
+                const email = $('#signupEmail').val();
+                const phone = $('#phone').val();
+                const password = $('#signupPassword').val();
+
+                if (!name || !email || !phone || !password) {
+                    showSignupWarningMessage();
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '/api/join',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        password: password,
+                        auth: 'USER'
+                    }),
+                })
+                .done(function (res, status, xhr) {
+                    showSignupSuccessMessage();
+                    console.log('Signup successful');
+                })
+                .fail(function (xhr, textStatus, errorThrown) {
+                    console.log('Signup failed');
+                });
+            });
+        });
 
         function onLogin() {
             let email = $('#email').val();
@@ -146,6 +156,16 @@
                     console.log('statusCode: ' + xhr.status);
                     window.location.href = host + '/api/user/login-page?error'
                 });
+        }
+
+        function showSignupWarningMessage() {
+            const signupWarningMessage = document.getElementById('signupWarningMessage');
+            signupWarningMessage.style.display = 'block';
+        }
+
+        function showSignupSuccessMessage() {
+            const signupSuccessMessage = document.getElementById('signupSuccessMessage');
+            signupSuccessMessage.style.display = 'block';
         }
 
         function showLoginFailedMessage() {
