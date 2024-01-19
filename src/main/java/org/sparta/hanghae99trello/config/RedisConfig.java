@@ -20,7 +20,7 @@ public class RedisConfig {
 //                .setAddress("redis://localhost:6379");
 
         config.useSingleServer()
-                .setAddress("redis://127.0.0.1:6379");
+                .setAddress("redis://172.31.0.96:6379");
 
         return Redisson.create(config);
     }
