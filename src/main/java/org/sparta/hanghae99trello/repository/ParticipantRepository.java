@@ -10,6 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant,Long> {
     List<Participant> findAllByBoardId(Long boardId);
+    List<Participant> findByIdIn(List<Long> operatorIds);
     Participant findByBoardIdAndUserId(Long boardId, Long userId);
     void deleteByBoardId(Long id);
+
+
 }

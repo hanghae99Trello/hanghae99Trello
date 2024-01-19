@@ -21,4 +21,8 @@ public class Operator {
     private Participant participant;
 
 
+    public Operator(Card card, Participant participant) {
+        this.card = card;
+        this.participant = participant;
+    }
 }

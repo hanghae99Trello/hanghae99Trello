@@ -28,7 +28,6 @@ public class Card {
     private String cardColor;
 
     @OneToMany(mappedBy = "card",cascade = CascadeType.REMOVE)
-    @JsonManagedReference
     private List<Comment> commentList;
 
     @Column(nullable = true)
@@ -37,11 +36,24 @@ public class Card {
     @OneToMany
     private List<Operator> operators;
 
-    @Column(nullable = false)
+    @Column
+    @Setter
     private double index;
+
+    public Card(String cardName, String cardDescription, String color) {
+        this.cardName = cardName;
+        this.cardDescription = cardDescription;
+        this.cardColor = color;
+        this.operators = new ArrayList<>();
+        this.commentList = new ArrayList<>();
+    }
 
     public void addComment(Comment comment) {
         this.commentList.add(comment);
+    }
+
+    public void updateOperator(Operator operator) {
+        this.operators.add(operator);
     }
 
 //    @Setter
