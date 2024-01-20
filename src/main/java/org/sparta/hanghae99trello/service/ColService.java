@@ -69,7 +69,6 @@ public class ColService {
 
     public ColResponseDto updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
         String lockKey = "ColLock";
-
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
@@ -77,10 +76,7 @@ public class ColService {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
 
-            lock.lock();
-
             Board board = boardService.findBoard(boardId);
-
             Col col = findCol(columnId);
 
             if (!col.getBoard().getId().equals(boardId)) {
@@ -88,48 +84,35 @@ public class ColService {
             }
 
             col.setColName(requestDto.getColName());
-
             return new ColResponseDto(colRepository.save(col));
-            } finally {
-                if (lock.isHeldByCurrentThread()) {
-                    lock.unlock();
-                }
-            }
+        } finally {
+            lock.unlock();
+        }
     }
 
+
+
     public void deleteCol(Long boardId, Long columnId) {
-        String lockkey = "ColLock";
+        String lockKey = "ColLock";
+        RLock lock = redissonClient.getLock(lockKey);
 
-        RLock lock = redissonClient.getLock(lockkey);
-
-        try {
-            if (!lock.tryLock()) {
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
-
-            lock.lock();
-
-            Board board = boardService.findBoard(boardId);
-
-            Col col = findCol(columnId);
-
-            if (!col.getBoard().getId().equals(board.getId())) {
-                throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
-            }
-
-            colRepository.deleteById(columnId);
-        } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
+        if (!lock.tryLock()) {
+            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
         }
 
+        Board board = boardService.findBoard(boardId);
+        Col col = findCol(columnId);
+
+        if (!col.getBoard().getId().equals(board.getId())) {
+            throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+        }
+
+        colRepository.deleteById(columnId);
     }
 
     @Transactional
     public ColResponseDto updateColIdx(Long boardId, Long columnId, Long columnOrderIndex) {
         String lockKey = "ColLock";
-
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
@@ -137,10 +120,7 @@ public class ColService {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
 
-            lock.lock();
-
             Board board = boardService.findBoard(boardId);
-
             Col columnToUpdate = findCol(columnId);
 
             if (!columnToUpdate.getBoard().getId().equals(boardId)) {
@@ -148,11 +128,8 @@ public class ColService {
             }
 
             List<Col> colList = board.getColList();
-
             Long currentIndex = columnToUpdate.getColIndex();
-
             colList.remove(columnToUpdate);
-
             columnToUpdate.setColIndex(columnOrderIndex);
 
             for (Col col : colList) {

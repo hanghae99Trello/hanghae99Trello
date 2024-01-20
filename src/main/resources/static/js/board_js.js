@@ -621,10 +621,15 @@ function submitColIndexEditForm(button) {
     const colEditIndex = $("#colEditIndex-" + columnId).val();
     const boardId = $(".board_container").data("board-id");
 
+    const data = {
+        colIndex: colEditIndex
+    };
+
     $.ajax({
         type: "PUT",
         url: `/api/users/boards/${boardId}/columns/${columnId}/${colEditIndex}`,
         contentType: "application/json",
+        data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
             closeColIndexEditForm(columnId);
