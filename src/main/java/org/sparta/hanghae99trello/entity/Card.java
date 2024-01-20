@@ -28,10 +28,10 @@ public class Card {
     private String cardColor;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
-    private List<Operator> operators;
+    private List<Operator> operators = new ArrayList<>();
 
     @Column(nullable = true)
     private LocalDate dueDate;
@@ -49,8 +49,7 @@ public class Card {
         this.cardDescription = cardDescription;
         this.cardColor = color;
         this.col = col;
-        this.operators = new ArrayList<>();
-        this.commentList = new ArrayList<>();
+
     }
 
     public void addComment(Comment comment) {
