@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arbutus+Slab" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css" />
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
@@ -20,17 +21,47 @@
             </h1>
         </div>
         <div class="flex_container">
-            <div class="dd" th:each="column : ${board.colList}" th:attr="data-column-id=${column.id}">
-                <ol class="kanban To-do">
+            <div class="dd" th:each="column : ${board.colList}">
+                <!-- 컬럼 인덱스 수정 -->
+                <div>
+                    <div class="popup-form" th:id="'ColIndexEditForm-' + ${column.id}">
+                        <form th:id="'editColIndexForm-' + ${column.id}">
+                            <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                            <input type="text" th:id="'colEditIndex-' + ${column.id}" name="colEditIndex" placeholder="Column Index" required><br>
+                            <button type="button" th:attr="data-column-id=${column.id}" onclick="submitColIndexEditForm(this)">Edit Column Index</button>
+                            <button type="button" th:attr="data-column-id=${column.id}" onclick="closeColIndexEditForm(this)">Close</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 컬럼 이름 수정 -->
+                <div>
+                    <div class="popup-form" th:id="'ColNameEditForm-' + ${column.id}">
+                        <form th:id="'editColumnForm-' + ${column.id}">
+                            <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                            <input type="text" th:id="'colEditName-' + ${column.id}" name="colEditName" placeholder="Column Name" required><br>
+                            <button type="button" th:attr="data-column-id=${column.id}" onclick="submitColNameEditForm(this)">Edit Column Name</button>
+                            <button type="button" th:attr="data-column-id=${column.id}" onclick="closeColNameEditForm(this)">Close</button>
+                        </form>
+                    </div>
+                </div>
+
+                <ol class="kanban To-do" th:attr="data-column-id=${column.id}" th:data-col-index="${column.colIndex}">
                     <div class="button_container">
                         <button class="delete-column-button" id="ColumnDeleteButton" th:attr="data-column-id=${column.id}" onclick="deleteColumn(this)">
-                            <span class="material-symbols-outlined">delete_forever</span>
+                            <span style="margin-top: 5px;" class="material-symbols-outlined">delete_forever</span>
                         </button>
-
                     </div>
                     <div class="kanban__title" style="display: flex; justify-content: space-between;">
-                        <h2 th:text="${column.colName}">Column Name</h2>
-                        <button id="ColumnEditButton" onclick="openColumnEditForm()">
+                        <div style="display: flex;">
+                            <h2 th:text="${column.colName}">Column Name</h2>
+                            <button id="ColNameEditButton" th:attr="data-column-id=${column.id}" onclick="openColNameEditForm(this)">
+                                <span style="margin-left: 2px;" class="material-symbols-outlined">
+                                    edit
+                                </span>
+                            </button>
+                        </div>
+                        <button id="ColIndexEditButton" th:attr="data-column-id=${column.id}" onclick="openColIndexEditForm(this)">
                             <i class="material-icons">settings</i>
                         </button>
                     </div>
@@ -80,17 +111,6 @@
                 <input type="text" id="colIndex" name="colIndex" placeholder="Column Index" required><br>
                 <button type="button" onclick="submitColumnAddForm()">Create Column</button>
                 <button type="button" onclick="closeColumnAddForm()">Close</button>
-            </form>
-        </div>
-
-        <!--컬럼 수정-->
-        <div class="popup-form" id="ColumnEditForm">
-            <form id="editColumnForm">
-                <div id="editColumnFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                <input type="text" id="colEditName" name="colEditName" placeholder="Column Name" required><br>
-                <input type="text" id="colEditIndex" name="colEditIndex" placeholder="Column Index" required><br>
-                <button type="button" onclick="submitColumnEditForm()">Create Column</button>
-                <button type="button" onclick="closeColumnEditForm()">Close</button>
             </form>
         </div>
     </div>

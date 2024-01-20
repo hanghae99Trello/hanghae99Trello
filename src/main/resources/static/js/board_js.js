@@ -514,7 +514,6 @@ function goToMyPage() {
 }
 
 
-
 // 보드 수정
 function openBoardEditForm() {
     document.getElementById("BoardEditForm").style.display = "block";
@@ -605,25 +604,57 @@ function submitColumnAddForm() {
 }
 
 
-// 컬럼 수정
-function openColumnEditForm() {
-    document.getElementById("ColumnEditForm").style.display = "block";
+
+// 컬럼 인덱스 수정
+function openColIndexEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("ColIndexEditForm-" + columnId).style.display = "block";
 }
 
-function closeColumnEditForm() {
-    document.getElementById("ColumnEditForm").style.display = "none";
+function closeColIndexEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("ColIndexEditForm-" + columnId).style.display = "none";
 }
 
-function submitColumnEditForm() {
-    const colEditName = $("#colEditName").val();
-    const colEditIndex = $("#colEditIndex").val();
+function submitColIndexEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    const colEditIndex = $("#colEditIndex-" + columnId).val();
     const boardId = $(".board_container").data("board-id");
-    const columnId = $(".dd").data("column-id");
 
+    $.ajax({
+        type: "PUT",
+        url: `/api/users/boards/${boardId}/columns/${columnId}/${colEditIndex}`,
+        contentType: "application/json",
+        success: function (response) {
+            console.log("Column updated successfully:", response);
+            closeColIndexEditForm(columnId);
+        },
+        error: function (error) {
+            console.error("Error updating column:", error);
+            document.getElementById("editColumnFormErrorMessage-" + columnId).textContent = "컬럼 수정에 실패했습니다.";
+        }
+    });
+}
+
+
+// 컬럼 이름 수정
+function openColNameEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("ColNameEditForm-" + columnId).style.display = "block";
+}
+
+function closeColNameEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("ColNameEditForm-" + columnId).style.display = "none";
+}
+
+function submitColNameEditForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    const colEditName = $("#colEditName-" + columnId).val();
+    const boardId = $(".board_container").data("board-id");
 
     const data = {
-        colName: colEditName,
-        colIndex: colEditIndex
+        colName: colEditName
     };
 
     $.ajax({
@@ -633,19 +664,18 @@ function submitColumnEditForm() {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
-            closeColumnEditForm();
+            closeColNameEditForm(columnId);
         },
         error: function (error) {
             console.error("Error updating column:", error);
-            document.getElementById("editColumnFormErrorMessage").textContent = "컬럼 수정에 실패했습니다.";
+            document.getElementById("editColumnFormErrorMessage-" + columnId).textContent = "컬럼 수정에 실패했습니다.";
         }
     });
 }
 
-
 // 컬럼 삭제
 function deleteColumn(button) {
-    var columnId = $(button).attr("data-column-id");
+    const columnId = $(button).attr("data-column-id");
     const boardId = $(".board_container").data("board-id");
 
     $.ajax({
