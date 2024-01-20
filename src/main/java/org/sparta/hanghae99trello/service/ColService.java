@@ -13,9 +13,7 @@ import org.sparta.hanghae99trello.repository.ColRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +56,6 @@ public class ColService {
         }
     }
 
-
     public List<ColResponseDto> getCols(Long boardId) {
         List<Col> cols = colRepository.findByBoardId(boardId);
 
@@ -69,16 +66,12 @@ public class ColService {
 
     public ColResponseDto updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
         String lockKey = "ColLock";
-
         RLock lock = redissonClient.getLock(lockKey);
-
         try {
             if (!lock.tryLock()) {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
-
             lock.lock();
-
             Board board = boardService.findBoard(boardId);
 
             Col col = findCol(columnId);
@@ -99,16 +92,12 @@ public class ColService {
 
     public void deleteCol(Long boardId, Long columnId) {
         String lockkey = "ColLock";
-
         RLock lock = redissonClient.getLock(lockkey);
-
         try {
             if (!lock.tryLock()) {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
-
             lock.lock();
-
             Board board = boardService.findBoard(boardId);
 
             Col col = findCol(columnId);
@@ -116,7 +105,6 @@ public class ColService {
             if (!col.getBoard().getId().equals(board.getId())) {
                 throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
             }
-
             colRepository.deleteById(columnId);
         } finally {
             if (lock.isHeldByCurrentThread()) {
@@ -129,16 +117,12 @@ public class ColService {
     @Transactional
     public ColResponseDto updateColIdx(Long boardId, Long columnId, Long columnOrderIndex) {
         String lockKey = "ColLock";
-
         RLock lock = redissonClient.getLock(lockKey);
-
         try {
             if (!lock.tryLock()) {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
-
             lock.lock();
-
             Board board = boardService.findBoard(boardId);
 
             Col columnToUpdate = findCol(columnId);

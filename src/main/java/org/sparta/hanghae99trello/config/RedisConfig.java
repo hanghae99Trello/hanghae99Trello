@@ -11,17 +11,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-
 //        config.useSingleServer()
 //                .setAddress("redis://localhost:6379");
-
         config.useSingleServer()
                 .setAddress("redis://cache:6379");
-
         return Redisson.create(config);
     }
 
