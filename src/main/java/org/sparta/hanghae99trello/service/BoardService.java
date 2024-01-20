@@ -80,8 +80,7 @@ public class BoardService {
 
     @Transactional
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto requestDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() ->
-                new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+        Board board = findBoard(boardId);
 
         if (!checkCreatedByUser(board)) {
             throw new IllegalArgumentException(ErrorMessage.UPDATE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
@@ -106,7 +105,7 @@ public class BoardService {
     }
 
     public void deleteBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+        Board board = findBoard(boardId);
 
         if (!checkCreatedByUser(board)) {
             throw new IllegalArgumentException(ErrorMessage.DELETE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
@@ -119,9 +118,7 @@ public class BoardService {
     }
 
     public BoardResponseDto getBoardById(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() ->
-            new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage())
-        );
+        Board board = findBoard(boardId);
         return new BoardResponseDto(board);
     }
 
@@ -147,5 +144,10 @@ public class BoardService {
         return colRequestDtoList.stream()
                 .map(colRequestDto -> new Col(colRequestDto.getColName(), colRequestDto.getColIndex(), null))
                 .collect(Collectors.toList());
+    }
+
+    public Board findBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
     }
 }
