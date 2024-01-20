@@ -76,7 +76,7 @@ public class UserService {
 
     public List<Board> getUserBoards(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
 
         return new ArrayList<>(user.getCreatedBoards());
     }
