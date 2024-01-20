@@ -36,14 +36,9 @@ public class ColService {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
             lock.lock();
-            Optional<Board> optionalBoard = boardRepository.findById(boardId);
 
-            if (optionalBoard.isEmpty()) {
-                throw new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage());
-            }
+            Board board = boardService.findBoard(boardId);
 
-            Board board = optionalBoard.get();
-//            Board board = boardService.getBoardById(boardId);
             Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
 
             Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
@@ -72,8 +67,6 @@ public class ColService {
                 .collect(Collectors.toList());
     }
 
-    // TODO : Error Handling (if board is not present, boardId랑 Column이 속한 ID 다른경우! )
-
     public ColResponseDto updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
         String lockKey = "ColLock";
 
@@ -86,12 +79,12 @@ public class ColService {
 
             lock.lock();
 
-            boardRepository.findById(boardId).orElseThrow(() -> new RuntimeException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+            Board board = boardService.findBoard(boardId);
 
             Col col = findCol(columnId);
 
             if (!col.getBoard().getId().equals(boardId)) {
-                throw new RuntimeException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+                throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
             }
 
             col.setColName(requestDto.getColName());
@@ -116,17 +109,12 @@ public class ColService {
 
             lock.lock();
 
-            Optional<Board> optionalBoard = boardRepository.findById(boardId);
-            if (optionalBoard.isEmpty()) {
-                throw new RuntimeException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage());
-            }
+            Board board = boardService.findBoard(boardId);
 
-
-            Board board = optionalBoard.get();
             Col col = findCol(columnId);
 
             if (!col.getBoard().getId().equals(board.getId())) {
-                throw new RuntimeException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+                throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
             }
 
             colRepository.deleteById(columnId);
@@ -151,54 +139,39 @@ public class ColService {
 
             lock.lock();
 
-            Optional<Board> optionalBoard = boardRepository.findById(boardId);
-            if (optionalBoard.isEmpty()) {
-                throw new RuntimeException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage());
-            }
+            Board board = boardService.findBoard(boardId);
 
             Col columnToUpdate = findCol(columnId);
 
             if (!columnToUpdate.getBoard().getId().equals(boardId)) {
-                throw new RuntimeException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+                throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
             }
 
-            Board board = optionalBoard.get();
             List<Col> colList = board.getColList();
 
-            // Get the current index of the column
             Long currentIndex = columnToUpdate.getColIndex();
 
-            // Remove the column from the list to prevent duplication
             colList.remove(columnToUpdate);
 
-            // Update the column index
             columnToUpdate.setColIndex(columnOrderIndex);
 
-            // Adjust other indices to prevent conflicts
             for (Col col : colList) {
                 if (!col.getId().equals(columnId) && col.getColIndex() >= columnOrderIndex) {
-                    // Increment indices of columns with indices greater than or equal to the updated column index
                     col.setColIndex(col.getColIndex() + 1);
                 }
             }
 
-            // Re-add the column to the list at the correct position
             colList.add(columnToUpdate);
-
-            // Save the changes back to the database
             List<Col> savedCols = colRepository.saveAll(colList);
 
-            // Return the response DTO for the updated column
             return new ColResponseDto(columnToUpdate);
         } finally {
-
+            lock.unlock();
         }
-
-
     }
 
     public Col findCol(Long id) {
         return colRepository.findById(id).orElseThrow(() ->
-                new RuntimeException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
+                new IllegalArgumentException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
     }
 }
