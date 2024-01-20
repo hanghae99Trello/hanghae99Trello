@@ -108,6 +108,10 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
 
+        if (!checkCreatedByUser(board)) {
+            throw new IllegalArgumentException(ErrorMessage.DELETE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
+        }
+
         List<Col> columns = colRepository.findByBoardId(boardId);
         colRepository.deleteAll(columns);
 
@@ -136,8 +140,6 @@ public class BoardService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
-        System.out.println("loggedInId = " + loggedInId);
-        System.out.println("boardCreatorId = " + boardCreatorId);
         return loggedInId.equals(boardCreatorId);
     }
 

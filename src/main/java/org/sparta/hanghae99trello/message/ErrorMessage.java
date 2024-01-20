@@ -14,6 +14,9 @@ public enum ErrorMessage {
     PASSWORD_MISMATCH_ERROR_MESSAGE("로그인에 실패하였습니다."),
     AUTH_EXCEPTION_MESSAGE("로그인 해야 가능한 기능입니다."),
     UPDATE_BOARD_AUTH_ERROR_MESSAGE("자신이 만든 보드만 수정할 수 있습니다."),
+    DELETE_BOARD_AUTH_ERROR_MESSAGE("자신이 만든 보드만 삭제할 수 있습니다."),
+    UPDATE_USER_AUTH_ERROR_MESSAGE("본인만 수정할 수 있습니다."),
+    DELETE_USER_AUTH_ERROR_MESSAGE("본인만 삭제할 수 있습니다."),
     ID_MISMATCH_ERROR_MESSAGE("요청 게시판 ID가 컬럼이 속한 게시판 ID와 다릅니다."),
     LOCK_NOT_ACQUIRED_ERROR_MESSAGE("락을 획득하지 못했습니다. 잠시 후 다시 시도해주세요.");
 

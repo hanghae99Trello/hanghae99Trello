@@ -102,6 +102,7 @@ public class ColService {
                 throw new RuntimeException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
             }
 
+
             col.setColName(requestDto.getColName());
 
             return new ColResponseDto(colRepository.save(col));
