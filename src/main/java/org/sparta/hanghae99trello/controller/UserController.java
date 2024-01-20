@@ -32,11 +32,11 @@ public class UserController {
         return new ResponseEntity<>(SuccessMessage.UPDATE_USER_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
     }
 
-//    @DeleteMapping("/users/{userId}")
-//    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-//        userService.deleteUser(userId);
-//        return new ResponseEntity<>(SuccessMessage.DELETE_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
-//    }
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>(SuccessMessage.DELETE_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
+    }
 
     private ResponseEntity<String> handleRequest(RequestHandler handler) {
         try {
