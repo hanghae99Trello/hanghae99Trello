@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CardOrderRequestDto {
-    private Long cardOrderIndex;
+public class CardColOrderRequestDto {
+    private Long cardIndex;
+    private Long newColIndex;
 }

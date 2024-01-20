@@ -2,13 +2,13 @@ package org.sparta.hanghae99trello.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.sparta.hanghae99trello.dto.CardColumnRequestDto;
-import org.sparta.hanghae99trello.dto.CardOrderRequestDto;
+import org.sparta.hanghae99trello.dto.CardColOrderRequestDto;
 import org.sparta.hanghae99trello.dto.CardRequestDto;
 import org.sparta.hanghae99trello.dto.CardResponseDto;
 import org.sparta.hanghae99trello.service.CardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,21 +52,14 @@ public class CardController {
         cardService.deleteCard(cardId);
         return new ResponseEntity<>("카드 삭제가 완료되었습니다.", HttpStatus.OK);
     }
-//
-//    //컬럼 간 카드 이동
-//    @PutMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}/col")
-//    public ResponseEntity<CardResponseDto> updateCardColumn(@PathVariable Long cardId,
-//                                                            @PathVariable Long columnId,
-//                                                            @RequestBody CardColumnRequestDto requestDto) {
-//        CardResponseDto cardResponseDto = cardService.updateCardColumn(cardId, columnId, requestDto.getColumnId());
-//        return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
-//    }
-//
-//    @PutMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}/order")
-//    public ResponseEntity<String> updateCardOrder(@PathVariable Long cardId,
-//                                                  @PathVariable Long columnId,
-//                                                  @RequestBody CardOrderRequestDto requestDto) {
-//        cardService.updateCardOrder(cardId, requestDto.getCardOrderIndex());
-//        return new ResponseEntity<>("카드 순서가 변경되었습니다.", HttpStatus.OK);
-//    }
+
+    @PutMapping("/{boardId}/columns/{columnId}/cards/{cardId}/col")
+    public ResponseEntity<CardResponseDto> updateCardColOrder(@PathVariable Long boardId,
+                                                              @PathVariable Long columnId,
+                                                              @PathVariable Long cardId,
+                                                              @RequestBody CardColOrderRequestDto requestDto){
+        CardResponseDto cardResponseDto = cardService.updateCardColOrder(boardId, columnId, cardId, requestDto.getCardIndex(),requestDto.getNewColIndex());
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
+    }
+
 }
