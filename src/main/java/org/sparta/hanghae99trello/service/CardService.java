@@ -15,6 +15,7 @@ import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -84,7 +85,6 @@ public class CardService {
 
     @Transactional
     //같은 카드일때 지웠다가 새로넣을 이유가 있나?
-    //카드 인덱스 커졌을 때 정렬하는 매커니즘 필요
     public CardResponseDto updateCardColOrder(Long boardId, Long columnId, Long cardId, Long newCardIndex, Long newColIndex) {
         
         Col col = getColById(columnId);
@@ -95,10 +95,38 @@ public class CardService {
         Col newCol = getColById(newColIndex);
         List<Card> cardList = cardRepository.findAllByColIdOrderByOrderIndexAsc(newCol.getId());
 
+        double newOrderIndex = calculateNewOrderIndex(newCardIndex, cardList);
+        card.setOrderIndex(newOrderIndex);
+
+        BigDecimal bd = new BigDecimal(Double.toString(newOrderIndex));
+        int precision = bd.precision();
+        if (precision >= 13) {
+            sortCardList(cardList);
+        }
+
+        card.updateCol(newCol);
+        newCol.addCard(card);
+
+        return new CardResponseDto(card);
+    }
+
+
+    @Transactional
+    public void sortCardList(List<Card> cardList){
+        double count = 1;
+        for (Card card : cardList) {
+            card.setOrderIndex(count);
+            cardRepository.save(card);
+            count += 1;
+        }
+    }
+
+    @Transactional
+    public double calculateNewOrderIndex(Long newCardIndex, List<Card> cardList){
         if(newCardIndex > cardList.size()){
             throw new IllegalArgumentException("존재하지 않는 인덱스 입니다.");
         }
-        
+
         double prevOrderIndex = 0;
         if (newCardIndex>0){
             prevOrderIndex = cardList.get(newCardIndex.intValue() - 1).getOrderIndex();
@@ -108,16 +136,8 @@ public class CardService {
         if (newCardIndex < cardList.size()){
             nextOrderIndex = cardList.get(newCardIndex.intValue()).getOrderIndex();
         }
-
-        double newOrderIndex = (prevOrderIndex + nextOrderIndex) / 2;
-
-        card.setOrderIndex(newOrderIndex);
-        card.updateCol(newCol);
-        newCol.addCard(card);
-
-        return new CardResponseDto(card);
+        return (prevOrderIndex + nextOrderIndex) / 2;
     }
-
 
     @Transactional
     public Col getColById(Long colId) {
@@ -128,6 +148,4 @@ public class CardService {
     public Card getCardById(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 카드가 없습니다."));
     }
-
-
 }
