@@ -1,6 +1,5 @@
 package org.sparta.hanghae99trello.entity;
 
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "cards")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,34 +27,29 @@ public class Card {
     @Column(nullable = false)
     private String cardColor;
 
-    @ManyToMany
-    @JoinTable(
-            name = "operator",
-            joinColumns =  @JoinColumn(name = "card_ids"),
-            inverseJoinColumns = @JoinColumn(name = "user_ids")
-    )
-    private List<User> operators;
-
-    @OneToMany(mappedBy = "card",cascade = CascadeType.REMOVE)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    private List<Operator> operators;
 
     @Column(nullable = true)
     private LocalDate dueDate;
 
-    @Setter
-    @JoinColumn(name = "previous_card_id")
-    private Long previousCardId;
+    @ManyToOne
+    @JoinColumn(name = "col_id")
+    private Col col;
 
+    @Column
     @Setter
-    @JoinColumn(name = "next_card_id")
-    private Long nextCardId;
+    private double orderIndex;
 
-    public Card(String cardName, String cardDescription, String color, List<User> operators) {
+    public Card(String cardName, String cardDescription, String color, Col col) {
         this.cardName = cardName;
         this.cardDescription = cardDescription;
         this.cardColor = color;
-        this.operators = operators != null ? operators : new ArrayList<>();
+        this.col = col;
+        this.operators = new ArrayList<>();
         this.commentList = new ArrayList<>();
     }
 
@@ -62,13 +57,18 @@ public class Card {
         this.commentList.add(comment);
     }
 
-    public void update(String cardName, String cardDescription, String color, List<User> operator, LocalDate dueDate) {
+    public void updateOperator(Operator operator) {
+        this.operators.add(operator);
+    }
+
+    public void update(String cardName, String cardDescription, String color, LocalDate dueDate) {
         this.cardName = cardName;
         this.cardDescription = cardDescription;
         this.cardColor = color;
-        this.operators = operator;
         this.dueDate = dueDate;
     }
 
-
+    public void updateCol(Col newCol) {
+        this.col = newCol;
+    }
 }
