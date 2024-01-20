@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - cache
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: dhdbwls1217
+      MYSQL_DATABASE: week_5
+    ports:
+      - "3307:3307"
+  cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
