@@ -3,103 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/index_style.css}" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arbutus+Slab" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <title>User Details</title>
-  <style>
-    * {
-      margin:0;
-      padding:0;
-    }
-    .board_container {
-      width: 80%;
-      margin: auto;
-      text-align: center;
-    }
-
-    .board_container > p {
-      line-height: 2em;
-    }
-
-    .board_list {
-      list-style: none;
-      width: 100%;
-    }
-
-    .board_list_box {
-      background-color: gray;
-      text-align: center;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    .add-board-button {
-      background-color: gray;
-      color: white;
-      font-size: 22px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .popup-form {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      z-index: 1000;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .popup-form input {
-      margin-right: 1px;
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
-
-    .popup-form button {
-      background-color: gray;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    #EditUserButton, #DeleteUserButton {
-      border: none;
-      background: white;
-      cursor: pointer;
-    }
-
-    a {
-      text-decoration: none;
-      color: white;
-    }
-
-    ul {
-      width: 100%;
-    }
-
-   .material-symbols-outlined {
-     font-variation-settings:
-             'FILL' 0,
-             'wght' 400,
-             'GRAD' 0,
-             'opsz' 24
-   }
-  </style>
+  <title>할일헤븐</title>
 </head>
 <body>
 <div class="board_container">
@@ -122,12 +30,17 @@
   <h2 style="margin: 40px 0 20px 0;">Your Boards</h2>
   <ul>
     <li class="board_list" th:each="board : ${userBoards}">
-      <a th:href="@{'/users/boards/' + ${board.id}}">
-        <div class="board_list_box">
-          <h3 th:text="${board.boardName}"></h3>
-          <p th:text="${board.boardDescription}"></p>
-        </div>
-      </a>
+      <div class="board_list_box">
+        <a th:href="@{'/users/boards/' + ${board.id}}" th:attr="data-boardId=${board.id}">
+            <h3 th:text="${board.boardName}"></h3>
+            <p th:text="${board.boardDescription}"></p>
+        </a>
+          <button id="DeleteBoardButton" onclick="deleteBoard()">
+                <span class="material-symbols-outlined">
+                  delete_forever
+                </span>
+          </button>
+      </div>
     </li>
     <li class="board_list">
       <div class="board_list_box">
@@ -159,117 +72,6 @@
   </div>
 </div>
 
-<script>
-  function openBoardForm() {
-    document.getElementById("boardForm").style.display = "block";
-  }
-
-  function closeBoardForm() {
-    document.getElementById("boardForm").style.display = "none";
-  }
-
-  function openUserForm() {
-    document.getElementById("userForm").style.display = "block";
-  }
-
-  function closeUserForm() {
-    document.getElementById("userForm").style.display = "none";
-  }
-
-  function submitBoardForm() {
-    const boardName = document.getElementById("boardName").value;
-    const boardColor = document.getElementById("boardColor").value;
-    const boardDescription = document.getElementById("boardDescription").value;
-    const participantsInput = document.getElementById("participants");
-    let participants = [];
-
-    if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
-      participants = participantsInput.value.split(",").map(participant => participant.trim());
-    }
-
-    const data = {
-      boardName: boardName,
-      boardColor: boardColor,
-      boardDescription: boardDescription,
-      participants: participants
-    };
-
-    fetch('/api/users/boards', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('보드 생성에 실패했습니다.');
-      }
-    })
-    .then(data => {
-      console.log('Success:', data);
-      closeBoardForm();
-    })
-    .catch((error) => {
-      console.error('Error:', error.message);
-      document.getElementById("boardFormErrorMessage").textContent = "보드 생성에 실패했습니다.";
-    });
-  }
-
-  function submitUserForm() {
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const userId = document.querySelector('[data-userId]').getAttribute('data-userId');
-
-    const data = {
-      name: name,
-      phone: phone
-    };
-
-    fetch(`/api/users/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      closeUserForm();
-    })
-    .catch(error => {
-      console.error("Error updating board:", error);
-      document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
-    });
-  }
-
-  function deleteUser() {
-    const userId = document.querySelector('[data-userId]').getAttribute('data-userId');
-
-    // API 호출
-    fetch(`/api/users/${userId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log('User deleted successfully');
-        alert('회원탈퇴가 완료되었습니다.');
-        window.location.href = '/api/user/login-page';
-      } else {
-        console.error('Failed to delete user');
-        document.getElementById("deleteUserErrorMessage").textContent = "사용자를 삭제할 수 없습니다.";
-      }
-    })
-    .catch(error => {
-      console.error('Error deleting user:', error);
-    });
-  }
-</script>
+<script type="text/javascript" th:src="@{/js/index_js.js}"></script>
 </body>
 </html>
