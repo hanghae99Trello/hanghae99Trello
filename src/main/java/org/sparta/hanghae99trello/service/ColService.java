@@ -35,12 +35,9 @@ public class ColService {
             if (!lock.tryLock()) {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
-            lock.lock();
 
             Board board = boardService.findBoard(boardId);
-
             Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
-
             Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
 
             Col col = new Col(
@@ -52,9 +49,7 @@ public class ColService {
 
             return new ColResponseDto(savedCol);
         } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
+            lock.unlock();
         }
     }
 
@@ -108,6 +103,7 @@ public class ColService {
         }
 
         colRepository.deleteById(columnId);
+        lock.unlock();
     }
 
     @Transactional

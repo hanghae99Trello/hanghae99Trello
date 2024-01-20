@@ -28,8 +28,8 @@
                         <form th:id="'editColIndexForm-' + ${column.id}">
                             <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
                             <input type="text" th:id="'colEditIndex-' + ${column.id}" name="colEditIndex" placeholder="Column Index" required><br>
-                            <button type="button" th:attr="data-column-id=${column.id}" onclick="submitColIndexEditForm(this)">Edit Column Index</button>
-                            <button type="button" th:attr="data-column-id=${column.id}" onclick="closeColIndexEditForm(this)">Close</button>
+                            <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColIndexEditForm(this)">Edit Column Index</button>
+                            <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColIndexEditForm(this)">Close</button>
                         </form>
                     </div>
                 </div>
@@ -40,8 +40,8 @@
                         <form th:id="'editColumnForm-' + ${column.id}">
                             <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
                             <input type="text" th:id="'colEditName-' + ${column.id}" name="colEditName" placeholder="Column Name" required><br>
-                            <button type="button" th:attr="data-column-id=${column.id}" onclick="submitColNameEditForm(this)">Edit Column Name</button>
-                            <button type="button" th:attr="data-column-id=${column.id}" onclick="closeColNameEditForm(this)">Close</button>
+                            <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColNameEditForm(this)">Edit Column Name</button>
+                            <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColNameEditForm(this)">Close</button>
                         </form>
                     </div>
                 </div>

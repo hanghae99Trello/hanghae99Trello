@@ -591,7 +591,13 @@ function submitColumnAddForm() {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('보드 생성에 실패했습니다.');
+            }
+        })
         .then(data => {
             console.log('Success:', data);
             closeColumnAddForm();
@@ -702,3 +708,14 @@ function deleteColumn(button) {
     });
 }
 
+
+// 인덱스 순으로 정렬
+$(document).ready(function() {
+    var container = $(".flex_container");
+    var items = container.find(".dd").toArray().sort(function(a, b) {
+        var aIndex = parseInt($(a).find(".kanban").data("col-index"));
+        var bIndex = parseInt($(b).find(".kanban").data("col-index"));
+        return aIndex - bIndex;
+    });
+    container.empty().append(items);
+});
