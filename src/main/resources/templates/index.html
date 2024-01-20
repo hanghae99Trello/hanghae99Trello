@@ -105,17 +105,16 @@
           <div class="board_list_box">
             <button class="add-board-button" onclick="openForm()">+</button>
           </div>
-        </a>
       </li>
     </ul>
 
     <div class="popup-form" id="boardForm">
       <form id="addBoardForm">
         <div id="formErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-        <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
-        <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
+        <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br />
+        <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br />
         <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
-        <input type="text" id="participants" name="participants" placeholder="Participants"><br>
+        <input type="text" id="participants" name="participants" placeholder="Participants"><br />
         <button type="button" onclick="submitForm()">Submit</button>
         <button type="button" onclick="closeForm()">Close</button>
       </form>
@@ -135,7 +134,12 @@
       const boardName = document.getElementById("boardName").value;
       const boardColor = document.getElementById("boardColor").value;
       const boardDescription = document.getElementById("boardDescription").value;
-      const participants = document.getElementById("participants").value.split(',').map(participant => participant.trim());
+      const participantsInput = document.getElementById("participants");
+      let participants = [];
+
+      if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
+        participants = participantsInput.value.split(",").map(participant => participant.trim());
+      }
 
       const data = {
         boardName: boardName,
@@ -144,7 +148,6 @@
         participants: participants
       };
 
-      // Ajax 호출
       fetch('/api/users/boards', {
         method: 'POST',
         headers: {
@@ -152,16 +155,21 @@
         },
         body: JSON.stringify(data)
       })
-              .then(response => response.json())
-              .then(data => {
-                console.log('Success:', data);
-                closeForm();
-                location.reload();
-              })
-              .catch((error) => {
-                console.error('Error:', error);
-                document.getElementById("formErrorMessage").textContent = "Error creating board.";
-              });
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('보드 생성에 실패했습니다.');
+        }
+      })
+      .then(data => {
+        console.log('Success:', data);
+        closeForm();
+      })
+      .catch((error) => {
+        console.error('Error:', error.message);
+        document.getElementById("formErrorMessage").textContent = "보드 생성에 실패했습니다.";
+      });
     }
   </script>
 </body>

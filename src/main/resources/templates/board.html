@@ -133,9 +133,14 @@
             const boardName = document.getElementById("boardName").value;
             const boardDescription = document.getElementById("boardDescription").value;
             const boardColor = document.getElementById("boardColor").value;
-            const participants = document.getElementById("participants").value;
+            const participantsInput = document.getElementById("participants");
+            let participants = [];
 
-            const requestData = {
+            if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
+                participants = participantsInput.value.split(",").map(participant => participant.trim());
+            }
+
+            const data = {
                 boardName: boardName,
                 boardDescription: boardDescription,
                 boardColor: boardColor,
@@ -144,24 +149,23 @@
 
             const boardContainer = document.querySelector('.board_container');
             const boardId = boardContainer.getAttribute('data-board-id');
-            fetch("/api/users/boards/" + boardId, {
+
+            fetch(`/api/users/boards/${boardId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(requestData)
+                body: JSON.stringify(data)
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data) {  // data가 존재하는 경우에만 리로드
-                        closeBoardEditForm();
-                        location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error("Error updating board:", error);
-                    document.getElementById("editBoardFormErrorMessage").textContent = "보드 수정에 실패했습니다.";
-                });
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                closeBoardEditForm();
+            })
+            .catch(error => {
+                console.error("Error updating board:", error);
+                document.getElementById("editBoardFormErrorMessage").textContent = "보드 수정에 실패했습니다.";
+            });
         }
     </script>
 </body>
