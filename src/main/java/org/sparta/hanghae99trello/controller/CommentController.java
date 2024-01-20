@@ -23,11 +23,12 @@ public class CommentController {
 
     //TODO :: 엔드포인트에 필요없는 값들 수정필요
     @PostMapping("/{boardId}/columns/{columnId}/cards/{cardId}/comments")
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long cardId,
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long boardId,
+                                                            @PathVariable Long cardId,
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        CommentResponseDto commentResponseDto = commentService.createComment(userDetails.getUser(),cardId,requestDto.getCommentMessage());
+        CommentResponseDto commentResponseDto = commentService.createComment(userDetails.getUser().getId(),boardId, cardId,requestDto.getCommentMessage());
         return ResponseEntity.status(HttpStatus.OK).body(commentResponseDto);
     }
 }

@@ -35,7 +35,6 @@ public class ColService {
             // Increment the colIndex
             Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
 
-            // Create and save the new Col
             Col col = new Col(
                     requestDto.getColName(),
                     newColIndex,
