@@ -61,21 +61,22 @@ public class UserService {
 
     }
 
-//    public void deleteUser(Long userId) {
-//        User user = findUser(userId);
-//        List<Board> boards = boardRepository.findByCreatedBy(user);
-//
-//        for (Board board : boards) {
-//            participantRepository.deleteByBoardId(board.getId());
-//            boardRepository.deleteById(board.getId());
-//        }
-//
-//        userRepository.delete(user);
-//    }
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
+        List<Board> boards = boardRepository.findByCreatedBy(user);
+
+        for (Board board : boards) {
+            participantRepository.deleteByBoardId(board.getId());
+            boardRepository.deleteById(board.getId());
+        }
+
+        userRepository.delete(user);
+    }
 
     public List<Board> getUserBoards(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
 
         return new ArrayList<>(user.getCreatedBoards());
     }
