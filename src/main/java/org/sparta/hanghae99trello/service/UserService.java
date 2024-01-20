@@ -12,6 +12,8 @@ import org.sparta.hanghae99trello.message.ErrorMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
 import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
+import org.sparta.hanghae99trello.security.UserDetailsImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,18 +53,19 @@ public class UserService {
         }
     }
 
-    public User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
-    }
-
-    public void updateUser(Long id, UserRequestDto requestDto) {
-        User user = findUser(id);
+    public void updateUser(Long userId, UserRequestDto requestDto) {
+        if (!checkUserSelf(userId)) {
+            throw new IllegalArgumentException(ErrorMessage.UPDATE_USER_AUTH_ERROR_MESSAGE.getErrorMessage());
+        }
+        User user = findUser(userId);
         user.update(requestDto);
-
     }
 
     @Transactional
     public void deleteUser(Long userId) {
+        if (!checkUserSelf(userId)) {
+            throw new IllegalArgumentException(ErrorMessage.DELETE_USER_AUTH_ERROR_MESSAGE.getErrorMessage());
+        }
         User user = findUser(userId);
         List<Board> boards = boardRepository.findByCreatedBy(user);
 
@@ -83,7 +86,6 @@ public class UserService {
 
     @PreDestroy
     public void preDestroy() {
-        // 애플리케이션 종료 시 실행될 코드
         redissonClient.shutdown();
     }
 
@@ -91,5 +93,11 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage())
         );
+    }
+
+    private boolean checkUserSelf(Long userId) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long loggedInUserId = userDetails.getId();
+        return loggedInUserId.equals(userId);
     }
 }
