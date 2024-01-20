@@ -13,7 +13,7 @@
 <div class="board_container">
   <h1 style="margin: 20px;">
     Welcome, <span th:text="${userName}"></span>!
-    <button id="EditUserButton" onclick="openUserForm()">
+    <button id="EditUserButton" onclick="openUserEditForm()">
       <i class="material-icons">settings</i>
     </button>
     <button id="DeleteUserButton" onclick="deleteUser()">
@@ -44,12 +44,13 @@
     </li>
     <li class="board_list">
       <div class="board_list_box">
-        <button class="add-board-button" onclick="openBoardForm()">+</button>
+        <button class="add-board-button" onclick="openBoardAddForm()">+</button>
       </div>
     </li>
   </ul>
 
-  <div class="popup-form" id="boardForm">
+  <!--보드 추가-->
+  <div class="popup-form" id="BoardAddForm">
     <form id="addBoardForm">
       <div id="boardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
       <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br />
@@ -57,17 +58,18 @@
       <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
       <input type="text" id="participants" name="participants" placeholder="Participants"><br />
       <button type="button" onclick="submitBoardForm()">Submit</button>
-      <button type="button" onclick="closeBoardForm()">Close</button>
+      <button type="button" onclick="closeBoardAddForm()">Close</button>
     </form>
   </div>
 
-  <div class="popup-form" id="userForm">
+  <!--사용자 정보 수정-->
+  <div class="popup-form" id="UserEditForm">
     <form id="editUserForm">
       <div id="editUserFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
       <input type="text" id="name" name="name" placeholder="Name"><br />
       <input type="text" id="phone" name="phone" placeholder="Phone"><br />
-      <button type="button" onclick="submitUserForm()">Submit</button>
-      <button type="button" onclick="closeUserForm()">Close</button>
+      <button type="button" onclick="submitUserEditForm()">Submit</button>
+      <button type="button" onclick="closeUserEditForm()">Close</button>
     </form>
   </div>
 </div>
