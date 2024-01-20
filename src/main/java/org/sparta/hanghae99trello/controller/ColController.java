@@ -37,13 +37,13 @@ public class ColController {
         return ResponseEntity.ok(colResponseDto);
     }
 
-    @DeleteMapping("/users/boards/{boardId}/columns/{columnId}")
+    @DeleteMapping("/{boardId}/columns/{columnId}")
     public ResponseEntity<String> deleteCol(@PathVariable Long boardId, @PathVariable Long columnId) {
         colService.deleteCol(boardId, columnId);
         return new ResponseEntity<>(SuccessMessage.DELETE_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.OK);
     }
 
-    @PutMapping("/users/boards/{boardId}/columns/{columnId}/{columnOrderIndex}")
+    @PutMapping("/{boardId}/columns/{columnId}/{columnOrderIndex}")
     public ResponseEntity<ColResponseDto> updateColIdx(@PathVariable Long boardId, @PathVariable Long columnId, @PathVariable Long columnOrderIndex) {
         ColResponseDto colResponseDto = colService.updateColIdx(boardId, columnId, columnOrderIndex);
         return ResponseEntity.ok(colResponseDto);

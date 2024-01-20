@@ -503,3 +503,167 @@ $('#color').spectrum({
         $("#label").text("change called: " + color.toHexString());
     }
 });
+
+
+document.querySelector('#p1').addEventListener('mdl-componentupgraded', function() {
+    this.MaterialProgress.setProgress(44);
+});
+
+function goToMyPage() {
+    window.location.href = '/';
+}
+
+
+
+// 보드 수정
+function openBoardEditForm() {
+    document.getElementById("BoardEditForm").style.display = "block";
+}
+
+function closeBoardEditForm() {
+    document.getElementById("BoardEditForm").style.display = "none";
+}
+
+function submitBoardEditForm() {
+    const boardName = document.getElementById("boardName").value;
+    const boardDescription = document.getElementById("boardDescription").value;
+    const boardColor = document.getElementById("boardColor").value;
+    const participantsInput = document.getElementById("participants");
+    let participants = [];
+
+    if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
+        participants = participantsInput.value.split(",").map(participant => participant.trim());
+    }
+
+    const data = {
+        boardName: boardName,
+        boardDescription: boardDescription,
+        boardColor: boardColor,
+        participants: participants
+    };
+
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+
+    fetch(`/api/users/boards/${boardId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            closeBoardEditForm();
+        })
+        .catch(error => {
+            console.error("Error updating board:", error);
+            document.getElementById("editBoardFormErrorMessage").textContent = "보드 수정에 실패했습니다.";
+        });
+}
+
+
+// 컬럼 생성
+function openColumnAddForm() {
+    document.getElementById("ColumnAddForm").style.display = "block";
+}
+
+function closeColumnAddForm() {
+    document.getElementById("ColumnAddForm").style.display = "none";
+}
+
+function submitColumnAddForm() {
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+
+    const colName = document.getElementById("colName").value;
+    const colIndex = document.getElementById("colIndex").value;
+
+    const data = {
+        colName: colName,
+        colIndex: colIndex
+    };
+
+    fetch(`/api/users/boards/${boardId}/columns`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            closeColumnAddForm();
+            location.reload();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            document.getElementById("addColumnFormErrorMessage").textContent = "컬럼 생성에 실패했습니다.";
+        });
+}
+
+
+// 컬럼 수정
+function openColumnEditForm() {
+    document.getElementById("ColumnEditForm").style.display = "block";
+}
+
+function closeColumnEditForm() {
+    document.getElementById("ColumnEditForm").style.display = "none";
+}
+
+function submitColumnEditForm() {
+    const colEditName = $("#colEditName").val();
+    const colEditIndex = $("#colEditIndex").val();
+    const boardId = $(".board_container").data("board-id");
+    const columnId = $(".dd").data("column-id");
+
+
+    const data = {
+        colName: colEditName,
+        colIndex: colEditIndex
+    };
+
+    $.ajax({
+        type: "PUT",
+        url: `/api/users/boards/${boardId}/columns/${columnId}`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            console.log("Column updated successfully:", response);
+            closeColumnEditForm();
+        },
+        error: function (error) {
+            console.error("Error updating column:", error);
+            document.getElementById("editColumnFormErrorMessage").textContent = "컬럼 수정에 실패했습니다.";
+        }
+    });
+}
+
+
+// 컬럼 삭제
+function deleteColumn(button) {
+    var columnId = $(button).attr("data-column-id");
+    const boardId = $(".board_container").data("board-id");
+
+    $.ajax({
+        type: "DELETE",
+        url: `/api/users/boards/${boardId}/columns/${columnId}`,
+        contentType: "application/json",
+        success: function (response) {
+            console.log("Column deleted successfully:", response);
+            alert('컬럼 삭제가 완료되었습니다.');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error deleting column:", error);
+
+            // 서버로부터 받은 응답 출력
+            console.log("Server response:", xhr.responseText);
+
+            alert("컬럼 삭제에 실패했습니다. 자세한 내용은 콘솔을 확인하세요.");
+        }
+    });
+}
+

@@ -58,12 +58,23 @@ public class UserService {
         }
     }
 
-    public void updateUser(Long userId, UserRequestDto requestDto) {
+    @Transactional
+    public UserResponseDto updateUser(Long userId, UserRequestDto requestDto) {
         if (!checkUserSelf(userId)) {
             throw new IllegalArgumentException(ErrorMessage.UPDATE_USER_AUTH_ERROR_MESSAGE.getErrorMessage());
         }
+
         User user = findUser(userId);
-        user.update(requestDto);
+
+        if (requestDto.getName() != null) {
+            user.setName(requestDto.getName());
+        }
+
+        if (requestDto.getPhone() != null) {
+            user.setPhone(requestDto.getPhone());
+        }
+
+        return new UserResponseDto(userRepository.save(user));
     }
 
     @Transactional
