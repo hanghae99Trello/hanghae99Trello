@@ -1,0 +1,99 @@
+* {
+    margin:0;
+    padding:0;
+}
+.board_container {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.board_container > p {
+    line-height: 2em;
+}
+
+.board_list {
+    list-style: none;
+    width: 100%;
+}
+
+.board_list_box {
+    background-color: gray;
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.add-board-button {
+    background-color: gray;
+    color: white;
+    font-size: 22px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-form {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-form input {
+    margin-right: 1px;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+.popup-form button {
+    background-color: gray;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#EditUserButton, #DeleteUserButton, #DeleteBoardButton {
+    border: none;
+    background: white;
+    cursor: pointer;
+}
+
+#DeleteBoardButton {
+    background: gray;
+    position: absolute;
+    bottom: 5px; /* 원하는 위치로 조절 */
+    right: 5px; /
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+ul {
+    width: 100%;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+}

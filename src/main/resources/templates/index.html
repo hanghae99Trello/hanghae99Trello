@@ -3,174 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Details</title>
-  <style>
-    * {
-      margin:0;
-      padding:0;
-    }
-    .board_container {
-      width: 80%;
-      margin: auto;
-      text-align: center;
-    }
-
-    .board_container > p {
-      line-height: 2em;
-    }
-
-    .board_list {
-      list-style: none;
-      width: 100%;
-    }
-
-    .board_list_box {
-      background-color: gray;
-      text-align: center;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    .add-board-button {
-      background-color: gray;
-      color: white;
-      font-size: 22px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .popup-form {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      z-index: 1000;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .popup-form input {
-      margin-right: 1px;
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
-
-    .popup-form button {
-      background-color: gray;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-
-    a {
-      text-decoration: none;
-      color: white;
-    }
-
-    ul {
-      width: 100%;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/index_style.css}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arbutus+Slab" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <title>할일헤븐</title>
 </head>
 <body>
-  <div class="board_container">
-    <h1 style="margin: 20px;">Welcome, <span th:text="${userName}"></span>!</h1>
-    <p>Your ID: <span th:text="${userId}"></span></p>
-    <p>Your Email: <span th:text="${userEmail}"></span></p>
-    <p>Your Phone: <span th:text="${userPhone}"></span></p>
+<div class="board_container">
+  <h1 style="margin: 20px;">
+    Welcome, <span th:text="${userName}"></span>!
+    <button id="EditUserButton" onclick="openUserEditForm()">
+      <i class="material-icons">settings</i>
+    </button>
+    <button id="DeleteUserButton" onclick="deleteUser()">
+      <span class="material-symbols-outlined">
+        delete_forever
+      </span>
+    </button>
+  </h1>
+  <div id="deleteUserErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+  <p>Your ID: <span th:text="${userId}" th:attr="data-userId=${userId}"></span></p>
+  <p>Your Email: <span th:text="${userEmail}"></span></p>
+  <p>Your Phone: <span th:text="${userPhone}"></span></p>
 
-    <h2 style="margin: 40px 0 20px 0;">Your Boards</h2>
-    <ul>
-      <li class="board_list" th:each="board : ${userBoards}">
-        <a th:href="@{'/users/boards/' + ${board.id}}">
-          <div class="board_list_box">
+  <h2 style="margin: 40px 0 20px 0;">Your Boards</h2>
+  <ul>
+    <li class="board_list" th:each="board : ${userBoards}">
+      <div class="board_list_box">
+        <a th:href="@{'/users/boards/' + ${board.id}}" th:attr="data-boardId=${board.id}">
             <h3 th:text="${board.boardName}"></h3>
             <p th:text="${board.boardDescription}"></p>
-          </div>
         </a>
-      </li>
-      <li class="board_list">
-          <div class="board_list_box">
-            <button class="add-board-button" onclick="openForm()">+</button>
-          </div>
-      </li>
-    </ul>
+          <button id="DeleteBoardButton" onclick="deleteBoard()">
+                <span class="material-symbols-outlined">
+                  delete_forever
+                </span>
+          </button>
+      </div>
+    </li>
+    <li class="board_list">
+      <div class="board_list_box">
+        <button class="add-board-button" onclick="openBoardAddForm()">+</button>
+      </div>
+    </li>
+  </ul>
 
-    <div class="popup-form" id="boardForm">
-      <form id="addBoardForm">
-        <div id="formErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-        <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br />
-        <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br />
-        <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
-        <input type="text" id="participants" name="participants" placeholder="Participants"><br />
-        <button type="button" onclick="submitForm()">Submit</button>
-        <button type="button" onclick="closeForm()">Close</button>
-      </form>
-    </div>
+  <!--보드 추가-->
+  <div class="popup-form" id="BoardAddForm">
+    <form id="addBoardForm">
+      <div id="boardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+      <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br />
+      <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br />
+      <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
+      <input type="text" id="participants" name="participants" placeholder="Participants"><br />
+      <button type="button" onclick="submitBoardForm()">Submit</button>
+      <button type="button" onclick="closeBoardAddForm()">Close</button>
+    </form>
   </div>
 
-  <script>
-    function openForm() {
-      document.getElementById("boardForm").style.display = "block";
-    }
+  <!--사용자 정보 수정-->
+  <div class="popup-form" id="UserEditForm">
+    <form id="editUserForm">
+      <div id="editUserFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+      <input type="text" id="name" name="name" placeholder="Name"><br />
+      <input type="text" id="phone" name="phone" placeholder="Phone"><br />
+      <button type="button" onclick="submitUserEditForm()">Submit</button>
+      <button type="button" onclick="closeUserEditForm()">Close</button>
+    </form>
+  </div>
+</div>
 
-    function closeForm() {
-      document.getElementById("boardForm").style.display = "none";
-    }
-
-    function submitForm() {
-      const boardName = document.getElementById("boardName").value;
-      const boardColor = document.getElementById("boardColor").value;
-      const boardDescription = document.getElementById("boardDescription").value;
-      const participantsInput = document.getElementById("participants");
-      let participants = [];
-
-      if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
-        participants = participantsInput.value.split(",").map(participant => participant.trim());
-      }
-
-      const data = {
-        boardName: boardName,
-        boardColor: boardColor,
-        boardDescription: boardDescription,
-        participants: participants
-      };
-
-      fetch('/api/users/boards', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('보드 생성에 실패했습니다.');
-        }
-      })
-      .then(data => {
-        console.log('Success:', data);
-        closeForm();
-      })
-      .catch((error) => {
-        console.error('Error:', error.message);
-        document.getElementById("formErrorMessage").textContent = "보드 생성에 실패했습니다.";
-      });
-    }
-  </script>
+<script type="text/javascript" th:src="@{/js/index_js.js}"></script>
 </body>
 </html>

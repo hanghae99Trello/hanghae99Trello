@@ -278,7 +278,7 @@ ol.kanban {
 }
 
 .dd-collapsed .dd-list {
-    display: none;
+    visibility: hidden;
 }
 
 .dd-item {
@@ -401,4 +401,29 @@ ol.kanban {
 
 .flex_container {
     display: flex;
+    position: relative;
+}
+
+.button_container {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+}
+
+#ColNameEditButton, #ColIndexEditButton, #ColumnDeleteButton {
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+}
+
+.material-symbols-outlined {
+    margin-top:3px;
+    font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
 }

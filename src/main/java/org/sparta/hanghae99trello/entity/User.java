@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@DynamicUpdate
 @Table(name = "users")
 public class User {
 

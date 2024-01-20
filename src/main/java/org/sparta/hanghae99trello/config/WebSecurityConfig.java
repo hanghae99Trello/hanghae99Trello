@@ -63,6 +63,8 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/hey", "/api/join", "/join", "/static/**", "/login").permitAll()
+                        .requestMatchers(HttpMethod.PUT).permitAll()
+                        .requestMatchers(HttpMethod.DELETE).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
                         .requestMatchers(HttpMethod.PUT, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
                         .requestMatchers(HttpMethod.GET, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
