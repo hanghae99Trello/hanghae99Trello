@@ -2,6 +2,8 @@ package org.sparta.hanghae99trello.service;
 
 import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
 import org.sparta.hanghae99trello.dto.ColRequestDto;
@@ -33,29 +35,41 @@ public class BoardService {
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
     private final ColRepository colRepository;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User createdBy = userDetails.getUser();
+        String lockKey = "createBoardLock";
 
-        Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
+        RLock lock = redissonClient.getLock(lockKey);
+        try {
+            if (!lock.tryLock()) {
+                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+            }
+            lock.lock();
+            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User createdBy = userDetails.getUser();
 
-        Board board = new Board(
-                requestDto.getBoardName(),
-                requestDto.getBoardColor(),
-                requestDto.getBoardDescription(),
-                createdBy,
-                participants
-        );
+            Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
-        for (Participant participant : participants) {
-            participant.setBoard(board);
+            Board board = new Board(
+                    requestDto.getBoardName(),
+                    requestDto.getBoardColor(),
+                    requestDto.getBoardDescription(),
+                    createdBy,
+                    participants
+            );
+            for (Participant participant : participants) {
+                participant.setBoard(board);
+            }
+            board.setParticipants(participants);
+            return new BoardResponseDto(boardRepository.save(board));
+
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
-
-
-        board.setParticipants(participants);
-        return new BoardResponseDto(boardRepository.save(board));
     }
 
 

@@ -35,21 +35,27 @@ public class UserService {
 
         RLock lock = redissonClient.getLock(lockKey);
         try {
-            lock.lock();
+            if (lock.tryLock()) {
+                lock.lock();
 
-            String name = requestDto.getName();
-            String email = requestDto.getEmail();
-            String password = requestDto.getPassword();
-            String phone = requestDto.getPhone();
+                String name = requestDto.getName();
+                String email = requestDto.getEmail();
+                String password = requestDto.getPassword();
+                String phone = requestDto.getPhone();
 
-            String encodedPassword = passwordEncoder.encode(password);
-            User user = userRepository.save(new User(name, email, encodedPassword, phone));
-            new UserResponseDto(user);
-
+                String encodedPassword = passwordEncoder.encode(password);
+                User user = userRepository.save(new User(name, email, encodedPassword, phone));
+                new UserResponseDto(user);
+            } else {
+                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+            }
         } finally {
-            lock.unlock();
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
     }
+
 
     public User getUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
@@ -86,7 +92,7 @@ public class UserService {
         redissonClient.shutdown();
     }
 
-    private User findUser(Long id) {
+    public User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage())
         );
