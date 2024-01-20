@@ -61,17 +61,18 @@ public class UserService {
 
     }
 
-//    public void deleteUser(Long userId) {
-//        User user = findUser(userId);
-//        List<Board> boards = boardRepository.findByCreatedBy(user);
-//
-//        for (Board board : boards) {
-//            participantRepository.deleteByBoardId(board.getId());
-//            boardRepository.deleteById(board.getId());
-//        }
-//
-//        userRepository.delete(user);
-//    }
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = findUser(userId);
+        List<Board> boards = boardRepository.findByCreatedBy(user);
+
+        for (Board board : boards) {
+            participantRepository.deleteByBoardId(board.getId());
+            boardRepository.deleteById(board.getId());
+        }
+
+        userRepository.delete(user);
+    }
 
     public List<Board> getUserBoards(Long userId) {
         User user = userRepository.findById(userId)
