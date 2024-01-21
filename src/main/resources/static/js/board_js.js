@@ -1,7 +1,3 @@
-/*!
- * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
- * Dual-licensed under the BSD or MIT licenses
- */
 ;(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in document;
@@ -715,10 +711,10 @@ function deleteColumn(button) {
 
 // 인덱스 순으로 정렬
 $(document).ready(function() {
-    var container = $(".flex_container");
-    var items = container.find(".dd").toArray().sort(function(a, b) {
-        var aIndex = parseInt($(a).find(".kanban").data("col-index"));
-        var bIndex = parseInt($(b).find(".kanban").data("col-index"));
+    const container = $(".flex_container");
+    const items = container.find(".dd").toArray().sort(function(a, b) {
+        const aIndex = parseInt($(a).find(".kanban").data("col-index"));
+        const bIndex = parseInt($(b).find(".kanban").data("col-index"));
         return aIndex - bIndex;
     });
     container.empty().append(items);
@@ -741,10 +737,10 @@ function submitCardAddForm(button) {
     const boardContainer = document.querySelector('.board_container');
     const boardId = boardContainer.getAttribute('data-board-id');
     const columnId = $(button).attr("data-column-id");
-    const cardName = document.getElementById("cardName").value;
-    const cardDescription = document.getElementById("cardDescription").value;
-    const color = document.getElementById("cardColor").value;
-    const operatorInput = document.getElementById("operatorIds");
+    const cardName = document.getElementById("cardName-" + columnId).value;
+    const cardDescription = document.getElementById("cardDescription-" + columnId).value;
+    const color = document.getElementById("color-" + columnId).value;
+    const operatorInput = document.getElementById("operatorIds-" + columnId);
     let operatorIds = [];
 
     if (operatorInput != null && operatorInput.value != null) {
@@ -771,18 +767,19 @@ function submitCardAddForm(button) {
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-    })
-    .then(data => {
-        console.log('Success:', data);
-        closeColumnAddForm();
-        location.reload();
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
-    });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(data => {
+            console.log('Success:', data);
+            closeCardAddForm(columnId);
+            location.reload();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
+        });
 }
+

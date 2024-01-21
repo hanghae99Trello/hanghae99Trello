@@ -13,130 +13,129 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
 </head>
 <body>
-    <div class="board_container" th:data-board-id="${boardId}">
-        <div id="p1" class="mdl-progress mdl-js-progress"></div>
-        <div class="kanban__title">
-            <h1>
-                <i class="material-icons">check</i> To do list
-            </h1>
-        </div>
-        <div class="flex_container">
-            <div class="dd" th:each="column : ${board.colList}">
-                <!-- 컬럼 인덱스 수정 -->
-                <div>
-                    <div class="popup-form" th:id="'ColIndexEditForm-' + ${column.id}">
-                        <form th:id="'editColIndexForm-' + ${column.id}">
-                            <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                            <input type="text" th:id="'colEditIndex-' + ${column.id}" name="colEditIndex" placeholder="Column Index" required><br>
-                            <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColIndexEditForm(this)">Edit Column Index</button>
-                            <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColIndexEditForm(this)">Close</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- 컬럼 이름 수정 -->
-                <div>
-                    <div class="popup-form" th:id="'ColNameEditForm-' + ${column.id}">
-                        <form th:id="'editColumnForm-' + ${column.id}">
-                            <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                            <input type="text" th:id="'colEditName-' + ${column.id}" name="colEditName" placeholder="Column Name" required><br>
-                            <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColNameEditForm(this)">Edit Column Name</button>
-                            <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColNameEditForm(this)">Close</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!--카드 추가-->
-                <div class="popup-form" th:id="'CardAddForm-' + ${column.id}">
-                    <form id="addCardForm">
-                        <div id="addCardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                        <input type="text" id="cardName" name="cardName" placeholder="Card Name" required><br>
-                        <input type="text" id="cardDescription" name="cardDescription" placeholder="Card Description" required><br>
-                        <input type="text" id="cardColor" name="color" placeholder="Card Color" required><br>
-                        <input type="text" id="operatorIds" name="operatorIds" placeholder="Operator IDs"><br>
-                        <input type="date" id="dueDate" name="dueDate" placeholder="Due Date"><br>
-                        <button type="button" th:attr="data-column-id=${column.id}" onclick="submitCardAddForm(this)">Add Card</button>
-                        <button type="button" th:attr="data-column-id=${column.id}" onclick="closeCardAddForm(this)">Close</button>
+<div class="board_container" th:data-board-id="${boardId}">
+    <div id="p1" class="mdl-progress mdl-js-progress"></div>
+    <div class="kanban__title">
+        <h1>
+            <i class="material-icons">check</i> To do list
+        </h1>
+    </div>
+    <div class="flex_container">
+        <div class="dd" th:each="column : ${board.colList}">
+            <!-- 컬럼 인덱스 수정 -->
+            <div>
+                <div class="popup-form" th:id="'ColIndexEditForm-' + ${column.id}">
+                    <form th:id="'editColIndexForm-' + ${column.id}">
+                        <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                        <input type="text" th:id="'colEditIndex-' + ${column.id}" name="colEditIndex" placeholder="Column Index" required><br>
+                        <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColIndexEditForm(this)">Edit Column Index</button>
+                        <button type="button" th:id="'ColIndexEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColIndexEditForm(this)">Close</button>
                     </form>
                 </div>
+            </div>
 
-                <ol class="kanban To-do" style="padding-bottom: 30px;" th:attr="data-column-id=${column.id}" th:data-col-index="${column.colIndex}">
-                    <div class="button_container">
-                        <button class="delete-column-button" id="ColumnDeleteButton" th:attr="data-column-id=${column.id}" onclick="deleteColumn(this)">
-                            <span style="margin-top: 5px;" class="material-symbols-outlined">delete_forever</span>
-                        </button>
-                    </div>
-                    <div class="kanban__title" style="display: flex; justify-content: space-between;">
-                        <div style="display: flex;">
-                            <h2 th:text="${column.colName}">Column Name</h2>
-                            <button id="ColNameEditButton" th:attr="data-column-id=${column.id}" onclick="openColNameEditForm(this)">
+            <!-- 컬럼 이름 수정 -->
+            <div>
+                <div class="popup-form" th:id="'ColNameEditForm-' + ${column.id}">
+                    <form th:id="'editColumnForm-' + ${column.id}">
+                        <div th:id="'editColumnFormErrorMessage-' + ${column.id}" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                        <input type="text" th:id="'colEditName-' + ${column.id}" name="colEditName" placeholder="Column Name" required><br>
+                        <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="submitColNameEditForm(this)">Edit Column Name</button>
+                        <button type="button" th:id="'ColNameEditForm-' + ${column.id}" th:attr="data-column-id=${column.id}" onclick="closeColNameEditForm(this)">Close</button>
+                    </form>
+                </div>
+            </div>
+
+            <!--카드 추가-->
+            <div class="popup-form" th:id="'CardAddForm-' + ${column.id}">
+                <form id="addCardForm">
+                    <div id="addCardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+                    <input type="text" th:id="'cardName-' + ${column.id}" name="cardName" placeholder="Card Name" required><br>
+                    <input type="text" th:id="'cardDescription-' + ${column.id}" name="cardDescription" placeholder="Card Description" required><br>
+                    <input type="text" th:id="'color-' + ${column.id}" name="color" placeholder="Card Color" required><br>
+                    <input type="text" th:id="'operatorIds-' + ${column.id}" name="operatorIds" placeholder="Operator IDs"><br>
+                    <button type="button" th:attr="data-column-id=${column.id}" onclick="submitCardAddForm(this)">Add Card</button>
+                    <button type="button" th:attr="data-column-id=${column.id}" onclick="closeCardAddForm(this)">Close</button>
+                </form>
+            </div>
+
+            <ol class="kanban To-do" style="padding-bottom: 30px;" th:attr="data-column-id=${column.id}" th:data-col-index="${column.colIndex}">
+                <div class="button_container">
+                    <button class="delete-column-button" id="ColumnDeleteButton" th:attr="data-column-id=${column.id}" onclick="deleteColumn(this)">
+                        <span style="margin-top: 5px;" class="material-symbols-outlined">delete_forever</span>
+                    </button>
+                </div>
+                <div class="kanban__title" style="display: flex; justify-content: space-between;">
+                    <div style="display: flex;">
+                        <h2 th:text="${column.colName}">Column Name</h2>
+                        <button id="ColNameEditButton" th:attr="data-column-id=${column.id}" onclick="openColNameEditForm(this)">
                                 <span style="margin-left: 2px;" class="material-symbols-outlined">
                                     edit
                                 </span>
-                            </button>
-                        </div>
-                        <button id="ColIndexEditButton" th:attr="data-column-id=${column.id}" onclick="openColIndexEditForm(this)">
-                            <i class="material-icons">settings</i>
                         </button>
                     </div>
-                    <ul style="padding: 0;" th:each="card : ${column.cardList}">
-                        <li class="dd-item">
-                            <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
-                            <div class="text" th:text="${card.cardDescription}"></div>
-<!--                            <div class="operators" th:each="operator : ${card.operators}">-->
-<!--                                <span th:text="${operator.getParticipant().getParticipantName()}"></span>-->
-<!--                            </div>-->
-                        </li>
-                    </ul>
+                    <button id="ColIndexEditButton" th:attr="data-column-id=${column.id}" onclick="openColIndexEditForm(this)">
+                        <i class="material-icons">settings</i>
+                    </button>
+                </div>
+                <ul style="padding: 0;" th:each="card : ${column.cardList}">
                     <li class="dd-item">
-                        <h3 class="title dd-handle">
-                            <span></span>
-                        </h3>
-                        <div class="actions">
-                            <button class="addbutt" th:attr="data-column-id=${column.id}" onclick="openCardAddForm(this)">
-                                <i class="material-icons">control_point</i> Add new
-                            </button>
-                        </div>
+                        <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
+                        <div class="text" th:text="${card.cardDescription}"></div>
+<!--                        <div class="operators" th:each="operator : ${card.operators}">-->
+<!--                            <span th:text="${operator.getParticipant().getParticipantName()}"></span>-->
+<!--                        </div>-->
                     </li>
-                </ol>
-            </div>
-        </div>
-        <menu class="kanban">
-            <button id="openAddBoardFormButton" onclick="openBoardEditForm()">
-                <i class="material-icons">settings</i>
-            </button>
-            <button id="goToIndexButton" onclick="goToMyPage()">
-                <i class="material-icons">chevron_left</i>
-            </button>
-            <button class="add-column-button" onclick="openColumnAddForm()">
-                <i class="material-icons">playlist_add</i> Add new Column
-            </button>
-        </menu>
-
-        <!--보드 수정-->
-        <div class="popup-form" id="BoardEditForm" style="display: none;">
-            <form id="editBoardForm">
-                <div id="editBoardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
-                <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
-                <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
-                <input type="text" id="participants" name="participants" placeholder="Participants"><br>
-                <button type="button" onclick="submitBoardEditForm()">Update Board</button>
-                <button type="button" onclick="closeBoardEditForm()">Close</button>
-            </form>
-        </div>
-
-        <!--컬럼 추가-->
-        <div class="popup-form" id="ColumnAddForm">
-            <form id="addColumnForm">
-                <div id="addColumnFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-                <input type="text" id="colName" name="colName" placeholder="Column Name" required><br>
-                <input type="text" id="colIndex" name="colIndex" placeholder="Column Index" required><br>
-                <button type="button" onclick="submitColumnAddForm()">Create Column</button>
-                <button type="button" onclick="closeColumnAddForm()">Close</button>
-            </form>
+                </ul>
+                <li class="dd-item">
+                    <h3 class="title dd-handle">
+                        <span></span>
+                    </h3>
+                    <div class="actions">
+                        <button class="addbutt" th:attr="data-column-id=${column.id}" onclick="openCardAddForm(this)">
+                            <i class="material-icons">control_point</i> Add new
+                        </button>
+                    </div>
+                </li>
+            </ol>
         </div>
     </div>
-    <script type="text/javascript" th:src="@{/js/board_js.js}"></script>
+    <menu class="kanban">
+        <button id="openAddBoardFormButton" onclick="openBoardEditForm()">
+            <i class="material-icons">settings</i>
+        </button>
+        <button id="goToIndexButton" onclick="goToMyPage()">
+            <i class="material-icons">chevron_left</i>
+        </button>
+        <button class="add-column-button" onclick="openColumnAddForm()">
+            <i class="material-icons">playlist_add</i> Add new Column
+        </button>
+    </menu>
+
+    <!--보드 수정-->
+    <div class="popup-form" id="BoardEditForm" style="display: none;">
+        <form id="editBoardForm">
+            <div id="editBoardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+            <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
+            <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
+            <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
+            <input type="text" id="participants" name="participants" placeholder="Participants"><br>
+            <button type="button" onclick="submitBoardEditForm()">Update Board</button>
+            <button type="button" onclick="closeBoardEditForm()">Close</button>
+        </form>
+    </div>
+
+    <!--컬럼 추가-->
+    <div class="popup-form" id="ColumnAddForm">
+        <form id="addColumnForm">
+            <div id="addColumnFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+            <input type="text" id="colName" name="colName" placeholder="Column Name" required><br>
+            <input type="text" id="colIndex" name="colIndex" placeholder="Column Index" required><br>
+            <button type="button" onclick="submitColumnAddForm()">Create Column</button>
+            <button type="button" onclick="closeColumnAddForm()">Close</button>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/board_js.js}"></script>
 </body>
 </html>

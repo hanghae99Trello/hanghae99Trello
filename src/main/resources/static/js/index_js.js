@@ -14,8 +14,14 @@ function submitBoardForm() {
     const participantsInput = document.getElementById("participants");
     let participants = [];
 
-    if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
-        participants = participantsInput.value.split(",").map(participant => participant.trim());
+    if (participantsInput != null && participantsInput.value != null) {
+        const inputValues = participantsInput.value.split(",");
+
+        if (inputValues.length === 1) {
+            participants.push(inputValues[0].trim());
+        }
+
+        participants = inputValues.map(participant => participant.trim());
     }
 
     const data = {
@@ -32,19 +38,19 @@ function submitBoardForm() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-    })
-    .then(data => {
-        console.log('Success:', data);
-        closeBoardAddForm();
-    })
-    .catch((error) => {
-        console.error('Error:', error.message);
-        document.getElementById("boardFormErrorMessage").textContent = "보드 생성에 실패했습니다.";
-    });
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
+        .then(data => {
+            console.log('Success:', data);
+            closeBoardAddForm();
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+            document.getElementById("boardFormErrorMessage").textContent = "보드 생성에 실패했습니다.";
+        });
 }
 
 
@@ -100,15 +106,15 @@ function submitUserEditForm() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        closeUserEditForm();
-    })
-    .catch(error => {
-        console.error("Error updating board:", error);
-        document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            closeUserEditForm();
+        })
+        .catch(error => {
+            console.error("Error updating board:", error);
+            document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
+        });
 }
 
 
@@ -122,17 +128,17 @@ function deleteUser() {
             'Content-Type': 'application/json'
         },
     })
-    .then(response => {
-        if (response.ok) {
-            console.log('User deleted successfully');
-            alert('회원탈퇴가 완료되었습니다.');
-            window.location.href = '/api/user/login-page';
-        } else {
-            console.error('Failed to delete user');
-            document.getElementById("deleteUserErrorMessage").textContent = "사용자를 삭제할 수 없습니다.";
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting user:', error);
-    });
+        .then(response => {
+            if (response.ok) {
+                console.log('User deleted successfully');
+                alert('회원탈퇴가 완료되었습니다.');
+                window.location.href = '/api/user/login-page';
+            } else {
+                console.error('Failed to delete user');
+                document.getElementById("deleteUserErrorMessage").textContent = "사용자를 삭제할 수 없습니다.";
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting user:', error);
+        });
 }

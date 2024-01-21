@@ -13,9 +13,7 @@ import org.sparta.hanghae99trello.repository.ColRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,11 +29,13 @@ public class ColService {
         String lockKey = "ColLock";
 
         RLock lock = redissonClient.getLock(lockKey);
+        boolean lockAcquired = false;
         try {
             if (!lock.tryLock()) {
                 throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
             }
 
+            lockAcquired = true;
             Board board = boardService.findBoard(boardId);
             Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
             Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
@@ -49,7 +49,9 @@ public class ColService {
 
             return new ColResponseDto(savedCol);
         } finally {
-            lock.unlock();
+            if (lockAcquired) {
+                lock.unlock();
+            }
         }
     }
 
@@ -148,3 +150,4 @@ public class ColService {
                 new IllegalArgumentException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
     }
 }
+
