@@ -547,7 +547,7 @@ function submitBoardEditForm() {
     fetch(`/api/users/boards/${boardId}`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(data)
     })
@@ -594,8 +594,6 @@ function submitColumnAddForm() {
         .then(response => {
             if (response.ok) {
                 return response.json();
-            } else {
-                throw new Error('보드 생성에 실패했습니다.');
             }
         })
         .then(data => {
@@ -719,3 +717,60 @@ $(document).ready(function() {
     });
     container.empty().append(items);
 });
+
+
+
+// 카드 생성
+function openCardAddForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("CardAddForm-" + columnId).style.display = "block";
+}
+
+function closeCardAddForm(button) {
+    const columnId = $(button).attr("data-column-id");
+    document.getElementById("CardAddForm-" + columnId).style.display = "none";
+}
+
+function submitCardAddForm(button) {
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    const columnId = $(button).attr("data-column-id");
+    const cardName = document.getElementById("cardName").value;
+    const cardDescription = document.getElementById("cardDescription").value;
+    const color = document.getElementById("cardColor").value;
+    const operatorInput = document.getElementById("operatorIds");
+    let operatorIds = [];
+
+    if (operatorInput != null && operatorInput.value.indexOf(",") !== -1) {
+        operatorIds = operatorInput.value.split(",").map(operatorIds => operatorIds.trim());
+    }
+
+    const data = {
+        cardName: cardName,
+        cardDescription: cardDescription,
+        color: color,
+        operatorIds: operatorIds
+    };
+
+    fetch(`/api/users/boards/${boardId}/columns/${columnId}/cards`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+        closeColumnAddForm();
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
+    });
+}

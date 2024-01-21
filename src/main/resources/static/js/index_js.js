@@ -35,8 +35,6 @@ function submitBoardForm() {
     .then(response => {
         if (response.ok) {
             return response.json();
-        } else {
-            throw new Error('보드 생성에 실패했습니다.');
         }
     })
     .then(data => {

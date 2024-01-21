@@ -27,7 +27,7 @@ public class CardController {
 
         CardResponseDto cardResponseDto = cardService.createCard(boardId, columnId, requestDto.getCardName(),
                 requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds());
-        return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
+        return ResponseEntity.ok(cardResponseDto);
     }
 
     @GetMapping("/{boardId}/columns/{columnId}/cards/{cardId}")

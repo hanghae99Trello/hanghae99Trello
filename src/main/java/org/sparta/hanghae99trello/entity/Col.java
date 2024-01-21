@@ -32,6 +32,7 @@ public class Col {
     private Board board;
 
     @OneToMany(mappedBy = "col")
+    @JsonManagedReference
     private List<Card> cardList;
 
     public Col(String colName, Long colIndex, Board board) {
