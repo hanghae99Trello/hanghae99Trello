@@ -60,8 +60,7 @@ public class PageController {
         List<ColResponseDto> columns = colService.getCols(boardId);
 
         model.addAttribute("board", board);
-        // model.addAttribute("columns", columns); // 이 부분은 주석 처리해주세요.
-
+        model.addAttribute("columns", columns);
         return "board";
     }
 }

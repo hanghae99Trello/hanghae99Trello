@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -28,41 +31,22 @@ public class Col {
     @JoinColumn(name = "board")
     private Board board;
 
-    @JoinColumn(name = "first_card_id")
-    private Long firstCardId;
-
-    @JoinColumn(name = "last_card_id")
-    private Long lastCardId;
-
-    public Long addCard(Card card) {
-        if (this.firstCardId == null) {
-            this.firstCardId = card.getId();
-            this.lastCardId = card.getId();
-            return card.getId();
-        }
-        Long prev_id = lastCardId;
-        this.lastCardId = card.getId();
-        return prev_id;
-    }
+    @OneToMany(mappedBy = "col")
+    @JsonManagedReference
+    private List<Card> cardList;
 
     public Col(String colName, Long colIndex, Board board) {
-
         this.colName = colName;
         this.colIndex = colIndex;
         this.board = board;
+        this.cardList = new ArrayList<>();
     }
 
-    public Boolean deleteCard(Card card) {
-        if (this.firstCardId.equals(this.lastCardId) && this.firstCardId.equals(card.getId())) {
-            this.firstCardId = null;
-            this.lastCardId = null;
-            return true;
-        } else if (this.firstCardId.equals(card.getId())) {
-            this.firstCardId = card.getNextCardId();
-        } else if (this.lastCardId.equals(card.getId())) {
-            this.lastCardId = card.getPreviousCardId();
-        }
-        return false;
+    public void addCard(Card card) {
+        this.cardList.add(card);
     }
 
+    public void deleteCard(Card card) {
+        this.cardList.remove(card);
+    }
 }

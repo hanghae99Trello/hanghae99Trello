@@ -771,18 +771,18 @@ function submitCardAddForm(button) {
         },
         body: JSON.stringify(data)
     })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-        })
-        .then(data => {
-            console.log('Success:', data);
-            closeColumnAddForm();
-            location.reload();
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
-        });
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+        closeColumnAddForm();
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
+    });
 }

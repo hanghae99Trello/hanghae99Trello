@@ -2,6 +2,8 @@ package org.sparta.hanghae99trello.service;
 
 import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
 import org.sparta.hanghae99trello.dto.ColRequestDto;
@@ -33,29 +35,41 @@ public class BoardService {
     private final UserRepository userRepository;
     private final ParticipantRepository participantRepository;
     private final ColRepository colRepository;
+    private final RedissonClient redissonClient;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User createdBy = userDetails.getUser();
+        String lockKey = "createBoardLock";
 
-        Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
+        RLock lock = redissonClient.getLock(lockKey);
+        try {
+            if (!lock.tryLock()) {
+                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+            }
+            lock.lock();
+            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User createdBy = userDetails.getUser();
 
-        Board board = new Board(
-                requestDto.getBoardName(),
-                requestDto.getBoardColor(),
-                requestDto.getBoardDescription(),
-                createdBy,
-                participants
-        );
+            Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
-        for (Participant participant : participants) {
-            participant.setBoard(board);
+            Board board = new Board(
+                    requestDto.getBoardName(),
+                    requestDto.getBoardColor(),
+                    requestDto.getBoardDescription(),
+                    createdBy,
+                    participants
+            );
+            for (Participant participant : participants) {
+                participant.setBoard(board);
+            }
+            board.setParticipants(participants);
+            return new BoardResponseDto(boardRepository.save(board));
+
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
-
-
-        board.setParticipants(participants);
-        return new BoardResponseDto(boardRepository.save(board));
     }
 
 
@@ -66,8 +80,7 @@ public class BoardService {
 
     @Transactional
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto requestDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() ->
-                new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+        Board board = findBoard(boardId);
 
         if (!checkCreatedByUser(board)) {
             throw new IllegalArgumentException(ErrorMessage.UPDATE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
@@ -92,7 +105,11 @@ public class BoardService {
     }
 
     public void deleteBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+        Board board = findBoard(boardId);
+
+        if (!checkCreatedByUser(board)) {
+            throw new IllegalArgumentException(ErrorMessage.DELETE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
+        }
 
         List<Col> columns = colRepository.findByBoardId(boardId);
         colRepository.deleteAll(columns);
@@ -101,9 +118,7 @@ public class BoardService {
     }
 
     public BoardResponseDto getBoardById(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() ->
-            new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage())
-        );
+        Board board = findBoard(boardId);
         return new BoardResponseDto(board);
     }
 
@@ -122,8 +137,6 @@ public class BoardService {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
-        System.out.println("loggedInId = " + loggedInId);
-        System.out.println("boardCreatorId = " + boardCreatorId);
         return loggedInId.equals(boardCreatorId);
     }
 
@@ -131,5 +144,10 @@ public class BoardService {
         return colRequestDtoList.stream()
                 .map(colRequestDto -> new Col(colRequestDto.getColName(), colRequestDto.getColIndex(), null))
                 .collect(Collectors.toList());
+    }
+
+    public Board findBoard(Long id) {
+        return boardRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
     }
 }

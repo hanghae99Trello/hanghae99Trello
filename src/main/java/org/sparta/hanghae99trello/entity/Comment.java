@@ -1,7 +1,6 @@
 package org.sparta.hanghae99trello.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,20 +14,17 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "card_id")
-    @JsonBackReference
-    private Card card;
+    private Participant participant;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Card card;
 
     @Column(nullable = false)
     private String commentMessage;
 
-    public Comment(User user, Card card, String commentMessage) {
+    public Comment(Participant participant, Card card, String commentMessage) {
+        this.participant = participant;
         this.card = card;
-        this.user = user;
         this.commentMessage = commentMessage;
     }
 }

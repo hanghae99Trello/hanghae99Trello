@@ -1,16 +1,31 @@
+$(document).ready(function () {
+    Cookies.remove('Authorization', {path: '/'});
+});
+
+const host = 'http://' + window.location.host;
+
+const href = location.href;
+const queryString = href.substring(href.indexOf("?")+1)
+if (queryString === 'error') {
+    const errorDiv = document.getElementById('login-failed');
+    errorDiv.style.display = 'block';
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const signUpBtn = document.getElementById("signUp");
-    const signInBtn = document.getElementById("signInBtn"); // 'signIn'이 아닌 'signInBtn'로 수정
+    const signIn = document.getElementById("signIn");
+    const signInBtn = document.getElementById("signInBtn");
     const container = document.querySelector(".container");
 
     signUpBtn.addEventListener("click", function() {
         container.classList.add("right-panel-active");
     });
 
-    signInBtn.addEventListener("click", function() {
+    signIn.addEventListener("click", function() {
         container.classList.remove("right-panel-active");
+    });
 
-        // 변경된 부분: 'onLogin()' 함수를 호출하지 않고, 로그인 요청 로직을 직접 처리
+    signInBtn.addEventListener("click", function() {
         let email = $('#email').val();
         let password = $('#password').val();
 
@@ -25,40 +40,54 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .fail(function (xhr, textStatus, errorThrown) {
                 console.log('statusCode: ' + xhr.status);
-                window.location.href = host + '/api/user/login-page?error'
+                showLoginFailedMessage();
+            });
+    });
+
+    $('#signUpBtn').click(function () {
+        const name = $('#name').val();
+        const email = $('#signupEmail').val();
+        const phone = $('#phone').val();
+        const password = $('#signupPassword').val();
+
+        if (!name || !email || !phone || !password) {
+            showSignupWarningMessage();
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/api/join',
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                password: password,
+                auth: 'USER'
+            }),
+        })
+            .done(function (res, status, xhr) {
+                showSignupSuccessMessage();
+                console.log('Signup successful');
+            })
+            .fail(function (xhr, textStatus, errorThrown) {
+                console.log('Signup failed');
             });
     });
 });
 
-$(document).ready(function () {
-    // 토큰 삭제
-    Cookies.remove('Authorization', {path: '/'});
-});
-
-const host = 'http://' + window.location.host;
-
-const href = location.href;
-const queryString = href.substring(href.indexOf("?")+1)
-if (queryString === 'error') {
-    const errorDiv = document.getElementById('login-failed');
-    errorDiv.style.display = 'block';
+function showSignupWarningMessage() {
+    const signupWarningMessage = document.getElementById('signupWarningMessage');
+    signupWarningMessage.style.display = 'block';
 }
 
-function onLogin() {
-    let email = $('#email').val();
-    let password = $('#password').val();
+function showSignupSuccessMessage() {
+    const signupSuccessMessage = document.getElementById('signupSuccessMessage');
+    signupSuccessMessage.style.display = 'block';
+}
 
-    $.ajax({
-        type: "POST",
-        url: `/api/user/login`,
-        contentType: "application/json",
-        data: JSON.stringify({username: email, password: password}),
-    })
-        .done(function (res, status, xhr) {
-            window.location.href = host;
-        })
-        .fail(function (xhr, textStatus, errorThrown) {
-            console.log('statusCode: ' + xhr.status);
-            window.location.href = host + '/api/user/login-page?error'
-        });
+function showLoginFailedMessage() {
+    const loginFailedMessage = document.getElementById('loginFailedMessage');
+    loginFailedMessage.style.display = 'block';
 }
