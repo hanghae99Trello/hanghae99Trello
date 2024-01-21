@@ -16,6 +16,7 @@ public class RedisConfig {
         Config config = new Config();
 //        config.useSingleServer()
 //                .setAddress("redis://localhost:6379");
+        //도커용 설정
         config.useSingleServer()
                 .setAddress("redis://cache:6379");
         return Redisson.create(config);

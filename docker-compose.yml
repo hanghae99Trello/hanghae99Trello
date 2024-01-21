@@ -12,6 +12,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: dhdbwls1217
       MYSQL_DATABASE: week_5
+    #포트 변경
     ports:
       - "3307:3307"
   cache:
