@@ -530,8 +530,14 @@ function submitBoardEditForm() {
     const participantsInput = document.getElementById("participants");
     let participants = [];
 
-    if (participantsInput != null && participantsInput.value.indexOf(",") !== -1) {
-        participants = participantsInput.value.split(",").map(participant => participant.trim());
+    if (participantsInput != null && participantsInput.value != null) {
+        const inputValues = participantsInput.value.split(",");
+
+        if (inputValues.length === 1) {
+            participants.push(inputValues[0].trim());
+        }
+
+        participants = inputValues.map(participant => participant.trim());
     }
 
     const data = {
@@ -741,8 +747,14 @@ function submitCardAddForm(button) {
     const operatorInput = document.getElementById("operatorIds");
     let operatorIds = [];
 
-    if (operatorInput != null && operatorInput.value.indexOf(",") !== -1) {
-        operatorIds = operatorInput.value.split(",").map(operatorIds => operatorIds.trim());
+    if (operatorInput != null && operatorInput.value != null) {
+        const inputValues = operatorInput.value.split(",");
+
+        if (inputValues.length === 1) {
+            operatorIds.push(inputValues[0].trim());
+        }
+
+        operatorIds = inputValues.map(operatorId => operatorId.trim());
     }
 
     const data = {
