@@ -41,26 +41,50 @@ function submitCommentForm() {
 }
 
 
-// 사용자 정보 수정
-function openUserEditForm() {
-    document.getElementById("UserEditForm").style.display = "block";
+// 카드 정보 수정
+function openCardEditForm() {
+    const cardContainer = document.querySelector('.card_container');
+    const cardId = cardContainer.getAttribute('data-card-id');
+    document.getElementById("CardEditForm-" + cardId).style.display = "block";
 }
 
-function closeUserEditForm() {
-    document.getElementById("UserEditForm").style.display = "none";
+function closeCardEditForm() {
+    const cardContainer = document.querySelector('.card_container');
+    const cardId = cardContainer.getAttribute('data-card-id');
+    document.getElementById("CardEditForm-" + cardId).style.display = "none";
 }
 
-function submitUserEditForm() {
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const userId = document.querySelector('[data-userId]').getAttribute('data-userId');
+function submitCardEditForm() {
+    const cardContainer = document.querySelector('.card_container');
+    const boardId = cardContainer.getAttribute('data-board-id');
+    const columnId = cardContainer.getAttribute('data-column-id');
+    const cardId = cardContainer.getAttribute('data-card-id');
+    const cardName = document.getElementById("cardName-" + cardId).value;
+    const cardDescription = document.getElementById("cardDescription-" + cardId).value;
+    const color = document.getElementById("color-" + cardId).value;
+    const dueDate = document.getElementById("dueDate-" + cardId).value;
+    const operatorInput = document.getElementById("operatorIds-" + cardId);
+    let operatorIds = [];
+
+    if (operatorInput != null && operatorInput.value != null) {
+        const inputValues = operatorInput.value.split(",");
+
+        if (inputValues.length === 1) {
+            operatorIds.push(inputValues[0].trim());
+        }
+
+        operatorIds = inputValues.map(operatorId => operatorId.trim());
+    }
 
     const data = {
-        name: name,
-        phone: phone
+        cardName: cardName,
+        cardDescription: cardDescription,
+        color: color,
+        dueDate: dueDate,
+        operatorIds: operatorIds
     };
 
-    fetch(`/api/users/${userId}`, {
+    fetch(`/api/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -69,12 +93,12 @@ function submitUserEditForm() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success updating user:', data);
-            closeUserEditForm();
+            console.log('Success updating card:', data);
+            closeCardEditForm();
         })
         .catch(error => {
-            console.error("Error updating user:", error);
-            document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
+            console.error("Error updating card:", error);
+            document.getElementById("editCardFormErrorMessage").textContent = "카드 정보 수정에 실패했습니다.";
         });
 }
 

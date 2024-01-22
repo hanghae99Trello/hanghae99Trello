@@ -512,18 +512,24 @@ function goToMyPage() {
 
 // 보드 수정
 function openBoardEditForm() {
-    document.getElementById("BoardEditForm").style.display = "block";
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    document.getElementById("BoardEditForm-" + boardId).style.display = "block";
 }
 
 function closeBoardEditForm() {
-    document.getElementById("BoardEditForm").style.display = "none";
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    document.getElementById("BoardEditForm-" + boardId).style.display = "none";
 }
 
 function submitBoardEditForm() {
-    const boardName = document.getElementById("boardName").value;
-    const boardDescription = document.getElementById("boardDescription").value;
-    const boardColor = document.getElementById("boardColor").value;
-    const participantsInput = document.getElementById("participants");
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    const boardName = document.getElementById("boardName-" + boardId).value;
+    const boardDescription = document.getElementById("boardDescription-" + boardId).value;
+    const boardColor = document.getElementById("boardColor-" + boardId).value;
+    const participantsInput = document.getElementById("participants-" + boardId);
     let participants = [];
 
     if (participantsInput != null && participantsInput.value != null) {
@@ -543,9 +549,6 @@ function submitBoardEditForm() {
         participants: participants
     };
 
-    const boardContainer = document.querySelector('.board_container');
-    const boardId = boardContainer.getAttribute('data-board-id');
-
     fetch(`/api/users/boards/${boardId}`, {
         method: "PUT",
         headers: {
@@ -553,7 +556,11 @@ function submitBoardEditForm() {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
         .then(data => {
             console.log('Success:', data);
             closeBoardEditForm();
