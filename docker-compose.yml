@@ -5,16 +5,8 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - db
       - cache
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: dhdbwls1217
-      MYSQL_DATABASE: docker_trello
-    #포트 변경
-    ports:
-      - "3307:3306"
+
   cache:
     image: redis:alpine
     ports:
