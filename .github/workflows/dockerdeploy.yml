@@ -58,7 +58,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Package deployment files
-        run: zip -r application.zip Dockerrun.aws.json
+        run: zip -r application.zip .ebextensions
 
       #2 현재시간가져오기
       - name: Get current time
