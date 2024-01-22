@@ -54,6 +54,7 @@
                     <input type="text" th:id="'cardDescription-' + ${column.id}" name="cardDescription" placeholder="Card Description" required><br>
                     <input type="text" th:id="'color-' + ${column.id}" name="color" placeholder="Card Color" required><br>
                     <input type="text" th:id="'operatorIds-' + ${column.id}" name="operatorIds" placeholder="Operator IDs"><br>
+                    <input type="date" th:id="'dueDate-' + ${column.id}" name="dueDate" placeholder="Due Date"><br>
                     <button type="button" th:attr="data-column-id=${column.id}" onclick="submitCardAddForm(this)">Add Card</button>
                     <button type="button" th:attr="data-column-id=${column.id}" onclick="closeCardAddForm(this)">Close</button>
                 </form>

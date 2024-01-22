@@ -31,9 +31,7 @@ public class ColService {
         RLock lock = redissonClient.getLock(lockKey);
         boolean lockAcquired = false;
         try {
-            if (!lock.tryLock()) {
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
+            checkTryLock(lock);
 
             lockAcquired = true;
             Board board = boardService.findBoard(boardId);
@@ -69,9 +67,7 @@ public class ColService {
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
-            if (!lock.tryLock()) {
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
+            checkTryLock(lock);
 
             Board board = boardService.findBoard(boardId);
             Col col = findCol(columnId);
@@ -93,9 +89,7 @@ public class ColService {
         String lockKey = "ColLock";
         RLock lock = redissonClient.getLock(lockKey);
 
-        if (!lock.tryLock()) {
-            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-        }
+        checkTryLock(lock);
 
         Board board = boardService.findBoard(boardId);
         Col col = findCol(columnId);
@@ -114,9 +108,7 @@ public class ColService {
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
-            if (!lock.tryLock()) {
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
+            checkTryLock(lock);
 
             Board board = boardService.findBoard(boardId);
             Col columnToUpdate = findCol(columnId);
@@ -148,6 +140,12 @@ public class ColService {
     public Col findCol(Long id) {
         return colRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
+    }
+
+    private void checkTryLock(RLock lock) {
+        if (!lock.tryLock()) {
+            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+        }
     }
 }
 

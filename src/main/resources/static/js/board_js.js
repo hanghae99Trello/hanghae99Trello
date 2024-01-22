@@ -740,6 +740,7 @@ function submitCardAddForm(button) {
     const cardName = document.getElementById("cardName-" + columnId).value;
     const cardDescription = document.getElementById("cardDescription-" + columnId).value;
     const color = document.getElementById("color-" + columnId).value;
+    const dueDate = document.getElementById("dueDate-" + columnId).value;
     const operatorInput = document.getElementById("operatorIds-" + columnId);
     let operatorIds = [];
 
@@ -757,6 +758,7 @@ function submitCardAddForm(button) {
         cardName: cardName,
         cardDescription: cardDescription,
         color: color,
+        dueDate: dueDate,
         operatorIds: operatorIds
     };
 
