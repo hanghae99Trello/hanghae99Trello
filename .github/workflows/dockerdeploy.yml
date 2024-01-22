@@ -55,5 +55,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: gyungtaek/gyungteak:latest
+          tags: gyungtaek/gyungtaek:latest
 
