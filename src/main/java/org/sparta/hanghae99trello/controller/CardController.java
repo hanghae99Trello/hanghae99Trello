@@ -26,7 +26,7 @@ public class CardController {
                                                       @RequestBody CardRequestDto requestDto) {
 
         CardResponseDto cardResponseDto = cardService.createCard(boardId, columnId, requestDto.getCardName(),
-                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds());
+                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds(), requestDto.getDueDate());
         return ResponseEntity.ok(cardResponseDto);
     }
 

@@ -23,7 +23,7 @@ public class CardResponseDto {
     private String color;
     private List<OperatorDto> operators;
     private List<CommentDto> commentList;
-    private LocalDate dueDate;
+    private String dueDate;
 
     public CardResponseDto(Card card) {
         this.cardName = card.getCardName();

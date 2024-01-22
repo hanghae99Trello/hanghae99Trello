@@ -24,10 +24,13 @@
         </button>
       </h1>
       <div id="deleteUserErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-      <h2><span th:text="${card.getCardDescription()}"></span></h2>
+      <h2 style="margin-bottom: 30px;"><span th:text="${card.getCardDescription()}"></span></h2>
       <p><span th:text="${card.getDueDate()}"></span></p>
-      <div class="operators" th:each="operator : ${card.operators}">
-        <span th:text="${operator.getParticipantName()} + ' '"></span>
+      <p style="color: green; font-weight: bold;">&lt;작업자&gt;</p>
+      <div class="operator_list" style="display: flex; justify-content: center;">
+        <div class="operators" th:each="operator : ${card.operators}" style="margin-right: 5px;">
+          <span th:text="${operator.getParticipantName()} + ' '"></span>
+        </div>
       </div>
     </div>
     <div class="comment_container">
@@ -41,7 +44,7 @@
         </li>
         <li class="comment_list">
           <div class="comment_list_box">
-            <button class="add-comment-button" onclick="openCommentAddForm()">댓글 쓰기</button>
+            <button class="add-comment-button" onclick="openCommentAddForm()">+</button>
           </div>
         </li>
       </ul>
