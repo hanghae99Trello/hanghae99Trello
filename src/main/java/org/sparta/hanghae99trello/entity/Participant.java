@@ -1,5 +1,6 @@
 package org.sparta.hanghae99trello.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class Participant {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 

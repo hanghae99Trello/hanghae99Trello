@@ -14,16 +14,10 @@
     <div class="card_info_container">
       <h1 style="margin: 20px;">
         <span th:text="${card.getCardName()}"></span>
-        <button id="EditUserButton" onclick="openUserEditForm()">
+        <button id="EditCardButton" onclick="openCardEditForm()">
           <i class="material-icons">settings</i>
         </button>
-        <button id="DeleteUserButton" onclick="deleteUser()">
-          <span class="material-symbols-outlined">
-            delete_forever
-          </span>
-        </button>
       </h1>
-      <div id="deleteUserErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
       <h2 style="margin-bottom: 30px;"><span th:text="${card.getCardDescription()}"></span></h2>
       <p><span th:text="${card.getDueDate()}"></span></p>
       <p style="color: green; font-weight: bold;">&lt;작업자&gt;</p>
@@ -61,15 +55,16 @@
     </div>
 
     <!--카드 정보 수정-->
-    <div class="popup-form" id="UserEditForm">
-      <form id="editUserForm">
-        <div id="editUserFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-        <input type="text" id="cardName" name="cardName" placeholder="Card Name"><br />
-        <input type="text" id="cardDescription" name="cardDescription" placeholder="Card Description"><br />
-        <input type="text" id="cardColor" name="cardColor" placeholder="Card Color"><br />
-        <input type="date" id="dueDate" name="dueDate" placeholder="DueDate"><br />
-        <button type="button" onclick="submitUserEditForm()">Submit</button>
-        <button type="button" onclick="closeUserEditForm()">Close</button>
+    <div class="popup-form" th:id="'CardEditForm-' + ${cardId}">
+      <form id="editCardForm">
+        <div id="editCardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+        <input type="text" th:id="'cardName-' + ${cardId}" name="cardName" placeholder="Card Name" required><br>
+        <input type="text" th:id="'cardDescription-' + ${cardId}" name="cardDescription" placeholder="Card Description" required><br>
+        <input type="text" th:id="'color-' + ${cardId}" name="color" placeholder="Card Color" required><br>
+        <input type="text" th:id="'operatorIds-' + ${cardId}" name="operatorIds" placeholder="Operator IDs"><br>
+        <input type="text" th:id="'dueDate-' + ${cardId}" name="dueDate" placeholder="Due Date"><br>
+        <button type="button" th:attr="data-card-id=${cardId}" onclick="submitCardEditForm(this)">Add Card</button>
+        <button type="button" th:attr="data-card-id=${cardId}" onclick="closeCardEditForm(this)">Close</button>
       </form>
     </div>
   </div>

@@ -121,13 +121,13 @@
     </menu>
 
     <!--보드 수정-->
-    <div class="popup-form" id="BoardEditForm" style="display: none;">
+    <div class="popup-form" th:id="'BoardEditForm-' + ${boardId}" style="display: none;">
         <form id="editBoardForm">
             <div id="editBoardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
-            <input type="text" id="boardName" name="boardName" placeholder="Board Name" required><br>
-            <input type="text" id="boardColor" name="boardColor" placeholder="Board Color" required><br>
-            <input type="text" id="boardDescription" name="boardDescription" placeholder="Board Description" required><br>
-            <input type="text" id="participants" name="participants" placeholder="Participants"><br>
+            <input type="text" th:id="'boardName-' + ${boardId}" name="boardName" placeholder="Board Name" required><br>
+            <input type="text" th:id="'boardColor-' + ${boardId}" name="boardColor" placeholder="Board Color" required><br>
+            <input type="text" th:id="'boardDescription-' + ${boardId}" name="boardDescription" placeholder="Board Description" required><br>
+            <input type="text" th:id="'participants-' + ${boardId}" name="participants" placeholder="Participants"><br>
             <button type="button" onclick="submitBoardEditForm()">Update Board</button>
             <button type="button" onclick="closeBoardEditForm()">Close</button>
         </form>
