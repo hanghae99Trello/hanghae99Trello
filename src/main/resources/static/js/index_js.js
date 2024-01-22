@@ -107,11 +107,11 @@ function submitUserEditForm() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
+            console.log('Success updating user:', data);
             closeUserEditForm();
         })
         .catch(error => {
-            console.error("Error updating board:", error);
+            console.error("Error updating user:", error);
             document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
         });
 }

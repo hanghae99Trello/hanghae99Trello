@@ -70,9 +70,9 @@
                     <div style="display: flex;">
                         <h2 th:text="${column.colName}">Column Name</h2>
                         <button id="ColNameEditButton" th:attr="data-column-id=${column.id}" onclick="openColNameEditForm(this)">
-                                <span style="margin-left: 2px;" class="material-symbols-outlined">
-                                    edit
-                                </span>
+                            <span style="margin-left: 2px;" class="material-symbols-outlined">
+                                edit
+                            </span>
                         </button>
                     </div>
                     <button id="ColIndexEditButton" th:attr="data-column-id=${column.id}" onclick="openColIndexEditForm(this)">
@@ -81,11 +81,16 @@
                 </div>
                 <ul style="padding: 0;" th:each="card : ${column.cardList}">
                     <li class="dd-item">
-                        <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
+                        <div style="display: flex; justify-content: space-between;">
+                            <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
+                            <button class="delete-card-button" id="CardDeleteButton" th:attr="data-card-id=${card.id}" onclick="deleteCard(this)">
+                                <span style="margin-top: 5px; color: black;" class="material-symbols-outlined">delete_forever</span>
+                            </button>
+                        </div>
                         <div class="text" th:text="${card.cardDescription}"></div>
-<!--                        <div class="operators" th:each="operator : ${card.operators}">-->
-<!--                            <span th:text="${operator.getParticipant().getParticipantName()}"></span>-->
-<!--                        </div>-->
+                        <div class="operators" th:each="operator : ${card.operators}">
+                            <span th:text="${operator.getParticipant().getParticipantName()} + ' '"></span>
+                        </div>
                     </li>
                 </ul>
                 <li class="dd-item">

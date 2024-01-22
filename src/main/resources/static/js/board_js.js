@@ -599,12 +599,12 @@ function submitColumnAddForm() {
             }
         })
         .then(data => {
-            console.log('Success:', data);
+            console.log('Success creating column:', data);
             closeColumnAddForm();
             location.reload();
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error('Error creating column:', error);
             document.getElementById("addColumnFormErrorMessage").textContent = "컬럼 생성에 실패했습니다.";
         });
 }
@@ -699,8 +699,6 @@ function deleteColumn(button) {
         },
         error: function (xhr, status, error) {
             console.error("Error deleting column:", error);
-
-            // 서버로부터 받은 응답 출력
             console.log("Server response:", xhr.responseText);
 
             alert("컬럼 삭제에 실패했습니다. 자세한 내용은 콘솔을 확인하세요.");
@@ -775,13 +773,36 @@ function submitCardAddForm(button) {
             }
         })
         .then(data => {
-            console.log('Success:', data);
+            console.log('Success creating card:', data);
             closeCardAddForm(columnId);
             location.reload();
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error('Error creating card:', error);
             document.getElementById("addCardFormErrorMessage").textContent = "카드 생성에 실패했습니다.";
         });
 }
 
+
+// 카드 삭제
+function deleteCard(button) {
+    const cardId = $(button).attr("data-card-id");
+    const columnId = $(button).attr("data-column-id");
+    const boardId = $(".board_container").data("board-id");
+
+    $.ajax({
+        type: "DELETE",
+        url: `/api/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`,
+        contentType: "application/json",
+        success: function (response) {
+            console.log("Card deleted successfully:", response);
+            alert('카드 삭제가 완료되었습니다.');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error deleting card:", error);
+            console.log("Server response:", xhr.responseText);
+
+            alert("카드 삭제에 실패했습니다. 자세한 내용은 콘솔을 확인하세요.");
+        }
+    });
+}
