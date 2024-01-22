@@ -31,7 +31,7 @@ public class Col {
     @JoinColumn(name = "board")
     private Board board;
 
-    @OneToMany(mappedBy = "col")
+    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Card> cardList;
 
