@@ -806,3 +806,13 @@ function deleteCard(button) {
         }
     });
 }
+
+
+// 카드 페이지로 이동
+function viewCard(button) {
+    const cardId = $(button).attr("data-card-id");
+    const columnId = $(button).attr("data-column-id");
+    const boardId = $(".board_container").data("board-id");
+
+    window.location.href = `/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`;
+}

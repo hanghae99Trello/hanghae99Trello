@@ -10,12 +10,12 @@ import org.sparta.hanghae99trello.entity.Operator;
 @NoArgsConstructor
 public class OperatorDto {
     private Long id;
-    private Long participantId;
+    private String participantName;
     private Long cardId;
 
     public OperatorDto(Operator operator){
         this.id = operator.getId();
-        this.participantId = operator.getParticipant().getId();
+        this.participantName = operator.getParticipant().getParticipantName();
         this.cardId = operator.getCard().getId();
     }
 }
