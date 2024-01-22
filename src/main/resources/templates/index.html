@@ -35,7 +35,7 @@
             <h3 th:text="${board.boardName}"></h3>
             <p th:text="${board.boardDescription}"></p>
         </a>
-          <button id="DeleteBoardButton" onclick="deleteBoard()">
+          <button id="DeleteBoardButton" th:attr="data-board-id=${board.id}" onclick="deleteBoard(this)">
                 <span style="color: white;" class="material-symbols-outlined">
                   delete_forever
                 </span>

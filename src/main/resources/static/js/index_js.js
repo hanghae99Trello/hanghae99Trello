@@ -53,10 +53,8 @@ function submitBoardForm() {
         });
 }
 
-
-// 보드 삭제
-function deleteBoard() {
-    const boardId = document.querySelector('[data-boardId]').getAttribute('data-boardId');
+function deleteBoard(button) {
+    const boardId = button.getAttribute('data-board-id');
 
     fetch(`/api/users/boards/${boardId}`, {
         method: 'DELETE',
@@ -66,16 +64,17 @@ function deleteBoard() {
     })
         .then(response => {
             if (response.ok) {
-                console.log('User deleted successfully');
+                console.log(`Board ${boardId} deleted successfully`);
                 alert('보드 삭제가 완료되었습니다.');
-                window.location.href = '/';
+                // Optionally, you can remove the deleted board from the DOM
+                button.parentNode.remove();
             } else {
-                console.error('Failed to delete user');
+                console.error('Failed to delete board');
                 document.getElementById("deleteUserErrorMessage").textContent = "보드를 삭제할 수 없습니다.";
             }
         })
         .catch(error => {
-            console.error('Error deleting user:', error);
+            console.error('Error deleting board:', error);
         });
 }
 
