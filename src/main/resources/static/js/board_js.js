@@ -638,7 +638,7 @@ function submitColIndexEditForm(button) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
-            closeColIndexEditForm(columnId);
+            closeColIndexEditForm(button);
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -675,7 +675,7 @@ function submitColNameEditForm(button) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
-            closeColNameEditForm(columnId);
+            closeColNameEditForm(button);
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -774,7 +774,7 @@ function submitCardAddForm(button) {
         })
         .then(data => {
             console.log('Success creating card:', data);
-            closeCardAddForm(columnId);
+            closeCardAddForm(button);
             location.reload();
         })
         .catch((error) => {

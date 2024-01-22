@@ -240,8 +240,8 @@ ol.kanban {
     font-weight: 400;
     line-height: 18px;
     overflow: hidden;
-    padding: 16px;
-    width: 79%;
+    padding: 16px 0;
+    width: 100%;
 }
 
 .actions {

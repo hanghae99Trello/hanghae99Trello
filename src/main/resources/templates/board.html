@@ -54,7 +54,7 @@
                     <input type="text" th:id="'cardDescription-' + ${column.id}" name="cardDescription" placeholder="Card Description" required><br>
                     <input type="text" th:id="'color-' + ${column.id}" name="color" placeholder="Card Color" required><br>
                     <input type="text" th:id="'operatorIds-' + ${column.id}" name="operatorIds" placeholder="Operator IDs"><br>
-                    <input type="date" th:id="'dueDate-' + ${column.id}" name="dueDate" placeholder="Due Date"><br>
+                    <input type="text" th:id="'dueDate-' + ${column.id}" name="dueDate" placeholder="Due Date"><br>
                     <button type="button" th:attr="data-column-id=${column.id}" onclick="submitCardAddForm(this)">Add Card</button>
                     <button type="button" th:attr="data-column-id=${column.id}" onclick="closeCardAddForm(this)">Close</button>
                 </form>
@@ -88,8 +88,10 @@
                             </button>
                         </div>
                         <div class="text" th:text="${card.cardDescription}" style="cursor: pointer;" th:attr="data-column-id=${column.id}, data-card-id=${card.id}" onclick="viewCard(this)"></div>
-                        <div class="operators" th:each="operator : ${card.operators}">
-                            <span th:text="${operator.getParticipant().getParticipantName()} + ' '"></span>
+                        <div class="operator_list" style="display: flex;">
+                            <div class="operators" th:each="operator : ${card.operators}" style="margin-right: 5px; color:green;">
+                                <span th:text="${operator.getParticipant().getParticipantName()} + ' '"></span>
+                            </div>
                         </div>
                     </li>
                 </ul>

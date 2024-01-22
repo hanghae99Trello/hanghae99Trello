@@ -13,5 +13,5 @@ public class CardRequestDto {
     private String cardDescription;
     private String color;
     private List<Long> operatorIds;
-    private LocalDate dueDate;
+    private String dueDate;
 }
