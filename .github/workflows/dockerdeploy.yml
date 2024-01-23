@@ -1,5 +1,4 @@
 name: Deploy to Beanstalk
-## application properties 작성해야됨
 on:
   push:
     branches:
@@ -50,31 +49,22 @@ jobs:
           push: true
           tags: gyungtaek/gyungtaek:latest
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
 
-      - name: Package deployment files
-        run: zip -r application.zip .ebextensions
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.AWS_SSH }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          SSH_KEY: ${{ secrets.AWS_SSH }}
 
-      #2 현재시간가져오기
-      - name: Get current time
-        uses: josStorer/get-current-time@v2.0.2
-        id: current-time
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
         with:
-          format: YYYY-MM-DDTHH-mm-ss
-          utcOffset: "+09:00"
-
-      - name: Deploy to AWS Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v20
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: beanstalk
-          environment_name: beanstalk-env
-          version_label: github-action-${{ steps.current-time.outputs.formattedTime }}
-          region: ap-northeast-2
-          deployment_package: application.zip
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ~/.ssh/id_rsa
+          script: |
+            sudo service docker start
+            docker pull gyungtaek/gyungtaek:latest
+            docker run -d -p 1234:1234 gyungtaek/gyungtaek:latest

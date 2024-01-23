@@ -9,6 +9,7 @@ import org.sparta.hanghae99trello.entity.Operator;
 import org.sparta.hanghae99trello.entity.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -21,8 +22,8 @@ public class CardResponseDto {
     private String cardName;
     private String cardDescription;
     private String color;
-    private List<OperatorDto> operators;
-    private List<CommentDto> commentList;
+    private List<OperatorDto> operators = new ArrayList<>();
+    private List<CommentDto> commentList = new ArrayList<>();
     private LocalDate dueDate;
 
     public CardResponseDto(Card card) {
