@@ -68,3 +68,4 @@ jobs:
           script: |
             cd ~/docker
             docker-compose up -d
+            docker image prune
