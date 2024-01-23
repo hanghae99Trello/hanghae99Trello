@@ -69,4 +69,4 @@ jobs:
             cd ~/docker
             docker pull gyungtaek/gyungtaek:latest
             docker-compose up -d
-            docker image rm gyungtaek/gyungtaek:<none>
+            docker image rm gyungtaek/gyungtaek:'<none>'
