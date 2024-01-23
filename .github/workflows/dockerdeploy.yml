@@ -69,4 +69,11 @@ jobs:
             cd ~/docker
             docker pull gyungtaek/gyungtaek:latest
             docker-compose up -d
-            docker image rm gyungtaek/gyungtaek:'<none>'
+  clean_up:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove unused images
+        run: |
+          docker system prune -a -f --volumes
+          docker image rm gyungtaek/gyungtaek -f
