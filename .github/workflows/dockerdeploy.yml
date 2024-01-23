@@ -57,5 +57,6 @@ jobs:
           key: ${{ secrets.AWS_SSH }}
           script: |
             sudo service docker start
+            echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
             docker pull gyungtaek/gyungtaek:latest
             docker run -d -p 1234:1234 gyungtaek/gyungtaek:latest
