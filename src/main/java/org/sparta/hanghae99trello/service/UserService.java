@@ -103,7 +103,7 @@ public class UserService {
 
     public List<Board> getUserBoards(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXIST_USER_ERROR_MESSAGE.getErrorMessage()));
 
         return new ArrayList<>(user.getCreatedBoards());
     }
@@ -115,7 +115,7 @@ public class UserService {
 
     public User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException(ErrorMessage.EXIST_USER_ERROR_MESSAGE.getErrorMessage())
+                new IllegalArgumentException(ErrorMessage.NOT_EXIST_USER_ERROR_MESSAGE.getErrorMessage())
         );
     }
 

@@ -1,6 +1,8 @@
 package org.sparta.hanghae99trello.service;
 
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -30,6 +32,8 @@ public class CardService {
     private final RedissonClient redissonClient;
     private final ParticipantRepository participantRepository;
     private final OperatorRepository operatorRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
@@ -152,7 +156,6 @@ public class CardService {
             boardLock.unlock();
         }
     }
-
 
     @Transactional
     public void sortCardList(List<Card> cardList){

@@ -5,6 +5,7 @@ import org.sparta.hanghae99trello.dto.BoardResponseDto;
 import org.sparta.hanghae99trello.dto.CardResponseDto;
 import org.sparta.hanghae99trello.dto.ColResponseDto;
 import org.sparta.hanghae99trello.entity.Board;
+import org.sparta.hanghae99trello.entity.Card;
 import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
 import org.sparta.hanghae99trello.service.BoardService;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
