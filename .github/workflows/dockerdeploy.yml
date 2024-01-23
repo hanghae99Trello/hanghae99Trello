@@ -49,17 +49,21 @@ jobs:
           push: true
           tags: gyungtaek/gyungtaek:latest
 
-      - name: Deploy to EC2
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.AWS_SSH }}
+          source: "./docker-compose.yml"
+          target: "~/docker/"
+
+      - name: Run docker-compose on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.AWS_SSH }}
           script: |
-            # Docker 서비스 시작
-            sudo service docker start
-
-            echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'mkdir -p ~/docker'
-            scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/docker/
-            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ~/docker && docker-compose up -d'
+            cd ~/docker
+            docker-compose up -d
