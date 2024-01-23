@@ -67,5 +67,6 @@ jobs:
           key: ${{ secrets.AWS_SSH }}
           script: |
             cd ~/docker
+            docker pull gyungtaek/gyungtaek:latest
             docker-compose up -d
             docker image prune
