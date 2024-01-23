@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arbutus+Slab" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css" />
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
 </head>
 <body>
@@ -21,7 +21,7 @@
         </h1>
     </div>
     <div class="flex_container">
-        <div class="dd" th:each="column : ${board.colList}">
+        <div class="dd column-container" th:each="column : ${board.colList}">
             <!-- 컬럼 인덱스 수정 -->
             <div>
                 <div class="popup-form" th:id="'ColIndexEditForm-' + ${column.id}">
@@ -79,12 +79,12 @@
                         <i class="material-icons">settings</i>
                     </button>
                 </div>
-                <ul style="padding: 0;" th:each="card : ${column.cardList}">
-                    <li class="dd-item">
+                <ul class="kanban cards" style="padding: 0;" th:each="card : ${column.cardList}" th:data-col-id="${column.id}">
+                    <li class="dd-item" th:attr="data-column-id=${column.id}, data-card-id=${card.id}, data-card-order-index=${card.orderIndex}">
                         <div style="display: flex; justify-content: space-between;">
                             <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
                             <button class="delete-card-button" id="CardDeleteButton" th:attr="data-card-id=${card.id}" onclick="deleteCard(this)">
-                                <span style="margin-top: 5px; color: black;" class="material-symbols-outlined">delete_forever</span>
+                                <span style="margin-top: 5px;" class="material-symbols-outlined">delete_forever</span>
                             </button>
                         </div>
                         <div class="text" th:text="${card.cardDescription}" style="cursor: pointer;" th:attr="data-column-id=${column.id}, data-card-id=${card.id}" onclick="viewCard(this)"></div>

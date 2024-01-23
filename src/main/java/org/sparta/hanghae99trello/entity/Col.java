@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -31,7 +30,7 @@ public class Col {
     @JoinColumn(name = "board")
     private Board board;
 
-    @OneToMany(mappedBy = "col", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "col", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference
     private List<Card> cardList;
 

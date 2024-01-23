@@ -1,6 +1,8 @@
 package org.sparta.hanghae99trello.service;
 
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.CardColOrderRequestDto;
 import org.sparta.hanghae99trello.dto.CardResponseDto;
@@ -27,6 +29,8 @@ public class CardService {
     private final ColRepository colRepository;
     private final ParticipantRepository participantRepository;
     private final OperatorRepository operatorRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
@@ -109,7 +113,6 @@ public class CardService {
 
         return new CardResponseDto(card);
     }
-
 
     @Transactional
     public void sortCardList(List<Card> cardList){

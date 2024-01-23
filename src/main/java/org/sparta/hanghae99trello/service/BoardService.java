@@ -148,6 +148,6 @@ public class BoardService {
 
     public Board findBoard(Long id) {
         return boardRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
+                new IllegalArgumentException(ErrorMessage.NOT_EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
     }
 }

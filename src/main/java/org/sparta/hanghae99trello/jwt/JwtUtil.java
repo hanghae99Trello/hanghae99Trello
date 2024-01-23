@@ -75,8 +75,8 @@ public class JwtUtil {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
-        logger.error(ErrorMessage.EXIST_TOKEN_ERROR_MESSAGE.getErrorMessage());
-        throw new NullPointerException(ErrorMessage.EXIST_TOKEN_ERROR_MESSAGE.getErrorMessage());
+        logger.error(ErrorMessage.NOT_EXIST_TOKEN_ERROR_MESSAGE.getErrorMessage());
+        throw new NullPointerException(ErrorMessage.NOT_EXIST_TOKEN_ERROR_MESSAGE.getErrorMessage());
     }
 
     public boolean validateToken(String token) {

@@ -53,7 +53,6 @@ public class ColService {
         }
     }
 
-
     public List<ColResponseDto> getCols(Long boardId) {
         List<Col> cols = colRepository.findByBoardId(boardId);
 
@@ -139,7 +138,7 @@ public class ColService {
 
     public Col findCol(Long id) {
         return colRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
+                new IllegalArgumentException(ErrorMessage.NOT_EXIST_COL_ERROR_MESSAGE.getErrorMessage()));
     }
 
     private void checkTryLock(RLock lock) {
