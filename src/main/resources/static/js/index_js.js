@@ -44,15 +44,17 @@ function submitBoardForm() {
             }
         })
         .then(data => {
-            console.log('Success:', data);
+            console.log('Success creating board:', data);
             closeBoardAddForm();
         })
         .catch((error) => {
-            console.error('Error:', error.message);
+            console.error('Error creating board:', error.message);
             document.getElementById("boardFormErrorMessage").textContent = "보드 생성에 실패했습니다.";
         });
 }
 
+
+// 보드 삭제
 function deleteBoard(button) {
     const boardId = button.getAttribute('data-board-id');
 

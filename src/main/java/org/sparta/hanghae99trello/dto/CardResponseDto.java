@@ -22,9 +22,9 @@ public class CardResponseDto {
     private String cardName;
     private String cardDescription;
     private String color;
-    private List<OperatorDto> operators = new ArrayList<>();
-    private List<CommentDto> commentList = new ArrayList<>();
-    private LocalDate dueDate;
+    private List<OperatorDto> operators;
+    private List<CommentDto> commentList;
+    private String dueDate;
 
     public CardResponseDto(Card card) {
         this.cardName = card.getCardName();

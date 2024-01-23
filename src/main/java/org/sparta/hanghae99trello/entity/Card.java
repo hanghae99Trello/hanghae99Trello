@@ -35,7 +35,7 @@ public class Card {
     private List<Operator> operators = new ArrayList<>();
 
     @Column(nullable = true)
-    private LocalDate dueDate;
+    private String dueDate;
 
     @ManyToOne
     @JsonBackReference
@@ -46,12 +46,12 @@ public class Card {
     @Setter
     private double orderIndex;
 
-    public Card(String cardName, String cardDescription, String color, Col col) {
+    public Card(String cardName, String cardDescription, String color, Col col, String dueDate) {
         this.cardName = cardName;
         this.cardDescription = cardDescription;
         this.cardColor = color;
         this.col = col;
-
+        this.dueDate = dueDate;
     }
 
     public void addComment(Comment comment) {
@@ -62,7 +62,7 @@ public class Card {
         this.operators.add(operator);
     }
 
-    public void update(String cardName, String cardDescription, String color, LocalDate dueDate) {
+    public void update(String cardName, String cardDescription, String color, String dueDate) {
         this.cardName = cardName;
         this.cardDescription = cardDescription;
         this.cardColor = color;

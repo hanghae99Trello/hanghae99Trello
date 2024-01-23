@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/card_style.css}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Arbutus+Slab" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <title>할일헤븐</title>
+</head>
+<body>
+  <div class="card_container" th:data-board-id="${boardId}" th:data-column-id="${columnId}" th:data-card-id="${cardId}">
+    <div class="card_info_container">
+      <h1 style="margin: 20px;">
+        <span th:text="${card.getCardName()}"></span>
+        <button id="EditCardButton" onclick="openCardEditForm()">
+          <i class="material-icons">settings</i>
+        </button>
+      </h1>
+      <h2 style="margin-bottom: 30px;"><span th:text="${card.getCardDescription()}"></span></h2>
+      <p><span th:text="${card.getDueDate()}"></span></p>
+      <p style="color: green; font-weight: bold;">&lt;작업자&gt;</p>
+      <div class="operator_list" style="display: flex; justify-content: center;">
+        <div class="operators" th:each="operator : ${card.operators}" style="margin-right: 5px;">
+          <span th:text="${operator.getParticipantName()} + ' '"></span>
+        </div>
+      </div>
+    </div>
+    <div class="comment_container">
+      <h2 style="margin: 40px 0 20px 0;">Comments</h2>
+      <ul>
+        <li class="comment_list" th:each="comment : ${card.commentList}">
+          <div class="comment_list_box">
+            <p th:text="${userName}"></p>
+            <p th:text="${comment.getCommentMessage()}"></p>
+          </div>
+        </li>
+        <li class="comment_list">
+          <div class="comment_list_box">
+            <button class="add-comment-button" onclick="openCommentAddForm()">+</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!--댓글 추가-->
+    <div class="popup-form" id="CommentAddForm">
+      <form id="addCommentForm">
+        <div id="CommentFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+        <input type="text" id="commentMessage" name="commentMessage" placeholder="Comment Message" required><br />
+        <button type="button" onclick="submitCommentForm()">Submit</button>
+        <button type="button" onclick="closeCommentAddForm()">Close</button>
+      </form>
+    </div>
+
+    <!--카드 정보 수정-->
+    <div class="popup-form" th:id="'CardEditForm-' + ${cardId}">
+      <form id="editCardForm">
+        <div id="editCardFormErrorMessage" style="font-weight: 100; color: red; margin-bottom: 10px;"></div>
+        <input type="text" th:id="'cardName-' + ${cardId}" name="cardName" placeholder="Card Name" required><br>
+        <input type="text" th:id="'cardDescription-' + ${cardId}" name="cardDescription" placeholder="Card Description" required><br>
+        <input type="text" th:id="'color-' + ${cardId}" name="color" placeholder="Card Color" required><br>
+        <input type="text" th:id="'operatorIds-' + ${cardId}" name="operatorIds" placeholder="Operator IDs"><br>
+        <input type="text" th:id="'dueDate-' + ${cardId}" name="dueDate" placeholder="Due Date"><br>
+        <button type="button" th:attr="data-card-id=${cardId}" onclick="submitCardEditForm(this)">Add Card</button>
+        <button type="button" th:attr="data-card-id=${cardId}" onclick="closeCardEditForm(this)">Close</button>
+      </form>
+    </div>
+  </div>
+
+<script type="text/javascript" th:src="@{/js/card_js.js}"></script>
+</body>
+</html>

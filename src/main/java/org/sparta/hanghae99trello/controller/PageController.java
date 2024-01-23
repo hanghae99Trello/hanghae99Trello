@@ -2,11 +2,13 @@ package org.sparta.hanghae99trello.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
+import org.sparta.hanghae99trello.dto.CardResponseDto;
 import org.sparta.hanghae99trello.dto.ColResponseDto;
 import org.sparta.hanghae99trello.entity.Board;
 import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
 import org.sparta.hanghae99trello.service.BoardService;
+import org.sparta.hanghae99trello.service.CardService;
 import org.sparta.hanghae99trello.service.ColService;
 import org.sparta.hanghae99trello.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +25,7 @@ public class PageController {
     private final UserService userService;
     private final BoardService boardService;
     private final ColService colService;
+    private final CardService cardService;
 
     @GetMapping("/")
     public String getUserDetails(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -62,5 +65,20 @@ public class PageController {
         model.addAttribute("board", board);
         model.addAttribute("columns", columns);
         return "board";
+    }
+
+    @GetMapping("/users/boards/{boardId}/columns/{columnId}/cards/{cardId}")
+    public String getColumns(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long boardId,
+            @PathVariable Long columnId,
+            @PathVariable Long cardId,
+            Model model
+    ) {
+        String userName = userDetails.getUser().getName();
+        model.addAttribute("userName", userName);
+        CardResponseDto card = cardService.getCard(boardId, columnId, cardId);
+        model.addAttribute("card", card);
+        return "card";
     }
 }

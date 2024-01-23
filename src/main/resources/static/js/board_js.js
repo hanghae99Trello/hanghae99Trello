@@ -512,18 +512,24 @@ function goToMyPage() {
 
 // 보드 수정
 function openBoardEditForm() {
-    document.getElementById("BoardEditForm").style.display = "block";
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    document.getElementById("BoardEditForm-" + boardId).style.display = "block";
 }
 
 function closeBoardEditForm() {
-    document.getElementById("BoardEditForm").style.display = "none";
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    document.getElementById("BoardEditForm-" + boardId).style.display = "none";
 }
 
 function submitBoardEditForm() {
-    const boardName = document.getElementById("boardName").value;
-    const boardDescription = document.getElementById("boardDescription").value;
-    const boardColor = document.getElementById("boardColor").value;
-    const participantsInput = document.getElementById("participants");
+    const boardContainer = document.querySelector('.board_container');
+    const boardId = boardContainer.getAttribute('data-board-id');
+    const boardName = document.getElementById("boardName-" + boardId).value;
+    const boardDescription = document.getElementById("boardDescription-" + boardId).value;
+    const boardColor = document.getElementById("boardColor-" + boardId).value;
+    const participantsInput = document.getElementById("participants-" + boardId);
     let participants = [];
 
     if (participantsInput != null && participantsInput.value != null) {
@@ -543,9 +549,6 @@ function submitBoardEditForm() {
         participants: participants
     };
 
-    const boardContainer = document.querySelector('.board_container');
-    const boardId = boardContainer.getAttribute('data-board-id');
-
     fetch(`/api/users/boards/${boardId}`, {
         method: "PUT",
         headers: {
@@ -553,7 +556,11 @@ function submitBoardEditForm() {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+        })
         .then(data => {
             console.log('Success:', data);
             closeBoardEditForm();
@@ -638,7 +645,7 @@ function submitColIndexEditForm(button) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
-            closeColIndexEditForm(columnId);
+            closeColIndexEditForm(button);
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -675,7 +682,7 @@ function submitColNameEditForm(button) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Column updated successfully:", response);
-            closeColNameEditForm(columnId);
+            closeColNameEditForm(button);
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -774,7 +781,7 @@ function submitCardAddForm(button) {
         })
         .then(data => {
             console.log('Success creating card:', data);
-            closeCardAddForm(columnId);
+            closeCardAddForm(button);
             location.reload();
         })
         .catch((error) => {
@@ -805,4 +812,14 @@ function deleteCard(button) {
             alert("카드 삭제에 실패했습니다. 자세한 내용은 콘솔을 확인하세요.");
         }
     });
+}
+
+
+// 카드 페이지로 이동
+function viewCard(button) {
+    const cardId = $(button).attr("data-card-id");
+    const columnId = $(button).attr("data-column-id");
+    const boardId = $(".board_container").data("board-id");
+
+    window.location.href = `/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`;
 }
