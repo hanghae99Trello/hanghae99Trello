@@ -56,7 +56,10 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.AWS_SSH }}
           script: |
+            # Docker 서비스 시작
             sudo service docker start
+
             echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-            docker pull gyungtaek/gyungtaek:latest
-            docker run -d -p 1234:1234 gyungtaek/gyungtaek:latest
+            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'mkdir -p ~/docker'
+            scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/docker/
+            ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ~/docker && docker-compose up -d'
