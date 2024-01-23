@@ -26,14 +26,9 @@ public class ColService {
 
     @Transactional
     public ColResponseDto createCol(Long boardId, ColRequestDto requestDto) {
-        String lockKey = "ColLock";
+        RLock boardLock = boardService.createBoardLock(boardId);
 
-        RLock lock = redissonClient.getLock(lockKey);
-        boolean lockAcquired = false;
         try {
-            checkTryLock(lock);
-
-            lockAcquired = true;
             Board board = boardService.findBoard(boardId);
             Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
             Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
@@ -47,11 +42,9 @@ public class ColService {
 
             return new ColResponseDto(savedCol);
         } finally {
-            if (lockAcquired) {
-                lock.unlock();
+                boardLock.unlock();
             }
         }
-    }
 
 
     public List<ColResponseDto> getCols(Long boardId) {
@@ -63,12 +56,10 @@ public class ColService {
     }
 
     public ColResponseDto updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
-        String lockKey = "ColLock";
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock colLock = createColLock(columnId);
 
         try {
-            checkTryLock(lock);
-
             Board board = boardService.findBoard(boardId);
             Col col = findCol(columnId);
 
@@ -79,36 +70,39 @@ public class ColService {
             col.setColName(requestDto.getColName());
             return new ColResponseDto(colRepository.save(col));
         } finally {
-            lock.unlock();
+            colLock.unlock();
+            boardLock.unlock();
         }
     }
 
 
 
     public void deleteCol(Long boardId, Long columnId) {
-        String lockKey = "ColLock";
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock colLock = createColLock(columnId);
 
-        checkTryLock(lock);
+        try {
+            Board board = boardService.findBoard(boardId);
+            Col col = findCol(columnId);
 
-        Board board = boardService.findBoard(boardId);
-        Col col = findCol(columnId);
+            if (!col.getBoard().getId().equals(board.getId())) {
+                throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+            }
 
-        if (!col.getBoard().getId().equals(board.getId())) {
-            throw new IllegalArgumentException(ErrorMessage.ID_MISMATCH_ERROR_MESSAGE.getErrorMessage());
+            colRepository.deleteById(columnId);
+        } finally {
+            colLock.unlock();
+            boardLock.unlock();
         }
 
-        colRepository.deleteById(columnId);
-        lock.unlock();
     }
 
     @Transactional
     public ColResponseDto updateColIdx(Long boardId, Long columnId, Long columnOrderIndex) {
-        String lockKey = "ColLock";
-        RLock lock = redissonClient.getLock(lockKey);
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock colLock = createColLock(columnId);
 
         try {
-            checkTryLock(lock);
 
             Board board = boardService.findBoard(boardId);
             Col columnToUpdate = findCol(columnId);
@@ -133,7 +127,8 @@ public class ColService {
 
             return new ColResponseDto(columnToUpdate);
         } finally {
-            lock.unlock();
+            colLock.unlock();
+            boardLock.unlock();
         }
     }
 
@@ -142,10 +137,14 @@ public class ColService {
                 new IllegalArgumentException(ErrorMessage.EXIST_COL_ERROR_MESSGAGE.getErrorMessage()));
     }
 
-    private void checkTryLock(RLock lock) {
+    public RLock createColLock(Long columnId) {
+        String lockKey = "ColLock"+ columnId.toString();
+        RLock lock = redissonClient.getLock(lockKey);
+
         if (!lock.tryLock()) {
             throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
         }
+        return lock;
     }
 }
 
