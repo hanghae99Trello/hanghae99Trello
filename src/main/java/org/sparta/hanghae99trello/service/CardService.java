@@ -2,12 +2,12 @@ package org.sparta.hanghae99trello.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.CardColOrderRequestDto;
 import org.sparta.hanghae99trello.dto.CardResponseDto;
-import org.sparta.hanghae99trello.entity.Card;
-import org.sparta.hanghae99trello.entity.Col;
-import org.sparta.hanghae99trello.entity.Operator;
-import org.sparta.hanghae99trello.entity.Participant;
+import org.sparta.hanghae99trello.entity.*;
+import org.sparta.hanghae99trello.message.ErrorMessage;
 import org.sparta.hanghae99trello.repository.CardRepository;
 import org.sparta.hanghae99trello.repository.ColRepository;
 import org.sparta.hanghae99trello.repository.OperatorRepository;
@@ -23,21 +23,34 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CardService {
+    private final BoardService boardService;
+    private final ColService colService;
     private final CardRepository cardRepository;
     private final ColRepository colRepository;
+    private final RedissonClient redissonClient;
     private final ParticipantRepository participantRepository;
     private final OperatorRepository operatorRepository;
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
                                       String cardDescription, String color, List<Long> operatorIds) {
-        Col col = getColById(columnId);
-        Card card = new Card(cardName, cardDescription, color,col);
-        cardRepository.save(card);
-        updateOperator(boardId, card, operatorIds);
-        card.setOrderIndex(card.getId());
-        col.addCard(card);
-        return new CardResponseDto(card);
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock colLock = colService.createColLock(columnId);
+
+        try{
+            Col col = getColById(columnId);
+            Card card = new Card(cardName, cardDescription, color,col);
+            cardRepository.save(card);
+            updateOperator(boardId, card, operatorIds);
+            card.setOrderIndex(card.getId());
+            col.addCard(card);
+            return new CardResponseDto(card);
+        } finally {
+            colLock.unlock();
+            boardLock.unlock();
+        }
+
+
     }
 
     @Transactional
@@ -49,11 +62,39 @@ public class CardService {
     @Transactional
     public CardResponseDto updateCard(Long boardId, Long cardId, String cardName, String cardDescription,
                                       String color, List<Long> operatorIds, LocalDate dueDate) {
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock cardLock = createCardLock(cardId);
+
+        try {
+            Card card = getCardById(cardId);
+            card.update(cardName, cardDescription, color, dueDate);
+            updateOperator(boardId, card, operatorIds);
+            cardRepository.save(card);
+            return new CardResponseDto(card);
+        } finally {
+            cardLock.unlock();
+            boardLock.unlock();
+        }
+
+    }
+
+    @Transactional
+    public void deleteCard(Long cardId) {
         Card card = getCardById(cardId);
-        card.update(cardName, cardDescription, color, dueDate);
-        updateOperator(boardId, card, operatorIds);
-        cardRepository.save(card);
-        return new CardResponseDto(card);
+        Col col = card.getCol();
+        Board board = col.getBoard();
+
+        RLock boardLock = boardService.createBoardLock(board.getId());
+        RLock colLock = colService.createColLock(col.getId());
+        RLock cardLock = createCardLock(cardId);
+        try{
+            col.deleteCard(card);
+            cardRepository.delete(card);
+        } finally {
+            cardLock.unlock();
+            colLock.unlock();
+            boardLock.unlock();
+        }
     }
 
     @Transactional
@@ -76,38 +117,40 @@ public class CardService {
     }
 
     @Transactional
-    public void deleteCard(Long cardId) {
-        Card card = getCardById(cardId);
-        Col col = card.getCol();
-        col.deleteCard(card);
-        cardRepository.delete(card);
-    }
-
-    @Transactional
     //같은 카드일때 지웠다가 새로넣을 이유가 있나?
     public CardResponseDto updateCardColOrder(Long boardId, Long columnId, Long cardId, Long newCardIndex, Long newColIndex) {
-        
-        Col col = getColById(columnId);
-        Card card = getCardById(cardId);
 
-        col.deleteCard(card);
+        RLock boardLock = boardService.createBoardLock(boardId);
+        RLock colLock = colService.createColLock(columnId);
+        RLock cardLock = createCardLock(cardId);
 
-        Col newCol = getColById(newColIndex);
-        List<Card> cardList = cardRepository.findAllByColIdOrderByOrderIndexAsc(newCol.getId());
+        try{
+            Col col = getColById(columnId);
+            Card card = getCardById(cardId);
 
-        double newOrderIndex = calculateNewOrderIndex(newCardIndex, cardList);
-        card.setOrderIndex(newOrderIndex);
+            col.deleteCard(card);
 
-        BigDecimal bd = new BigDecimal(Double.toString(newOrderIndex));
-        int precision = bd.precision();
-        if (precision >= 13) {
-            sortCardList(cardList);
+            Col newCol = getColById(newColIndex);
+            List<Card> cardList = cardRepository.findAllByColIdOrderByOrderIndexAsc(newCol.getId());
+
+            double newOrderIndex = calculateNewOrderIndex(newCardIndex, cardList);
+            card.setOrderIndex(newOrderIndex);
+
+            BigDecimal bd = new BigDecimal(Double.toString(newOrderIndex));
+            int precision = bd.precision();
+            if (precision >= 13) {
+                sortCardList(cardList);
+            }
+
+            card.updateCol(newCol);
+            newCol.addCard(card);
+
+            return new CardResponseDto(card);
+        } finally {
+            cardLock.unlock();
+            colLock.unlock();
+            boardLock.unlock();
         }
-
-        card.updateCol(newCol);
-        newCol.addCard(card);
-
-        return new CardResponseDto(card);
     }
 
 
@@ -147,5 +190,15 @@ public class CardService {
     @Transactional
     public Card getCardById(Long cardId) {
         return cardRepository.findById(cardId).orElseThrow(() -> new IllegalArgumentException("아이디에 해당하는 카드가 없습니다."));
+    }
+
+    private RLock createCardLock(Long cardId) {
+        String lockKey = "CardLock" + cardId.toString();
+        RLock lock = redissonClient.getLock(lockKey);
+
+        if (!lock.tryLock()) {
+            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+        }
+        return lock;
     }
 }

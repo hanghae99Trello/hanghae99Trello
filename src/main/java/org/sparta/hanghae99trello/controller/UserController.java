@@ -20,7 +20,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<String> createUser(@RequestBody UserRequestDto requestDto) {
         return handleRequest(() -> {
-            userService.createUser(requestDto);
+            UserResponseDto responseDto = userService.createUser(requestDto);
             return new ResponseEntity<>(SuccessMessage.JOIN_SUCCESS_MESSAGE.getSuccessMessage(), HttpStatus.CREATED);
         });
     }

@@ -39,37 +39,25 @@ public class BoardService {
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        String lockKey = "createBoardLock";
 
-        RLock lock = redissonClient.getLock(lockKey);
-        try {
-            if (!lock.tryLock()) {
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
-            lock.lock();
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User createdBy = userDetails.getUser();
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User createdBy = userDetails.getUser();
 
-            Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
+        Set<Participant> participants = convertStringArrayToParticipants(requestDto.getParticipants());
 
-            Board board = new Board(
-                    requestDto.getBoardName(),
-                    requestDto.getBoardColor(),
-                    requestDto.getBoardDescription(),
-                    createdBy,
-                    participants
-            );
-            for (Participant participant : participants) {
-                participant.setBoard(board);
-            }
-            board.setParticipants(participants);
-            return new BoardResponseDto(boardRepository.save(board));
-
-        } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
+        Board board = new Board(
+                requestDto.getBoardName(),
+                requestDto.getBoardColor(),
+                requestDto.getBoardDescription(),
+                createdBy,
+                participants
+        );
+        for (Participant participant : participants) {
+            participant.setBoard(board);
         }
+        board.setParticipants(participants);
+        return new BoardResponseDto(boardRepository.save(board));
+
     }
 
 
@@ -115,6 +103,8 @@ public class BoardService {
         colRepository.deleteAll(columns);
 
         boardRepository.delete(board);
+
+
     }
 
     public BoardResponseDto getBoardById(Long boardId) {
@@ -150,4 +140,14 @@ public class BoardService {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
     }
-}
+
+    public RLock createBoardLock(Long boardId) {
+        String lockKey = "BoardLock" + boardId.toString();
+
+        RLock lock = redissonClient.getLock(lockKey);
+        if (!lock.tryLock()) {
+            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
+            }
+        return lock;
+        }
+    }
