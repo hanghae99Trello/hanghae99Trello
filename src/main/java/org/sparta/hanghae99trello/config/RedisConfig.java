@@ -19,11 +19,11 @@ public class RedisConfig {
 //        config.useSingleServer()
 //                .setAddress("redis://localhost:6379");
 
-        config.useSingleServer()
-                .setAddress("redis://127.0.0.1:6379");
-//
 //        config.useSingleServer()
-//                .setAddress("redis://cache:6379");
+//                .setAddress("redis://127.0.0.1:6379");
+
+        config.useSingleServer()
+                .setAddress("redis://cache:6380");
         return Redisson.create(config);
     }
 
