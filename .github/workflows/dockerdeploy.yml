@@ -77,5 +77,5 @@ jobs:
         run: |
           docker container prune -f
           docker system prune -a -f --volumes
-          docker image rm -f gyungtaek/gyungtaek
-          docker image prune -f
+          docker image rm -f gyungtaek/gyungtaek || true 
+          docker image prune -a -f
