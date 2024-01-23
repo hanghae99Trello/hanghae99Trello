@@ -49,21 +49,12 @@ jobs:
           push: true
           tags: gyungtaek/gyungtaek:latest
 
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.AWS_SSH }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-        env:
-          SSH_KEY: ${{ secrets.AWS_SSH }}
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ~/.ssh/id_rsa
+          key: ${{ secrets.AWS_SSH }}
           script: |
             sudo service docker start
             docker pull gyungtaek/gyungtaek:latest
