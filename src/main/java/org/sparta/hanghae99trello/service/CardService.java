@@ -33,13 +33,13 @@ public class CardService {
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
-                                      String cardDescription, String color, List<Long> operatorIds) {
+                                      String cardDescription, String color, List<Long> operatorIds, String dueDate) {
         RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = colService.createColLock(columnId);
 
         try{
             Col col = getColById(columnId);
-            Card card = new Card(cardName, cardDescription, color,col);
+            Card card = new Card(cardName, cardDescription, color,col, dueDate);
             cardRepository.save(card);
             updateOperator(boardId, card, operatorIds);
             card.setOrderIndex(card.getId());
@@ -61,7 +61,7 @@ public class CardService {
 
     @Transactional
     public CardResponseDto updateCard(Long boardId, Long cardId, String cardName, String cardDescription,
-                                      String color, List<Long> operatorIds, LocalDate dueDate) {
+                                      String color, List<Long> operatorIds, String dueDate) {
         RLock boardLock = boardService.createBoardLock(boardId);
         RLock cardLock = createCardLock(cardId);
 

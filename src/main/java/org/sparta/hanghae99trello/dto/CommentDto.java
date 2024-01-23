@@ -10,12 +10,12 @@ import org.sparta.hanghae99trello.entity.Comment;
 @NoArgsConstructor
 public class CommentDto {
     private Long id;
-    private Long participantId;
+    private String participantName;
     private String commentMessage;
 
     public CommentDto(Comment comment){
         this.id = comment.getId();
-        this.participantId = comment.getParticipant().getId();
+        this.participantName = comment.getParticipant().getParticipantName();
         this.commentMessage = comment.getCommentMessage();
     }
 }
