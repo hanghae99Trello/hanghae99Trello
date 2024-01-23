@@ -76,4 +76,4 @@ jobs:
       - name: Remove unused images
         run: |
           docker system prune -a -f --volumes
-          docker image rm gyungtaek/gyungtaek -f
+          docker image rm -f gyungtaek/gyungtaek
