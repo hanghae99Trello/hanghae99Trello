@@ -49,6 +49,7 @@ jobs:
           push: true
           tags: gyungtaek/gyungtaek:latest
 
+
       - name: Copy docker-compose.yml to EC2
         uses: appleboy/scp-action@master
         with:
