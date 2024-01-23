@@ -19,13 +19,13 @@
         </button>
       </h1>
       <h2 style="margin-bottom: 30px;"><span th:text="${card.getCardDescription()}"></span></h2>
-      <p><span th:text="${card.getDueDate()}"></span></p>
-      <p style="color: green; font-weight: bold;">&lt;작업자&gt;</p>
+      <p style="color: darkgreen; font-weight: bold; margin-top: 20px;">&lt;작업자&gt;</p>
       <div class="operator_list" style="display: flex; justify-content: center;">
         <div class="operators" th:each="operator : ${card.operators}" style="margin-right: 5px;">
           <span th:text="${operator.getParticipantName()} + ' '"></span>
         </div>
       </div>
+      <p style="color: darkred; margin-top: 10px;">마감일: <span th:text="${card.getDueDate()}"></span></p>
     </div>
     <div class="comment_container">
       <h2 style="margin: 40px 0 20px 0;">Comments</h2>

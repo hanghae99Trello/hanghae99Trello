@@ -37,7 +37,7 @@ public class Card {
     @Column(nullable = true)
     private String dueDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
     @JoinColumn(name = "col_id")
     private Col col;

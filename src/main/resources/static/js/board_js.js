@@ -714,12 +714,12 @@ function deleteColumn(button) {
 }
 
 
-// 인덱스 순으로 정렬
+// 컬럼인덱스 순으로 정렬
 $(document).ready(function() {
     const container = $(".flex_container");
     const items = container.find(".dd").toArray().sort(function(a, b) {
-        const aIndex = parseInt($(a).find(".kanban").data("col-index"));
-        const bIndex = parseInt($(b).find(".kanban").data("col-index"));
+        const aIndex = parseInt($(a).find(".To-do").data("col-index"));
+        const bIndex = parseInt($(b).find(".To-do").data("col-index"));
         return aIndex - bIndex;
     });
     container.empty().append(items);
@@ -823,3 +823,59 @@ function viewCard(button) {
 
     window.location.href = `/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`;
 }
+
+
+// 카드 이동
+function moveCard(cardId, sourceColumnId, targetColumnId, newCardIndex) {
+    const boardId = $(".board_container").data("board-id");
+
+    const data = {
+        newColIndex: targetColumnId,
+        cardIndex: newCardIndex
+    };
+
+    $.ajax({
+        type: "PUT",
+        url: `/api/users/boards/${boardId}/columns/${sourceColumnId}/cards/${cardId}/col`,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+            console.log("Card moved successfully:", response);
+            location.reload();
+        },
+        error: function (error) {
+            console.error("Error moving card:", error);
+            alert("카드 이동에 실패했습니다. 자세한 내용은 콘솔을 확인하세요.");
+        }
+    });
+}
+
+$(document).ready(function () {
+    $(".dd-item").draggable({
+        helper: 'clone',
+        cursor: "move",
+        start: function (event, ui) {
+            console.log("Drop event occurred");
+            $(this).data("originalColumnId", $(this).closest('.kanban').attr("data-column-id"));
+        }
+    });
+
+    $(".kanban").droppable({
+        accept: ".dd-item",
+        drop: function (event, ui) {
+            console.log("Drag start event occurred");
+            const droppedItem = $(ui.helper).clone();
+            $(this).children('.cards').append(droppedItem);
+
+            const targetColumnId = parseFloat($(this).attr("data-column-id"));
+            const originalColumnId = ui.helper.attr("data-column-id");
+            const newCardIndex = droppedItem.index();
+            ui.helper.remove();
+
+            if (ui.helper.attr("data-dropped") !== "true") {
+                moveCard(ui.helper.attr("data-card-id"), originalColumnId, targetColumnId, newCardIndex);
+                ui.helper.attr("data-dropped", "true");
+            }
+        }
+    });
+});

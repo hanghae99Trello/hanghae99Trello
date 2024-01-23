@@ -72,13 +72,14 @@
     border: none;
     background: white;
     cursor: pointer;
+    color: #666;
 }
 
 #DeleteBoardButton {
     background: gray;
     position: absolute;
-    bottom: 5px; /* 원하는 위치로 조절 */
-    right: 5px; /
+    bottom: 5px;
+    right: 5px;
 }
 
 a {
