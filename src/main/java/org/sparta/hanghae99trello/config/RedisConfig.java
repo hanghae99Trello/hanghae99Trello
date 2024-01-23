@@ -16,14 +16,14 @@ public class RedisConfig {
     public RedissonClient redissonClient() {
         Config config = new Config();
 
-        config.useSingleServer()
-                .setAddress("redis://43.201.15.228:6379");
+//        config.useSingleServer()
+//                .setAddress("redis://43.201.15.228:6379");
 
 //        config.useSingleServer()
 //                .setAddress("redis://127.0.0.1:6379");
 
-//        config.useSingleServer()
-//                .setAddress("redis://cache:6380");
+        config.useSingleServer()
+                .setAddress("redis://cache:6380");
         return Redisson.create(config);
     }
 

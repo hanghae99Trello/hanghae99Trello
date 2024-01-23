@@ -4,10 +4,10 @@ services:
     image: gyungtaek/gyungtaek:latest
     ports:
       - "1234:1234"
-#    depends_on:
-#      - cache
-#
-#  cache:
-#    image: redis:alpine
-#    ports:
-#      - "6380:6380"
+    depends_on:
+      - cache
+
+  cache:
+    image: redis:alpine
+    ports:
+      - "6380:6379"
