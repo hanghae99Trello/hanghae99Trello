@@ -17,7 +17,7 @@ public class RedisConfig {
         Config config = new Config();
 
         config.useSingleServer()
-                .setAddress("redis://localhost:6379");
+                .setAddress("redis://43.201.15.228:6379");
 
 //        config.useSingleServer()
 //                .setAddress("redis://127.0.0.1:6379");
