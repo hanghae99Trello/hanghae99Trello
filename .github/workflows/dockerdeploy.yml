@@ -73,8 +73,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Remove unused images
-        run: |
-          docker container prune -f
-          docker system prune -a -f --volumes
-          docker image prune -a -f
+      - name: Remove unused images on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.AWS_SSH }}
+          script: |
+            docker container prune -f
+            docker system prune -a -f --volumes
+            docker image prune -a -f
