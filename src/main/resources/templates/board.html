@@ -80,7 +80,8 @@
                     </button>
                 </div>
                 <ul class="kanban cards" style="padding: 0;" th:each="card : ${column.cardList}" th:attr="data-column-id=${column.id}" th:data-col-id="${column.id}">
-                    <li class="dd-item" th:attr="data-column-id=${column.id}, data-card-id=${card.id}, data-card-order-index=${card.orderIndex}">
+                    <li class="dd-item" th:style="'border-color: ' + ${card.getCardColor()} + '; border-style: solid; border-width: 1px;'"
+                        th:attr="data-column-id=${column.id}, data-card-id=${card.id}, data-card-order-index=${card.orderIndex}">
                         <div style="display: flex; justify-content: space-between;">
                             <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
                             <button class="delete-card-button" id="CardDeleteButton" th:attr="data-card-id=${card.id}" onclick="deleteCard(this)">

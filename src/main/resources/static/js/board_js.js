@@ -564,6 +564,7 @@ function submitBoardEditForm() {
         .then(data => {
             console.log('Success:', data);
             closeBoardEditForm();
+            location.reload();
         })
         .catch(error => {
             console.error("Error updating board:", error);
@@ -646,6 +647,7 @@ function submitColIndexEditForm(button) {
         success: function (response) {
             console.log("Column updated successfully:", response);
             closeColIndexEditForm(button);
+            location.reload();
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -683,6 +685,7 @@ function submitColNameEditForm(button) {
         success: function (response) {
             console.log("Column updated successfully:", response);
             closeColNameEditForm(button);
+            location.reload();
         },
         error: function (error) {
             console.error("Error updating column:", error);
@@ -703,6 +706,7 @@ function deleteColumn(button) {
         success: function (response) {
             console.log("Column deleted successfully:", response);
             alert('컬럼 삭제가 완료되었습니다.');
+            location.reload();
         },
         error: function (xhr, status, error) {
             console.error("Error deleting column:", error);
@@ -804,6 +808,7 @@ function deleteCard(button) {
         success: function (response) {
             console.log("Card deleted successfully:", response);
             alert('카드 삭제가 완료되었습니다.');
+            location.reload();
         },
         error: function (xhr, status, error) {
             console.error("Error deleting card:", error);

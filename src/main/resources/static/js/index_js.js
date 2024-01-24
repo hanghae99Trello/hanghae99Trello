@@ -46,6 +46,7 @@ function submitBoardForm() {
         .then(data => {
             console.log('Success creating board:', data);
             closeBoardAddForm();
+            window.location.reload();
         })
         .catch((error) => {
             console.error('Error creating board:', error.message);
@@ -68,7 +69,6 @@ function deleteBoard(button) {
             if (response.ok) {
                 console.log(`Board ${boardId} deleted successfully`);
                 alert('보드 삭제가 완료되었습니다.');
-                // Optionally, you can remove the deleted board from the DOM
                 button.parentNode.remove();
             } else {
                 console.error('Failed to delete board');
@@ -111,13 +111,13 @@ function submitUserEditForm() {
         .then(data => {
             console.log('Success updating user:', data);
             closeUserEditForm();
+            window.location.reload();
         })
         .catch(error => {
             console.error("Error updating user:", error);
             document.getElementById("editUserFormErrorMessage").textContent = "사용자 정보 수정에 실패했습니다.";
         });
 }
-
 
 // 사용자 삭제
 function deleteUser() {
@@ -132,6 +132,7 @@ function deleteUser() {
         .then(response => {
             if (response.ok) {
                 console.log('User deleted successfully');
+                deleteCookie('Authorization');
                 alert('회원탈퇴가 완료되었습니다.');
                 window.location.href = '/api/user/login-page';
             } else {
@@ -142,4 +143,8 @@ function deleteUser() {
         .catch(error => {
             console.error('Error deleting user:', error);
         });
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
