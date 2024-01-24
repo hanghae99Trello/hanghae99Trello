@@ -68,7 +68,6 @@ public class Card {
         this.cardColor = color;
         this.dueDate = dueDate;
     }
-
     public void updateCol(Col newCol) {
         this.col = newCol;
     }

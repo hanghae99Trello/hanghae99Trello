@@ -12,6 +12,8 @@ import lombok.Setter;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -54,4 +56,19 @@ public class Board {
         this.createdBy = createdBy;
         this.participants = participants;
     }
+
+    public List<Col> getColListSort() {
+        List<Col> colList = this.getColList();
+        for (Col col : colList) {
+            List<Card> cardList = col.getCardList();
+            cardList.sort(new Comparator<Card>() {
+                @Override
+                public int compare(Card c1, Card c2) {
+                    return Double.compare(c1.getOrderIndex(), c2.getOrderIndex());
+                }
+            });
+        }
+        return colList;
+    }
+
 }
