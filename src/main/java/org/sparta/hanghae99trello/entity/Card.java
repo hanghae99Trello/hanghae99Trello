@@ -1,6 +1,7 @@
 package org.sparta.hanghae99trello.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +30,11 @@ public class Card {
     private String cardColor;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Operator> operators = new ArrayList<>();
 
     @Column(nullable = true)

@@ -22,6 +22,7 @@ public class Participant {
     private Board board;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
