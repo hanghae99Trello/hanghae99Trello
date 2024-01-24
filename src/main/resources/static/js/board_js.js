@@ -841,7 +841,6 @@ function moveCard(cardId, sourceColumnId, targetColumnId, newCardIndex) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Card moved successfully:", response);
-            // location.reload();
         },
         error: function (error) {
             console.error("Error moving card:", error);
@@ -854,22 +853,15 @@ $(document).ready(function () {
     $(".kanban .cards").sortable({
         connectWith: ".kanban .cards",
         start: function (event, ui) {
-            // 드래그 시작 시
             const originalColumnId = ui.item.closest('.kanban').attr("data-column-id");
             ui.item.data("originalColumnId", originalColumnId);
             ui.item.data("originalIndex", ui.item.index());
         },
         stop: function (event, ui) {
-            // 순서 변경 시
             const targetColumnId = ui.item.closest('.kanban').attr("data-column-id");
             const originalColumnId = ui.item.data("originalColumnId");
             const newIndex = ui.item.index();
 
-            console.log("Original Column ID:", originalColumnId);
-            console.log("Target Column ID:", targetColumnId);
-            console.log("New Index:", newIndex);
-
-            // 서버로 정보를 보내는 함수 호출
             moveCard(ui.item.attr("data-card-id"), originalColumnId, targetColumnId, newIndex);
         },
     });
