@@ -127,12 +127,6 @@ public class BoardService {
         return loggedInId.equals(boardCreatorId);
     }
 
-    private List<Col> convertColRequestDtoList(List<ColRequestDto> colRequestDtoList) {
-        return colRequestDtoList.stream()
-                .map(colRequestDto -> new Col(colRequestDto.getColName(), colRequestDto.getColIndex(), null))
-                .collect(Collectors.toList());
-    }
-
     public Board findBoard(Long id) {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.NOT_EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
