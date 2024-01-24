@@ -11,11 +11,9 @@ import java.util.List;
 public class ColRequestDto {
     private String colName;
     private Long colIndex;
-    private Board board;
 
-    public ColRequestDto(String colName,Long colIndex, Board board) {
+    public ColRequestDto(String colName,Long colIndex) {
         this.colName = colName;
         this.colIndex = colIndex;
-        this.board = board;
     }
 }
