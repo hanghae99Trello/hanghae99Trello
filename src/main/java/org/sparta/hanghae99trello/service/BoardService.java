@@ -131,14 +131,4 @@ public class BoardService {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.NOT_EXIST_BOARD_ERROR_MESSAGE.getErrorMessage()));
     }
-
-    public RLock createBoardLock(Long boardId) {
-        String lockKey = "BoardLock" + boardId.toString();
-
-        RLock lock = redissonClient.getLock(lockKey);
-        if (!lock.tryLock()) {
-            throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
-        return lock;
-        }
-    }
+}
