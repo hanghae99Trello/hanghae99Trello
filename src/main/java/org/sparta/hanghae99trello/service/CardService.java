@@ -32,8 +32,7 @@ public class CardService {
     private final RedissonClient redissonClient;
     private final ParticipantRepository participantRepository;
     private final OperatorRepository operatorRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
+
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
@@ -53,8 +52,6 @@ public class CardService {
             colLock.unlock();
             boardLock.unlock();
         }
-
-
     }
 
     @Transactional
@@ -121,7 +118,6 @@ public class CardService {
     }
 
     @Transactional
-    //같은 카드일때 지웠다가 새로넣을 이유가 있나?
     public CardResponseDto updateCardColOrder(Long boardId, Long columnId, Long cardId, Long newCardIndex, Long newColIndex) {
 
         RLock boardLock = boardService.createBoardLock(boardId);
