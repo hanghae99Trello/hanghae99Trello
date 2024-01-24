@@ -25,7 +25,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CardService {
-    private final BoardService boardService;
     private final ColService colService;
     private final CardRepository cardRepository;
     private final ColRepository colRepository;
@@ -37,7 +36,6 @@ public class CardService {
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
                                       String cardDescription, String color, List<Long> operatorIds, String dueDate) {
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = colService.createColLock(columnId);
 
         try{
@@ -50,7 +48,6 @@ public class CardService {
             return new CardResponseDto(card);
         } finally {
             colLock.unlock();
-            boardLock.unlock();
         }
     }
 
@@ -63,7 +60,6 @@ public class CardService {
     @Transactional
     public CardResponseDto updateCard(Long boardId, Long cardId, String cardName, String cardDescription,
                                       String color, List<Long> operatorIds, String dueDate) {
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock cardLock = createCardLock(cardId);
 
         try {
@@ -74,7 +70,6 @@ public class CardService {
             return new CardResponseDto(card);
         } finally {
             cardLock.unlock();
-            boardLock.unlock();
         }
 
     }
@@ -84,8 +79,6 @@ public class CardService {
         Card card = getCardById(cardId);
         Col col = card.getCol();
         Board board = col.getBoard();
-
-        RLock boardLock = boardService.createBoardLock(board.getId());
         RLock colLock = colService.createColLock(col.getId());
         RLock cardLock = createCardLock(cardId);
         try{
@@ -94,7 +87,6 @@ public class CardService {
         } finally {
             cardLock.unlock();
             colLock.unlock();
-            boardLock.unlock();
         }
     }
 
@@ -119,8 +111,6 @@ public class CardService {
 
     @Transactional
     public CardResponseDto updateCardColOrder(Long boardId, Long columnId, Long cardId, Long newCardIndex, Long newColIndex) {
-
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = colService.createColLock(columnId);
         RLock cardLock = createCardLock(cardId);
 
@@ -149,7 +139,6 @@ public class CardService {
         } finally {
             cardLock.unlock();
             colLock.unlock();
-            boardLock.unlock();
         }
     }
 

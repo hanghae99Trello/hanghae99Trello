@@ -26,24 +26,20 @@ public class ColService {
 
     @Transactional
     public ColResponseDto createCol(Long boardId, ColRequestDto requestDto) {
-        RLock boardLock = boardService.createBoardLock(boardId);
 
-        try {
-            Board board = boardService.findBoard(boardId);
-            Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
-            Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
+        Board board = boardService.findBoard(boardId);
+        Long lastColIndex = colRepository.findLastColIndexByBoardId(boardId);
+        Long newColIndex = (lastColIndex != null) ? lastColIndex + 1 : 1;
 
-            Col col = new Col(
-                    requestDto.getColName(),
-                    newColIndex,
-                    board
-            );
-            Col savedCol = colRepository.save(col);
+        Col col = new Col(
+                requestDto.getColName(),
+                newColIndex,
+                board
+        );
+        Col savedCol = colRepository.save(col);
 
-            return new ColResponseDto(savedCol);
-        } finally {
-            boardLock.unlock();
-        }
+        return new ColResponseDto(savedCol);
+
     }
 
     public List<ColResponseDto> getCols(Long boardId) {
@@ -55,7 +51,6 @@ public class ColService {
     }
 
     public ColResponseDto updateCol(Long boardId, Long columnId, ColRequestDto requestDto) {
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = createColLock(columnId);
 
         try {
@@ -70,14 +65,12 @@ public class ColService {
             return new ColResponseDto(colRepository.save(col));
         } finally {
             colLock.unlock();
-            boardLock.unlock();
         }
     }
 
 
 
     public void deleteCol(Long boardId, Long columnId) {
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = createColLock(columnId);
 
         try {
@@ -91,14 +84,12 @@ public class ColService {
             colRepository.deleteById(columnId);
         } finally {
             colLock.unlock();
-            boardLock.unlock();
         }
 
     }
 
     @Transactional
     public ColResponseDto updateColIdx(Long boardId, Long columnId, Long columnOrderIndex) {
-        RLock boardLock = boardService.createBoardLock(boardId);
         RLock colLock = createColLock(columnId);
 
         try {
@@ -126,7 +117,6 @@ public class ColService {
             return new ColResponseDto(columnToUpdate);
         } finally {
             colLock.unlock();
-            boardLock.unlock();
         }
     }
 
