@@ -34,7 +34,7 @@ public class Board {
     private String boardDescription;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     @JoinColumn(name = "created_by")
     private User createdBy;
 

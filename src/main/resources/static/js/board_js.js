@@ -855,7 +855,6 @@ $(document).ready(function () {
         helper: 'clone',
         cursor: "move",
         start: function (event, ui) {
-            console.log("Drop event occurred");
             $(this).data("originalColumnId", $(this).closest('.kanban').attr("data-column-id"));
         }
     });
@@ -863,7 +862,6 @@ $(document).ready(function () {
     $(".kanban").droppable({
         accept: ".dd-item",
         drop: function (event, ui) {
-            console.log("Drag start event occurred");
             const droppedItem = $(ui.helper).clone();
             $(this).children('.cards').append(droppedItem);
 

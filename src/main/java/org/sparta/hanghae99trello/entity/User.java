@@ -42,9 +42,11 @@ public class User {
     private UserAuthEnum auth;
 
     @OneToMany(mappedBy = "createdBy")
+    @JsonManagedReference
     private Set<Board> createdBoards;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Participant> boards;
 
     public User(String name, String email, String password, String phone) {
