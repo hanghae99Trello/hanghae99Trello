@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 @RequiredArgsConstructor
 public class BoardResponseDto {
+
     private Long id;
     private String boardName;
     private String boardColor;

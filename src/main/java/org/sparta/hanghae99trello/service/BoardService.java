@@ -1,31 +1,24 @@
 package org.sparta.hanghae99trello.service;
 
-import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.dto.BoardResponseDto;
-import org.sparta.hanghae99trello.dto.ColRequestDto;
 import org.sparta.hanghae99trello.entity.Board;
 import org.sparta.hanghae99trello.entity.Col;
 import org.sparta.hanghae99trello.entity.Participant;
 import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.ErrorMessage;
-import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.repository.BoardRepository;
 import org.sparta.hanghae99trello.repository.ColRepository;
-import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +26,10 @@ import java.util.stream.Collectors;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final ParticipantRepository participantRepository;
     private final ColRepository colRepository;
-    private final RedissonClient redissonClient;
 
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User createdBy = userDetails.getUser();
 
@@ -52,14 +42,14 @@ public class BoardService {
                 createdBy,
                 participants
         );
+
         for (Participant participant : participants) {
             participant.setBoard(board);
         }
+
         board.setParticipants(participants);
         return new BoardResponseDto(boardRepository.save(board));
-
     }
-
 
     @Transactional
     public List<BoardResponseDto> getBoards() {
@@ -70,7 +60,7 @@ public class BoardService {
     public BoardResponseDto updateBoard(Long boardId, BoardRequestDto requestDto) {
         Board board = findBoard(boardId);
 
-        if (!checkCreatedByUser(board)) {
+        if (isNotCreatedByUser(board)) {
             throw new IllegalArgumentException(ErrorMessage.UPDATE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
         }
 
@@ -95,7 +85,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
         Board board = findBoard(boardId);
 
-        if (!checkCreatedByUser(board)) {
+        if (isNotCreatedByUser(board)) {
             throw new IllegalArgumentException(ErrorMessage.DELETE_BOARD_AUTH_ERROR_MESSAGE.getErrorMessage());
         }
 
@@ -111,20 +101,22 @@ public class BoardService {
 
     private Set<Participant> convertStringArrayToParticipants(Set<String> participantNames) {
         Set<Participant> participants = new HashSet<>();
+
         for (String participantName : participantNames) {
             User user = userRepository.findByName(participantName);
             if (user != null) {
                 participants.add(new Participant(user, user.getName()));
             }
         }
+
         return participants;
     }
 
-    private boolean checkCreatedByUser(Board board) {
+    private boolean isNotCreatedByUser(Board board) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
-        return loggedInId.equals(boardCreatorId);
+        return !loggedInId.equals(boardCreatorId);
     }
 
     public Board findBoard(Long id) {

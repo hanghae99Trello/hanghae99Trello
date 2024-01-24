@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 public class Operator {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,6 @@ public class Operator {
     @ManyToOne
     @JsonIgnore
     private Participant participant;
-
 
     public Operator(Card card, Participant participant) {
         this.card = card;

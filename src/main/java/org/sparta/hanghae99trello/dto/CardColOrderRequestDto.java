@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CardColOrderRequestDto {
+
     private Long cardIndex;
     private Long newColIndex;
 }

@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "participants")
 public class Participant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +32,6 @@ public class Participant {
 
     public Participant(User user, String participantName) {
         this.user = user;
-        this.participantName = user.getName();
+        this.participantName = participantName;
     }
 }

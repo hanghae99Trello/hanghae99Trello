@@ -1,8 +1,6 @@
 package org.sparta.hanghae99trello.service;
 
-import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.dto.UserResponseDto;
@@ -14,7 +12,6 @@ import org.sparta.hanghae99trello.repository.ParticipantRepository;
 import org.sparta.hanghae99trello.repository.UserRepository;
 import org.sparta.hanghae99trello.security.UserDetailsImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final ParticipantRepository participantRepository;
@@ -46,7 +44,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDto updateUser(Long userId, UserRequestDto requestDto) {
-        if (!checkUserSelf(userId)) {
+        if (isUserSelf(userId)) {
             throw new IllegalArgumentException(ErrorMessage.UPDATE_USER_AUTH_ERROR_MESSAGE.getErrorMessage());
         }
 
@@ -65,9 +63,10 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long userId) {
-        if (!checkUserSelf(userId)) {
+        if (isUserSelf(userId)) {
             throw new IllegalArgumentException(ErrorMessage.DELETE_USER_AUTH_ERROR_MESSAGE.getErrorMessage());
         }
+
         User user = findUser(userId);
         List<Board> boards = boardRepository.findByCreatedBy(user);
 
@@ -86,20 +85,15 @@ public class UserService {
         return new ArrayList<>(user.getCreatedBoards());
     }
 
-    @PreDestroy
-    public void preDestroy() {
-        redissonClient.shutdown();
-    }
-
-    public User findUser(Long id) {
+    private User findUser(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException(ErrorMessage.NOT_EXIST_USER_ERROR_MESSAGE.getErrorMessage())
         );
     }
 
-    private boolean checkUserSelf(Long userId) {
+    private boolean isUserSelf(Long userId) {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long loggedInUserId = userDetails.getId();
-        return loggedInUserId.equals(userId);
+        return !loggedInUserId.equals(userId);
     }
 }

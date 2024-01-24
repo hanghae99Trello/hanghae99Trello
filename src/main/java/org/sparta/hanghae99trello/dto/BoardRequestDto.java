@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor
 public class BoardRequestDto {
+
     private String boardName;
     private String boardColor;
     private String boardDescription;

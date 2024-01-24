@@ -3,7 +3,6 @@ package org.sparta.hanghae99trello.controller;
 import lombok.RequiredArgsConstructor;
 import org.sparta.hanghae99trello.dto.UserRequestDto;
 import org.sparta.hanghae99trello.dto.UserResponseDto;
-import org.sparta.hanghae99trello.entity.User;
 import org.sparta.hanghae99trello.message.SuccessMessage;
 import org.sparta.hanghae99trello.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping("/join")

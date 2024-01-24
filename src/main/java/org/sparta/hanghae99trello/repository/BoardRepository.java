@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    Board findByBoardName(String boardName);
-    Optional<Board> findById(Long id);
 
+    Optional<Board> findById(Long id);
     List<Board> findByCreatedBy(User user);
 }

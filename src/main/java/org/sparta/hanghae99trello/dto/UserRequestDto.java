@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class UserRequestDto {
+
     private String name;
     private String email;
     private String password;

@@ -1,6 +1,7 @@
 package org.sparta.hanghae99trello.security;
 
 public enum UserAuthEnum {
+
     USER(Authority.USER);
 
     private final String authority;

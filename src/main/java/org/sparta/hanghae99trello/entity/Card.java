@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "cards")
 public class Card {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,6 +71,7 @@ public class Card {
         this.cardColor = color;
         this.dueDate = dueDate;
     }
+
     public void updateCol(Col newCol) {
         this.col = newCol;
     }

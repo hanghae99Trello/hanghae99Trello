@@ -5,6 +5,7 @@ import org.sparta.hanghae99trello.entity.User;
 
 @Getter
 public class UserResponseDto {
+
     private final Long id;
     private final String name;
     private final String email;

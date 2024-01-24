@@ -9,6 +9,7 @@ import org.sparta.hanghae99trello.entity.Operator;
 @Setter
 @NoArgsConstructor
 public class OperatorDto {
+
     private Long id;
     private String participantName;
     private Long cardId;

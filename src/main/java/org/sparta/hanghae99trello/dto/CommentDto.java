@@ -9,6 +9,7 @@ import org.sparta.hanghae99trello.entity.Comment;
 @Setter
 @NoArgsConstructor
 public class CommentDto {
+
     private Long id;
     private String participantName;
     private String commentMessage;

@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/api/users/boards")
 public class CommentController {
+
     private final CommentService commentService;
 
-    //TODO :: 엔드포인트에 필요없는 값들 수정필요
     @PostMapping("/{boardId}/columns/{columnId}/cards/{cardId}/comments")
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long boardId,
                                                             @PathVariable Long cardId,
+                                                            @PathVariable String columnId,
                                                             @RequestBody CommentRequestDto requestDto,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
 

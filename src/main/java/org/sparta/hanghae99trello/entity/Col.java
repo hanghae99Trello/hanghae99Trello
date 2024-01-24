@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,6 +16,7 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "cols")
 public class Col {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

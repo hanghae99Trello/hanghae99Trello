@@ -8,10 +8,7 @@ import org.sparta.hanghae99trello.dto.CardResponseDto;
 import org.sparta.hanghae99trello.service.CardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +31,7 @@ public class CardController {
     public ResponseEntity<CardResponseDto> getCard(@PathVariable Long boardId,
                                                    @PathVariable Long columnId,
                                                    @PathVariable Long cardId) {
-        CardResponseDto cardResponseDto = cardService.getCard(boardId, columnId, cardId);
+        CardResponseDto cardResponseDto = cardService.getCard(cardId);
         return ResponseEntity.status(HttpStatus.OK).body(cardResponseDto);
     }
 
@@ -58,7 +55,7 @@ public class CardController {
                                                               @PathVariable Long columnId,
                                                               @PathVariable Long cardId,
                                                               @RequestBody CardColOrderRequestDto requestDto){
-        CardResponseDto cardResponseDto = cardService.updateCardColOrder(boardId, columnId, cardId, requestDto.getCardIndex(),requestDto.getNewColIndex());
+        CardResponseDto cardResponseDto = cardService.updateCardColOrder(columnId, cardId, requestDto.getCardIndex(),requestDto.getNewColIndex());
         return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
     }
 

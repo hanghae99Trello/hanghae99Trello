@@ -1,18 +1,16 @@
 package org.sparta.hanghae99trello.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.Column;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.sparta.hanghae99trello.dto.BoardRequestDto;
-import org.sparta.hanghae99trello.security.UserAuthEnum;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -20,6 +18,7 @@ import java.util.*;
 @NoArgsConstructor
 @Table(name = "boards")
 public class Board {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,12 +59,11 @@ public class Board {
             List<Card> cardList = col.getCardList();
             cardList.sort(new Comparator<Card>() {
                 @Override
-                public int compare(Card c1, Card c2) {
-                    return Double.compare(c1.getOrderIndex(), c2.getOrderIndex());
+                public int compare(Card card1, Card card2) {
+                    return Double.compare(card1.getOrderIndex(), card2.getOrderIndex());
                 }
             });
         }
         return colList;
     }
-
 }

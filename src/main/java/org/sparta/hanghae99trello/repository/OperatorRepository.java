@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface OperatorRepository extends JpaRepository<Operator,Long> {
-    List<Operator> findAllByCardId(Long cardId);
+
 }

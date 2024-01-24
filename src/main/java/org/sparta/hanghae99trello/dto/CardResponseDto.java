@@ -4,13 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.sparta.hanghae99trello.entity.Card;
-import org.sparta.hanghae99trello.entity.Comment;
-import org.sparta.hanghae99trello.entity.Operator;
-import org.sparta.hanghae99trello.entity.User;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Getter
