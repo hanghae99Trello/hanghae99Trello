@@ -12,10 +12,7 @@ import lombok.Setter;
 import org.sparta.hanghae99trello.dto.BoardRequestDto;
 import org.sparta.hanghae99trello.security.UserAuthEnum;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -47,7 +44,7 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Col> colList;
+    private List<Col> colList = new ArrayList<>();
 
     public Board(String boardName, String boardColor, String boardDescription, User createdBy, Set<Participant> participants) {
         this.boardName = boardName;

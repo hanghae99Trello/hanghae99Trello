@@ -101,10 +101,7 @@ public class BoardService {
 
         List<Col> columns = colRepository.findByBoardId(boardId);
         colRepository.deleteAll(columns);
-
         boardRepository.delete(board);
-
-
     }
 
     public BoardResponseDto getBoardById(Long boardId) {
