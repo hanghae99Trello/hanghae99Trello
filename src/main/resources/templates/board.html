@@ -79,7 +79,7 @@
                         <i class="material-icons">settings</i>
                     </button>
                 </div>
-                <ul class="kanban cards" style="padding: 0;" th:each="card : ${column.cardList}" th:data-col-id="${column.id}">
+                <ul class="kanban cards" style="padding: 0;" th:each="card : ${column.cardList}" th:attr="data-column-id=${column.id}" th:data-col-id="${column.id}">
                     <li class="dd-item" th:attr="data-column-id=${column.id}, data-card-id=${card.id}, data-card-order-index=${card.orderIndex}">
                         <div style="display: flex; justify-content: space-between;">
                             <h3 class="title dd-handle" th:text="${card.cardName}">Card Name</h3>
