@@ -841,7 +841,7 @@ function moveCard(cardId, sourceColumnId, targetColumnId, newCardIndex) {
         data: JSON.stringify(data),
         success: function (response) {
             console.log("Card moved successfully:", response);
-            location.reload();
+            // location.reload();
         },
         error: function (error) {
             console.error("Error moving card:", error);
@@ -851,29 +851,27 @@ function moveCard(cardId, sourceColumnId, targetColumnId, newCardIndex) {
 }
 
 $(document).ready(function () {
-    $(".dd-item").draggable({
-        helper: 'clone',
-        cursor: "move",
+    $(".kanban .cards").sortable({
+        connectWith: ".kanban .cards",
         start: function (event, ui) {
-            $(this).data("originalColumnId", $(this).closest('.kanban').attr("data-column-id"));
-        }
-    });
+            // 드래그 시작 시
+            const originalColumnId = ui.item.closest('.kanban').attr("data-column-id");
+            ui.item.data("originalColumnId", originalColumnId);
+            ui.item.data("originalIndex", ui.item.index());
+        },
+        stop: function (event, ui) {
+            // 순서 변경 시
+            const targetColumnId = ui.item.closest('.kanban').attr("data-column-id");
+            const originalColumnId = ui.item.data("originalColumnId");
+            const newIndex = ui.item.index();
 
-    $(".kanban").droppable({
-        accept: ".dd-item",
-        drop: function (event, ui) {
-            const droppedItem = $(ui.helper).clone();
-            $(this).children('.cards').append(droppedItem);
+            console.log("Original Column ID:", originalColumnId);
+            console.log("Target Column ID:", targetColumnId);
+            console.log("New Index:", newIndex);
 
-            const targetColumnId = parseFloat($(this).attr("data-column-id"));
-            const originalColumnId = ui.helper.attr("data-column-id");
-            const newCardIndex = droppedItem.index();
-            ui.helper.remove();
-
-            if (ui.helper.attr("data-dropped") !== "true") {
-                moveCard(ui.helper.attr("data-card-id"), originalColumnId, targetColumnId, newCardIndex);
-                ui.helper.attr("data-dropped", "true");
-            }
-        }
+            // 서버로 정보를 보내는 함수 호출
+            moveCard(ui.item.attr("data-card-id"), originalColumnId, targetColumnId, newIndex);
+        },
     });
 });
+
