@@ -33,37 +33,15 @@ public class UserService {
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto requestDto) {
-        String lockKey = "createUserLock";
 
-        RLock lock = redissonClient.getLock(lockKey);
-        try {
-            System.out.println("현재 스레드(" + Thread.currentThread().getId() + ")가 lock을 가지고 있음");
+        String name = requestDto.getName();
+        String email = requestDto.getEmail();
+        String password = requestDto.getPassword();
+        String phone = requestDto.getPhone();
 
-            System.out.println("Try Lock 시도");
-            if (!lock.tryLock()) {
-                System.out.println("락 실패");
-                throw new RuntimeException(ErrorMessage.LOCK_NOT_ACQUIRED_ERROR_MESSAGE.getErrorMessage());
-            }
-            System.out.println("현재 스레드(" + Thread.currentThread().getId() + ")가 lock을 가지고 있음");
-
-            System.out.println("Try Lock 성공");
-
-            String name = requestDto.getName();
-            String email = requestDto.getEmail();
-            String password = requestDto.getPassword();
-            String phone = requestDto.getPhone();
-
-            String encodedPassword = passwordEncoder.encode(password);
-            User user = userRepository.save(new User(name, email, encodedPassword, phone));
-            return new UserResponseDto(user);
-
-        } finally {
-            System.out.println("User : final 문 도착");
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-                System.out.println("userLock 해제 완료");
-            }
-        }
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = userRepository.save(new User(name, email, encodedPassword, phone));
+        return new UserResponseDto(user);
     }
 
     @Transactional
