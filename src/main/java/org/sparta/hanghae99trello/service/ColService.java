@@ -42,9 +42,9 @@ public class ColService {
 
             return new ColResponseDto(savedCol);
         } finally {
-                boardLock.unlock();
-            }
+            boardLock.unlock();
         }
+    }
 
     public List<ColResponseDto> getCols(Long boardId) {
         List<Col> cols = colRepository.findByBoardId(boardId);
@@ -111,7 +111,6 @@ public class ColService {
             }
 
             List<Col> colList = board.getColList();
-            Long currentIndex = columnToUpdate.getColIndex();
             colList.remove(columnToUpdate);
             columnToUpdate.setColIndex(columnOrderIndex);
 
@@ -122,7 +121,7 @@ public class ColService {
             }
 
             colList.add(columnToUpdate);
-            List<Col> savedCols = colRepository.saveAll(colList);
+            colRepository.saveAll(colList);
 
             return new ColResponseDto(columnToUpdate);
         } finally {

@@ -101,10 +101,7 @@ public class BoardService {
 
         List<Col> columns = colRepository.findByBoardId(boardId);
         colRepository.deleteAll(columns);
-
         boardRepository.delete(board);
-
-
     }
 
     public BoardResponseDto getBoardById(Long boardId) {
@@ -128,12 +125,6 @@ public class BoardService {
         Long loggedInId = userDetails.getId();
         Long boardCreatorId = board.getCreatedBy().getId();
         return loggedInId.equals(boardCreatorId);
-    }
-
-    private List<Col> convertColRequestDtoList(List<ColRequestDto> colRequestDtoList) {
-        return colRequestDtoList.stream()
-                .map(colRequestDto -> new Col(colRequestDto.getColName(), colRequestDto.getColIndex(), null))
-                .collect(Collectors.toList());
     }
 
     public Board findBoard(Long id) {

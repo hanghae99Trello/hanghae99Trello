@@ -1,5 +1,7 @@
 package org.sparta.hanghae99trello.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +15,11 @@ public class Operator {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private Card card;
 
     @ManyToOne
+    @JsonIgnore
     private Participant participant;
 
 

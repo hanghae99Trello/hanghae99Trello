@@ -28,6 +28,6 @@ public class BoardResponseDto {
         this.participants = board.getParticipants().stream()
                 .map(Participant::getParticipantName)
                 .collect(Collectors.toSet());
-        this.colList = board.getColList();
+        this.colList = board.getColListSort();
     }
 }
