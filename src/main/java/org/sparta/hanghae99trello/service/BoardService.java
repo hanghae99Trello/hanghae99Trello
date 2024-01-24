@@ -74,11 +74,18 @@ public class BoardService {
     }
 
     private void updateParticipants(Board board, Set<String> participantNames) {
+        Set<String> existingParticipantNames = board.getParticipants()
+                .stream()
+                .map(Participant::getParticipantName)
+                .collect(Collectors.toSet());
+
         for (String participantName : participantNames) {
-            User user = userRepository.findByName(participantName);
-            Participant participant = new Participant(user, participantName);
-            participant.setBoard(board);
-            board.getParticipants().add(participant);
+            if (!existingParticipantNames.contains(participantName)) {
+                User user = userRepository.findByName(participantName);
+                Participant newParticipant = new Participant(user, participantName);
+                newParticipant.setBoard(board);
+                board.getParticipants().add(newParticipant);
+            }
         }
     }
 

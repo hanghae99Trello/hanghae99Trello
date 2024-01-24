@@ -33,6 +33,7 @@ function submitCommentForm() {
         .then(data => {
             console.log('Success creating comment:', data);
             closeCommentAddForm();
+            location.reload();
         })
         .catch((error) => {
             console.error('Error creating comment:', error.message);
@@ -95,6 +96,7 @@ function submitCardEditForm() {
         .then(data => {
             console.log('Success updating card:', data);
             closeCardEditForm();
+            location.reload();
         })
         .catch(error => {
             console.error("Error updating card:", error);

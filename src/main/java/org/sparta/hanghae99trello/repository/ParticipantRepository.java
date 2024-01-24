@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ParticipantRepository extends JpaRepository<Participant,Long> {
 
     List<Participant> findByIdIn(List<Long> operatorIds);
-    Participant findByBoardIdAndUserId(Long boardId, Long userId);
+    Optional<Participant> findParticipantByBoardIdAndUserId(Long boardId, Long userId);
+
     void deleteByBoardId(Long id);
 }
