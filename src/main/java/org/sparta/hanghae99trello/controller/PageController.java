@@ -31,12 +31,14 @@ public class PageController {
     public String getUserDetails(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long userId = userDetails.getId();
         String userName = userDetails.getUser().getName();
+        String userNickname = userDetails.getUser().getNickname();
         String userEmail = userDetails.getUser().getEmail();
         String userPhone = userDetails.getUser().getPhone();
         List<Board> userBoards = userService.getUserBoards(userId);
 
         model.addAttribute("userId", userId);
         model.addAttribute("userName", userName);
+        model.addAttribute("userNickname", userNickname);
         model.addAttribute("userEmail", userEmail);
         model.addAttribute("userPhone", userPhone);
         model.addAttribute("userBoards", userBoards);
@@ -75,8 +77,8 @@ public class PageController {
             @PathVariable Long cardId,
             Model model
     ) {
-        String userName = userDetails.getUser().getName();
-        model.addAttribute("userName", userName);
+        String userNickname = userDetails.getUser().getNickname();
+        model.addAttribute("userNickname", userNickname);
         CardResponseDto card = cardService.getCard(cardId);
         model.addAttribute("card", card);
         return "card";

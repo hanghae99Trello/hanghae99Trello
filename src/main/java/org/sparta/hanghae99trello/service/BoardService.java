@@ -81,7 +81,7 @@ public class BoardService {
 
         for (String participantName : participantNames) {
             if (!existingParticipantNames.contains(participantName)) {
-                User user = userRepository.findByName(participantName);
+                User user = userRepository.findByNickname(participantName);
                 Participant newParticipant = new Participant(user, participantName);
                 newParticipant.setBoard(board);
                 board.getParticipants().add(newParticipant);
@@ -110,9 +110,9 @@ public class BoardService {
         Set<Participant> participants = new HashSet<>();
 
         for (String participantName : participantNames) {
-            User user = userRepository.findByName(participantName);
+            User user = userRepository.findByNickname(participantName);
             if (user != null) {
-                participants.add(new Participant(user, user.getName()));
+                participants.add(new Participant(user, user.getNickname()));
             }
         }
 

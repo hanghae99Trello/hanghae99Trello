@@ -33,12 +33,13 @@ public class UserService {
     public UserResponseDto createUser(UserRequestDto requestDto) {
 
         String name = requestDto.getName();
+        String nickname = requestDto.getNickname();
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         String phone = requestDto.getPhone();
 
         String encodedPassword = passwordEncoder.encode(password);
-        User user = userRepository.save(new User(name, email, encodedPassword, phone));
+        User user = userRepository.save(new User(name, nickname, email, encodedPassword, phone));
         return new UserResponseDto(user);
     }
 

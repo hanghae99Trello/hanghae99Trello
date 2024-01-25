@@ -32,7 +32,7 @@
       <ul>
         <li class="comment_list" th:each="comment : ${card.commentList}">
           <div class="comment_list_box">
-            <p th:text="${userName}"></p>
+            <p th:text="${userNickname}"></p>
             <p th:text="${comment.getCommentMessage()}"></p>
           </div>
         </li>
@@ -61,7 +61,7 @@
         <input type="text" th:id="'cardName-' + ${cardId}" name="cardName" placeholder="Card Name" required><br>
         <input type="text" th:id="'cardDescription-' + ${cardId}" name="cardDescription" placeholder="Card Description" required><br>
         <input type="text" th:id="'color-' + ${cardId}" name="color" placeholder="Card Color" required><br>
-        <input type="text" th:id="'operatorIds-' + ${cardId}" name="operatorIds" placeholder="Operator IDs"><br>
+        <input type="text" th:id="'operatorNicknames-' + ${cardId}" name="operatorIds" placeholder="Operator Nicknames"><br>
         <input type="text" th:id="'dueDate-' + ${cardId}" name="dueDate" placeholder="Due Date"><br>
         <button type="button" th:attr="data-card-id=${cardId}" onclick="submitCardEditForm(this)">Add Card</button>
         <button type="button" th:attr="data-card-id=${cardId}" onclick="closeCardEditForm(this)">Close</button>

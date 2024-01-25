@@ -28,6 +28,9 @@ public class User {
     private String name;
 
     @Column(nullable = false, unique = true)
+    private String nickname;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @JsonIgnore
@@ -49,8 +52,9 @@ public class User {
     @JsonManagedReference
     private Set<Participant> boards;
 
-    public User(String name, String email, String password, String phone) {
+    public User(String name, String nickname, String email, String password, String phone) {
         this.name = name;
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.phone = phone;
@@ -59,6 +63,7 @@ public class User {
 
     public void update(UserRequestDto requestDto) {
         this.name = requestDto.getName();
+        this.nickname = requestDto.getNickname();
         this.email = requestDto.getEmail();
         this.phone = requestDto.getPhone();
     }

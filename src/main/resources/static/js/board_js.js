@@ -750,17 +750,17 @@ function submitCardAddForm(button) {
     const cardDescription = document.getElementById("cardDescription-" + columnId).value;
     const color = document.getElementById("color-" + columnId).value;
     const dueDate = document.getElementById("dueDate-" + columnId).value;
-    const operatorInput = document.getElementById("operatorIds-" + columnId);
-    let operatorIds = [];
+    const operatorInput = document.getElementById("operatorNicknames-" + columnId);
+    let operatorNicknames = [];
 
     if (operatorInput != null && operatorInput.value != null) {
         const inputValues = operatorInput.value.split(",");
 
         if (inputValues.length === 1) {
-            operatorIds.push(inputValues[0].trim());
+            operatorNicknames.push(inputValues[0].trim());
         }
 
-        operatorIds = inputValues.map(operatorId => operatorId.trim());
+        operatorNicknames = inputValues.map(operatorNickname => operatorNickname.trim());
     }
 
     const data = {
@@ -768,7 +768,7 @@ function submitCardAddForm(button) {
         cardDescription: cardDescription,
         color: color,
         dueDate: dueDate,
-        operatorNames: operatorIds
+        operatorNames: operatorNicknames
     };
 
     fetch(`/api/users/boards/${boardId}/columns/${columnId}/cards`, {

@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $('#signUpBtn').click(function () {
         const name = $('#name').val();
+        const nickname = $('#nickname').val();
         const email = $('#signupEmail').val();
         const phone = $('#phone').val();
         const password = $('#signupPassword').val();
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
             contentType: "application/json",
             data: JSON.stringify({
                 name: name,
+                nickname: nickname,
                 email: email,
                 phone: phone,
                 password: password,
