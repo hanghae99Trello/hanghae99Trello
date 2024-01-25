@@ -23,7 +23,7 @@ public class CardController {
                                                       @RequestBody CardRequestDto requestDto) {
 
         CardResponseDto cardResponseDto = cardService.createCard(boardId, columnId, requestDto.getCardName(),
-                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds(), requestDto.getDueDate());
+                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorNames(), requestDto.getDueDate());
         return ResponseEntity.ok(cardResponseDto);
     }
 
@@ -40,7 +40,7 @@ public class CardController {
                                                       @PathVariable Long cardId,
                                                       @RequestBody CardRequestDto requestDto) {
         CardResponseDto cardResponseDto = cardService.updateCard(boardId, cardId, requestDto.getCardName(),
-                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorIds(), requestDto.getDueDate());
+                requestDto.getCardDescription(), requestDto.getColor(), requestDto.getOperatorNames(), requestDto.getDueDate());
         return ResponseEntity.status(HttpStatus.CREATED).body(cardResponseDto);
     }
 

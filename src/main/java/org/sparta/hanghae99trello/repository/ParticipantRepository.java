@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant,Long> {
 
-    List<Participant> findByIdIn(List<Long> operatorIds);
+    List<Participant> findByParticipantNameInAndBoardId(List<String> operatorNames, Long boardId);
     Participant findByBoardIdAndUserId(Long boardId, Long userId);
     void deleteByBoardId(Long id);
 }

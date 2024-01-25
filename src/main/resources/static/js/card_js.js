@@ -81,7 +81,7 @@ function submitCardEditForm() {
         cardDescription: cardDescription,
         color: color,
         dueDate: dueDate,
-        operatorIds: operatorIds
+        operatorNames: operatorIds
     };
 
     fetch(`/api/users/boards/${boardId}/columns/${columnId}/cards/${cardId}`, {
@@ -95,6 +95,7 @@ function submitCardEditForm() {
         .then(data => {
             console.log('Success updating card:', data);
             closeCardEditForm();
+            location.reload();
         })
         .catch(error => {
             console.error("Error updating card:", error);

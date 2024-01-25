@@ -768,7 +768,7 @@ function submitCardAddForm(button) {
         cardDescription: cardDescription,
         color: color,
         dueDate: dueDate,
-        operatorIds: operatorIds
+        operatorNames: operatorIds
     };
 
     fetch(`/api/users/boards/${boardId}/columns/${columnId}/cards`, {

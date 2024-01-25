@@ -12,6 +12,6 @@ public class CardRequestDto {
     private String cardName;
     private String cardDescription;
     private String color;
-    private List<Long> operatorIds;
+    private List<String> operatorNames;
     private String dueDate;
 }

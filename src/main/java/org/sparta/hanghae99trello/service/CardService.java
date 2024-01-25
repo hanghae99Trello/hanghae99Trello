@@ -34,14 +34,14 @@ public class CardService {
 
     @Transactional
     public CardResponseDto createCard(Long boardId, Long columnId, String cardName,
-                                      String cardDescription, String color, List<Long> operatorIds, String dueDate) {
+                                      String cardDescription, String color, List<String> operatorNames, String dueDate) {
         RLock colLock = colService.createColLock(columnId);
 
         try{
             Col col = getColById(columnId);
             Card card = new Card(cardName, cardDescription, color,col, dueDate);
             cardRepository.save(card);
-            updateOperator(boardId, card, operatorIds);
+            updateOperator(boardId, card, operatorNames);
             card.setOrderIndex(card.getId());
             col.addCard(card);
             return new CardResponseDto(card);
@@ -58,13 +58,13 @@ public class CardService {
 
     @Transactional
     public CardResponseDto updateCard(Long boardId, Long cardId, String cardName, String cardDescription,
-                                      String color, List<Long> operatorIds, String dueDate) {
+                                      String color, List<String> operatorNames, String dueDate) {
         RLock cardLock = createCardLock(cardId);
 
         try {
             Card card = getCardById(cardId);
             card.update(cardName, cardDescription, color, dueDate);
-            updateOperator(boardId, card, operatorIds);
+            updateOperator(boardId, card, operatorNames);
             cardRepository.save(card);
             return new CardResponseDto(card);
         } finally {
@@ -89,14 +89,10 @@ public class CardService {
     }
 
     @Transactional
-    public void updateOperator(Long boardId, Card card, List<Long> operatorIds) {
-        List<Participant> participants = participantRepository.findByIdIn(operatorIds);
+    public void updateOperator(Long boardId, Card card, List<String> operatorNames) {
+        List<Participant> participants = participantRepository.findByParticipantNameInAndBoardId(operatorNames,boardId);
         List<Participant> operatorsInCard = card.getOperators().stream().map(Operator::getParticipant).toList();
         for (Participant participant : participants) {
-            if (!boardId.equals(participant.getBoard().getId())) {
-                throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_PARTICIPANT_ERROR_MESSAGE.getErrorMessage());
-            }
-
             if (!operatorsInCard.contains(participant)) {
                 Operator operator = new Operator(card, participant);
                 operatorRepository.save(operator);
