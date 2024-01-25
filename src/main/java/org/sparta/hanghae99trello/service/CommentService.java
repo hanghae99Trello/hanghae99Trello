@@ -22,7 +22,9 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createComment(Long userId, Long boardId, Long cardId, String commentMessage) {
-        Participant participant = participantRepository.findByBoardIdAndUserId(boardId,userId);
+        Participant participant = participantRepository.findParticipantByBoardIdAndUserId(boardId, userId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NOT_EXIST_PARTICIPANT_ERROR_MESSAGE.getErrorMessage()));
+
 
         if (participant == null){
             throw new IllegalArgumentException(ErrorMessage.NOT_EXIST_PARTICIPANT_ERROR_MESSAGE.getErrorMessage());

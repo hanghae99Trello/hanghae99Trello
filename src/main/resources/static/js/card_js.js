@@ -33,6 +33,7 @@ function submitCommentForm() {
         .then(data => {
             console.log('Success creating comment:', data);
             closeCommentAddForm();
+            location.reload();
         })
         .catch((error) => {
             console.error('Error creating comment:', error.message);

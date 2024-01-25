@@ -85,6 +85,7 @@ public class ColService {
         try {
             Board board = boardService.findBoard(boardId);
             Col columnToUpdate = findCol(columnId);
+            Long currIdx = columnToUpdate.getColIndex();
 
             isBoardIdMatch(boardId, columnToUpdate);
 
@@ -92,9 +93,17 @@ public class ColService {
             colList.remove(columnToUpdate);
             columnToUpdate.setColIndex(columnOrderIndex);
 
-            for (Col col : colList) {
-                if (!col.getId().equals(columnId) && col.getColIndex() >= columnOrderIndex) {
-                    col.setColIndex(col.getColIndex() + 1);
+            if (columnOrderIndex > currIdx) {
+                for (Col col : colList) {
+                    if (!col.getId().equals(columnId) && col.getColIndex() > currIdx && col.getColIndex() <= columnOrderIndex) {
+                        col.setColIndex(col.getColIndex() - 1);
+                    }
+                }
+            } else if (columnOrderIndex < currIdx) {
+                for (Col col : colList) {
+                    if (!col.getId().equals(columnId) && col.getColIndex() < currIdx && col.getColIndex() >= columnOrderIndex) {
+                        col.setColIndex(col.getColIndex() + 1);
+                    }
                 }
             }
 

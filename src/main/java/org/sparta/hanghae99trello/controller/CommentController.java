@@ -30,6 +30,6 @@ public class CommentController {
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails){
 
         CommentResponseDto commentResponseDto = commentService.createComment(userDetails.getUser().getId(),boardId, cardId,requestDto.getCommentMessage());
-        return ResponseEntity.status(HttpStatus.OK).body(commentResponseDto);
+        return ResponseEntity.ok(commentResponseDto);
     }
 }
