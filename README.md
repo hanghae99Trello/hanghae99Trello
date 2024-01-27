@@ -1,6 +1,7 @@
 # 주특기 프로젝트 트렐로
 ![image](https://github.com/hanghae99Trello/hanghae99Trello/assets/152241642/ca0df1a1-6824-40c8-9871-f6f3a970390a)
-![image](https://github.com/hanghae99Trello/hanghae99Trello/assets/152241642/3077b8c8-a8c9-45af-b152-30f4f110cf07)
+![image](https://github.com/hanghae99Trello/hanghae99Trello/assets/152241642/5427ed1c-d380-4499-ae3b-be4cb8c9e5a8)
+
 
 ## 구현 기능
 - **사용자 관리 기능**
