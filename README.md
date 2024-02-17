@@ -52,3 +52,4 @@
 - [x]  Docker를 사용하여 컨테이너화
 - [x]  Thymeleaf를 사용하여 화면과 서버 통신
 - [x]  Spring Security를 사용하여 권한 제어
+---
