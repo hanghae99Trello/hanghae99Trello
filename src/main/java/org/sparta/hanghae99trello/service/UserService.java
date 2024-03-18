@@ -31,7 +31,6 @@ public class UserService {
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto requestDto) {
-
         String name = requestDto.getName();
         String nickname = requestDto.getNickname();
         String email = requestDto.getEmail();
