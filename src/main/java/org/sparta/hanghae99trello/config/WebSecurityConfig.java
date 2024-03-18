@@ -63,12 +63,12 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/hey", "/api/join", "/join", "/static/**", "/api/user/login").permitAll()
-                        .requestMatchers(HttpMethod.PUT).permitAll()
-                        .requestMatchers(HttpMethod.DELETE).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.PUT, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.GET, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/boards/**").hasAnyAuthority("AUTH_USER")
+                        .requestMatchers(HttpMethod.PUT).authenticated()
+                        .requestMatchers(HttpMethod.DELETE).authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/users/boards/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/boards/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/users/boards/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/boards/**").authenticated()
                         .anyRequest().authenticated()
         );
 
